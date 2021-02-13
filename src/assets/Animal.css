@@ -1,0 +1,40 @@
+
+.menu {
+    bottom: 5%; 
+    position: absolute;
+    right: 0px;
+    width: 5%;
+    z-index:400
+}
+.menu ul{
+    list-style: none;
+}
+
+.menu a {
+    background-color: white;
+    border-radius: 50%;
+    font-size: 40px;
+    padding: 3% 40%;
+}
+
+.menu ul{
+    width: 50px;
+    list-style: none;
+    padding: 0 10px 0 0;
+    margin: 18px 3px;
+    transition-property: height;
+    transition-duration: 0.5s;
+    overflow: hidden;
+}
+.menu ul{
+    height: 50px;
+    position: absolute;
+    bottom: 5%; 
+    right: 0px;
+
+
+
+}
+.menu ul:hover {
+    height: 150px;
+}
