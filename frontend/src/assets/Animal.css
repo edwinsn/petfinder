@@ -1,40 +1,45 @@
-
 .menu {
-    bottom: 5%; 
-    position: absolute;
-    right: 0px;
-    width: 5%;
+    border: 1px solid black;
+    bottom: 7%; 
+    position: fixed ;
+    right: 2%;
     z-index:400
 }
-.menu ul{
-    list-style: none;
-}
 
-.menu a {
-    background-color: white;
+.selector {
+    background-color: blue;
     border-radius: 50%;
-    font-size: 40px;
-    padding: 3% 40%;
+    height: 10vh;
+    width: 10vh;
+    min-height: 70px;
+    min-width: 70px;
 }
 
-.menu ul{
-    width: 50px;
-    list-style: none;
-    padding: 0 10px 0 0;
-    margin: 18px 3px;
+.options{
+    background-color: rgba(0, 153, 255, 0.486);
+    height: 0;
     transition-property: height;
     transition-duration: 0.5s;
-    overflow: hidden;
+    overflow:hidden
 }
-.menu ul{
-    height: 50px;
-    position: absolute;
-    bottom: 5%; 
-    right: 0px;
 
-
-
+.menu:hover .options {
+    height: 19.5vh;
 }
-.menu ul:hover {
-    height: 150px;
+.options div{
+    background-color: rgb(250, 111, 204);
+    border-radius: 50%;
+    width: 9vh;
+    height:9vh;
+    margin: auto;
+}
+
+.dogOption{
+    background-image: url("./images/dogIcon.png");
+    background-size: cover;
+    
+}
+.catOption{
+    background-image: url("./images/catIcon.png"); 
+    background-size: cover;
 }
