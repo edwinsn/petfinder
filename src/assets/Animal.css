@@ -1,13 +1,9 @@
 .menu {
-    border: 1px solid black;
-    bottom: 7%; 
-    position: fixed ;
-    right: 2%;
     z-index:400
 }
 
 .selector {
-    background-color: blue;
+    background-color:white;
     border-radius: 50%;
     height: 10vh;
     width: 10vh;
@@ -16,7 +12,6 @@
 }
 
 .options{
-    background-color: rgba(0, 153, 255, 0.486);
     height: 0;
     transition-property: height;
     transition-duration: 0.5s;
@@ -42,4 +37,14 @@
 .catOption{
     background-image: url("./images/catIcon.png"); 
     background-size: cover;
+}
+
+.reportMenu{
+   color: rgb(50, 199, 50);
+  display: flex;
+  bottom: 7%;
+  right: 2%;
+  z-index: 400;
+  position: fixed;
+  align-items: flex-end;
 }

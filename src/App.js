@@ -1,11 +1,13 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { MapContainer, TileLayer } from "react-leaflet";
 import Search from "./Search";
 import './assets/App.css';
 import {Animal} from './Animal'
-import {Aux} from './Aux'
+
 
 export const App = () => {
+
+
   return (
     <div id="mydiv">
     <MapContainer style={{"zIndex":0}} center={{ lat: 51.5287718, lng: -0.2416804 }} zoom={6} zoomControl={false}>
@@ -15,7 +17,6 @@ export const App = () => {
       >
       </TileLayer>
       <Search />
-  
       <Animal />
     </MapContainer>
     </div>
