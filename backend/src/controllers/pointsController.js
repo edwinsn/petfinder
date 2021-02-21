@@ -21,11 +21,13 @@ pointsControllers.getDataBase = async (req, res)=>{
 
 pointsControllers.postPoint = async (req, res)=>{
     
-    const {lat, lon, type} = req.body
+    const {coords, type} = req.body;
+    const {lat, lon} = coords;
+
     const newPoint = new pointModel({
-        lat:lat,
-        lon:lon,
-        type:type,
+        lat,
+        lon,
+        type,
         nPost:1,
     })
     await newPoint.save();

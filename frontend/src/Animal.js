@@ -1,5 +1,5 @@
-//to-do set undragable the marker one in sended
-//to-do delete last marker if added new one before sending
+//done: set undragable the marker one in sended
+//done: delete last marker if added new one before sending
 import {useState} from 'react'
 import {useMap} from 'react-leaflet'
 import L from 'leaflet'
@@ -7,64 +7,63 @@ import './assets/Animal.css'
 import axios from 'axios'
 import dogIcon from './assets/images/dogIcon.png'
 import catIcon from './assets/images/catIcon.png'
+import sendButtonIcon from './assets/images/SendButton.svg'
+import plusIcon from './assets/images/plus.svg'
 
+import {Form} from './Form'
 
+let activeMarker = false
 
 export function Animal(){
 
-    const [reportColor,reportColorchange] = useState();
+    const [reportIcon,reportIconchange] = useState(plusIcon);
     const [coordinates,changeCoordinates] = useState();
     const [type, changeType] = useState();
 
     let map = useMap()
 
-    map.on('popupopen', function(e) {
-    // find the pixel location on the map where the popup anchor is
-    var px = map.project(e.popup._latlng);
-   // find the height of the popup container, divide by 2 to centre, subtract from the Y axis of marker location
-    px.y -= e.popup._container.clientHeight/2;
-    // pan to new center
-    map.panTo(map.unproject(px),{animate: true});
-});
-    
 
-    return (
-            <div className="menu" 
-                 onDrop={()=>{console.log(":)")}}
+    const [formDisplay, changeFormDisplay] = useState("none") 
+
+    let typesOfAnimals = ["dog","cat"];
+    const animalList = typesOfAnimals.map(
+        (animalType)=>(
+            <div
+                key={animalType}
+                className = {animalType+"Option"}
+                draggable={true}
+                onDragEnd={(ev)=>{
+                    changeFormDisplay("block")
+                    changeType(animalType);
+                    addMark(reportIconchange, map, animalType, changeCoordinates, ev)
+                    }
+                }
+                onClick={()=>{
+                    changeFormDisplay("block")
+                    changeType(animalType);
+                    addMark(reportIconchange, map, animalType, changeCoordinates)
+                    }
+                }>
+                    </div>
+ 
+        )
+    );
+
+    return (<div className="reportMenu">
+            <Form display={formDisplay}/>
+            <div className="menu"
                  onMouseEnter={()=>{map.dragging.disable()}}
                  onMouseLeave={()=>{map.dragging.enable()}}>
                 <div className="options">
-                    <div
-                    className = "dogOption"
-                    draggable="true"
-                    onDragEnd={(ev)=>{
-                        addMark(reportColorchange, map, "dog", changeCoordinates, ev)
-                        }
-                    }
-                    onClick={()=>{
-                        changeType("dog");
-                        addMark(reportColorchange, map, "dog", changeCoordinates)
-                        }
-                    }>
-                    </div>
-                    <div
-                    className = "catOption"
-                    draggable="true"
-                    onDragEnd={(ev)=>{
-                        addMark(reportColorchange, map, "cat", changeCoordinates, ev)
-                        }
-                    }
-                    onClick={()=>{
-                        changeType("cat");
-                        addMark(reportColorchange, map, "cat", changeCoordinates)
-                        }}>
-                    </div>
+                 {animalList}
                 </div>
-                <div    className="selector" 
-                        onClick={()=>{sendPoint(reportColorchange, coordinates, changeCoordinates, type)}} 
-                        style={{background:reportColor}}>
-                </div>
-            </div>            
+                <img  
+                        className="selector" 
+                        onClick={()=>{sendPoint(reportIconchange, coordinates, changeCoordinates, type, changeFormDisplay)}} 
+                        src={reportIcon}
+                />
+            </div>    
+            </div>        
         )
 }
 
@@ -76,7 +75,9 @@ function printCoords(ev, map){
   console.log(map.getCenter())
 }
  
-function addMark(reportColorchange, map, type, changeCoordinates, ev={clientX:false}){
+function addMark(reportIconchange, map, type, changeCoordinates, ev={clientX:false}){
+
+    if(activeMarker){map.removeLayer(activeMarker)}
 
     let icon = L.icon({
         iconUrl: type=="dog"?dogIcon:catIcon,
@@ -91,15 +92,19 @@ function addMark(reportColorchange, map, type, changeCoordinates, ev={clientX:fa
         changeCoordinates(marker.getLatLng())
         })
     marker.addTo(map)
-    reportColorchange("green")
-
+    reportIconchange(sendButtonIcon)
+    activeMarker = marker
     }
 
-function sendPoint(sendBackgorundchange, coordinates, changeCoordinates, type){
+function sendPoint(sendBackgorundchange, coordinates, changeCoordinates, type, changeFormDisplay){
     if(coordinates){
-        sendBackgorundchange("white");
+        sendBackgorundchange(plusIcon);
         console.log(coordinates)
         // axios.post(process.env.POINTS_URI,{coords:coordinates,type})
         changeCoordinates(false)
+        activeMarker.dragging.disable()
+        changeFormDisplay("none")
+        activeMarker = false;
+
         }
 }
