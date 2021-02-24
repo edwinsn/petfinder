@@ -1,4 +1,4 @@
-const pointModel = require("../Models/point")
+const {pointModel, backupPointModel} = require("../Models/point")
 
 const pointsControllers = {}
 
@@ -8,9 +8,7 @@ pointsControllers.getPoints = async (req, res)=>{
         lat:{$gt:lowerlat,$lt:upperlat},
         lon:{$gt:lowerlon,$lt:upperlon}
     });
-
     res.json(points);
-
 }
 
 pointsControllers.getDataBase = async (req, res)=>{
@@ -20,33 +18,70 @@ pointsControllers.getDataBase = async (req, res)=>{
 }
 
 pointsControllers.postPoint = async (req, res)=>{
+    //resolve to an error in the catch  (400,500)
     
-    const {coords, type} = req.body;
-    const {lat, lon} = coords;
+    try{
+    
+        const {coords, type, frecuence} = req.body;
+        const {lat, lng} = coords;
 
-    const newPoint = new pointModel({
-        lat,
-        lon,
-        type,
-        nPost:1,
-    })
-    await newPoint.save();
-    
-    return res.json({loactions:"Point saved!"})
+        if(type.length&frecuence&lat&lng){
+
+            const newPoint = new pointModel({
+                lat,
+                lng,
+                type,
+                frecuence,
+                deprecated_level:0
+            })
+            await newPoint.save();
+            
+            return res.json({mesagge:"Point saved!"})
+        }
+        else{
+            return res.status(400).send({mesage:"Data incomplete"})
+        }
+        }
+    catch(err){
+        return res.status(500).send(err);
+    }
 }
 
 pointsControllers.updatePoint = async (req,res) =>{
-    console.log(req.params.id,req.body);
-    await pointModel.findOneAndDelete(req.params.id,req.body)
-    return res.json({mesage:"Point actualized"})
+    //actualiza the deprecated level
+
+    const {lat, lng} = req.body.coords
+ 
+    let pointToUpdate =await pointModel.findOne({lat, lng})
+    
+    let deleteOption = false;
+
+    if(pointToUpdate.deprecated_level<5 || !deleteOption ){
+      await pointModel.updateOne({lat,lng},{deprecated_level:pointToUpdate.deprecated_level+1})
+      res.json({mesagge:"Point updated!"})
+    }else {
+      const {type, frecuence, deprecated_level, id} = pointToUpdate
+      await deletePoint(id, lat, lng, type, frecuence, deprecated_level);
+      console.log(id)
+      res.json({message:"point deleted!"})
+    }
+    
 }
 
-pointsControllers.deletePoint = async (req, res)=>{
-    console.log(req.params.id)
-    await pointModel.findByIdAndDelete(req.params.id)
-    return res.json({mesage:"deleted"})
+deletePoint = async (id,lat,lng,type,frecuence,deprecated_level)=>{
+    //move to a back up and deprecated database
+
+    const deprecatedPoint = await pointModel.findByIdAndDelete(id)
+
+
+    const newPoint = new backupPointModel({
+            lat,
+            lng,
+            type,
+            frecuence,
+            deprecated_level
+            })
+    await newPoint.save();
 }
-
-
 
 module.exports = pointsControllers

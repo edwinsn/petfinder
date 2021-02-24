@@ -4,7 +4,6 @@ import './assets/form.css'
 
 export  function Form(props) {
 
-    let [ frecuence, setFrecuence] = useState(1)
 
     let [frecuence0, setActive0] = useState(true)
     let [frecuence1, setActive1] = useState(false)
@@ -24,7 +23,7 @@ export  function Form(props) {
             key={i} 
             style={{background:active[i]?"#3B72E1":"#E3E3E3"}}
             onClick={(ev)=>{
-                selectFrecuence( i, setFrecuence, setActiveFrecuences ) 
+                selectFrecuence( i, props.setFrecuence, setActiveFrecuences ) 
             }}></div>
             )
     }
@@ -41,7 +40,7 @@ export  function Form(props) {
 
 function selectFrecuence(i, setFrecuence, setActiveFrecuences){
     
-    setFrecuence(i)
+    setFrecuence(i+1)
     setActiveFrecuences.forEach((active, index) => {
         active(i<index?false:true)
     });

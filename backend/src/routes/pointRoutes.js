@@ -6,10 +6,8 @@ const router = Router();
 
 router.route("/").get(getPoints)
                  .post(postPoint)
-
-router.route("/:id").delete(deletePoint)
-                    .put(updatePoint)
-
+                 .put(updatePoint)
+                 
 router.route("/database").get(getDataBase)
-
+                
 module.exports = router

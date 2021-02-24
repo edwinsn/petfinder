@@ -19,6 +19,7 @@ export function Animal(){
     const [reportIcon,reportIconchange] = useState(plusIcon);
     const [coordinates,changeCoordinates] = useState();
     const [type, changeType] = useState();
+    const [frecuence,setFrecuence] = useState(1);
 
     let map = useMap()
 
@@ -50,7 +51,7 @@ export function Animal(){
     );
 
     return (<div className="reportMenu">
-            <Form display={formDisplay}/>
+            <Form display={formDisplay} setFrecuence = {setFrecuence}/>
             <div className="menu"
                  onMouseEnter={()=>{map.dragging.disable()}}
                  onMouseLeave={()=>{map.dragging.enable()}}>
@@ -59,7 +60,7 @@ export function Animal(){
                 </div>
                 <img  
                         className="selector" 
-                        onClick={()=>{sendPoint(reportIconchange, coordinates, changeCoordinates, type, changeFormDisplay)}} 
+                        onClick={()=>{sendPoint(reportIconchange, coordinates, changeCoordinates, type, changeFormDisplay, frecuence)}} 
                         src={reportIcon}
                 />
             </div>    
@@ -96,11 +97,11 @@ function addMark(reportIconchange, map, type, changeCoordinates, ev={clientX:fal
     activeMarker = marker
     }
 
-function sendPoint(sendBackgorundchange, coordinates, changeCoordinates, type, changeFormDisplay){
+function sendPoint(sendBackgorundchange, coordinates, changeCoordinates, type, changeFormDisplay, frecuence){
     if(coordinates){
         sendBackgorundchange(plusIcon);
-        console.log(coordinates)
-        // axios.post(process.env.POINTS_URI,{coords:coordinates,type})
+        console.log(coordinates, type, frecuence)
+        // axios.post(process.env.POINTS_URI,{coords:coordinates, type, frecuence})
         changeCoordinates(false)
         activeMarker.dragging.disable()
         changeFormDisplay("none")
