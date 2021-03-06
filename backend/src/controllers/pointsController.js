@@ -50,14 +50,14 @@ pointsControllers.postPoint = async (req, res)=>{
 pointsControllers.updatePoint = async (req,res) =>{
     //actualiza the deprecated level
 
-    const {lat, lng} = req.body.coords
+    const {lat, lng, isDeprecated} = req.body
  
     let pointToUpdate =await pointModel.findOne({lat, lng})
     
     let deleteOption = false;
 
     if(pointToUpdate.deprecated_level<5 || !deleteOption ){
-      await pointModel.updateOne({lat,lng},{deprecated_level:pointToUpdate.deprecated_level+1})
+      await pointModel.updateOne({lat,lng},{deprecated_level:pointToUpdate.deprecated_level+(isDeprecated?1:-1)})
       res.json({mesagge:"Point updated!"})
     }else {
       const {type, frecuence, deprecated_level, id} = pointToUpdate
