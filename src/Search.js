@@ -8,6 +8,7 @@ function Search() {
     const map = useMap();
 
     useEffect(()=>{
+
       const searchControl = new ELG.Geosearch().addTo(map);
       const results = new L.LayerGroup().addTo(map);
 
@@ -17,7 +18,7 @@ function Search() {
           results.addLayer(L.marker(data.results[i].latlng));
         }
       });
-    },[])
+    },[map])
   
 
     return null;

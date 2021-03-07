@@ -1,6 +1,6 @@
 //done: set undragable the marker one in sended
 //done: delete last marker if added new one before sending
-import {useState} from 'react'
+import React, {useState} from 'react'
 import {useMap} from 'react-leaflet'
 import L from 'leaflet'
 import './assets/Animal.css'
@@ -14,17 +14,18 @@ import {Form} from './Form'
 
 let activeMarker = false
 
-export function Animal(){
-
+export let Animal=React.memo((props)=>{
+    console.log("animal rerenderes")
     const [reportIcon,reportIconchange] = useState(plusIcon);
     const [coordinates,changeCoordinates] = useState();
     const [type, changeType] = useState();
-    const [frecuence,setFrecuence] = useState(1);
+    const frecuence = {frecuence:1};
 
     let map = useMap()
 
 
     const [formDisplay, changeFormDisplay] = useState("none") 
+
 
     let typesOfAnimals = ["dog","cat"];
     const animalList = typesOfAnimals.map(
@@ -36,13 +37,13 @@ export function Animal(){
                 onDragEnd={(ev)=>{
                     changeFormDisplay("block")
                     changeType(animalType);
-                    addMark(reportIconchange, map, animalType, changeCoordinates, ev)
+                    addMark(reportIconchange, map, animalType, changeCoordinates, props.panel, props.panelDisplay, props.changeProb, ev)
                     }
                 }
                 onClick={()=>{
                     changeFormDisplay("block")
                     changeType(animalType);
-                    addMark(reportIconchange, map, animalType, changeCoordinates)
+                    addMark(reportIconchange, map, animalType, changeCoordinates, props.panel, props.panelDisplay,props.changeProb)
                     }
                 }>
                     </div>
@@ -51,14 +52,14 @@ export function Animal(){
     );
 
     return (<div className="reportMenu">
-            <Form display={formDisplay} setFrecuence = {setFrecuence}/>
+            <Form display={formDisplay} frecuence = {frecuence}/>
             <div className="menu"
                  onMouseEnter={()=>{map.dragging.disable()}}
                  onMouseLeave={()=>{map.dragging.enable()}}>
                 <div className="options">
                  {animalList}
                 </div>
-                <img  
+                <img    alt="Report a Dog"
                         className="selector" 
                         onClick={()=>{sendPoint(reportIconchange, coordinates, changeCoordinates, type, changeFormDisplay, frecuence)}} 
                         src={reportIcon}
@@ -67,21 +68,15 @@ export function Animal(){
             </div>        
         )
 }
-
-function printCoords(ev, map){
-  let latlng = map.mouseEventToLatLng(ev);
-  map.panTo( new L.latLng(0,0))
-  console.log(latlng);
-  console.log("center at:")
-  console.log(map.getCenter())
-}
+)
  
-function addMark(reportIconchange, map, type, changeCoordinates, ev={clientX:false}){
+function addMark(reportIconchange, map, type, changeCoordinates, panel, panelDisplay, changeProb, ev={clientX:false}){
+ 
 
     if(activeMarker){map.removeLayer(activeMarker)}
 
     let icon = L.icon({
-        iconUrl: type=="dog"?dogIcon:catIcon,
+        iconUrl: type==="dog"?dogIcon:catIcon,
         iconSize:     [38, 38]
     });
     let coordinates = ev.clientX? map.mouseEventToLatLng(ev) : (ev.screenX? map.containerPointToLatLng([ev.screenX-10,ev.screenY-110]):map.getCenter());
@@ -92,20 +87,28 @@ function addMark(reportIconchange, map, type, changeCoordinates, ev={clientX:fal
     marker.on('dragend',()=>{
         changeCoordinates(marker.getLatLng())
         })
+    marker.on('click',(e)=>{
+        let {lat,lng} = coordinates
+        panelDisplay(lat, lng, 1)
+
+    })
+//actualizar el estado dentro una marca rerenderiz la pagina principal
     marker.addTo(map)
     reportIconchange(sendButtonIcon)
     activeMarker = marker
     }
 
-function sendPoint(sendBackgorundchange, coordinates, changeCoordinates, type, changeFormDisplay, frecuence){
+async function sendPoint(sendBackgorundchange, coordinates, changeCoordinates, type, changeFormDisplay, frecuence){
     if(coordinates){
         sendBackgorundchange(plusIcon);
-        console.log(coordinates, type, frecuence)
-        // axios.post(process.env.POINTS_URI,{coords:coordinates, type, frecuence})
+        console.log(process.env.REACT_APP_POINTS_URI)
         changeCoordinates(false)
         activeMarker.dragging.disable()
         changeFormDisplay("none")
         activeMarker = false;
+        console.log(process.env.REACT_APP_POINTS_URI)
+      //  let {data,status}=await axios.post(process.env.REACT_APP_POINTS_URI,{coords:coordinates, type, frecuence})
+      //  console.log(data+"---"+status)
 
         }
 }
