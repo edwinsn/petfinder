@@ -47,7 +47,7 @@ pointsControllers.postPoint = async (req, res)=>{
 }
 
 pointsControllers.updatePoint = async (req,res) =>{
-    //actualiza the deprecated level
+
 
     const {lat, lng, isDeprecated} = req.body
  
@@ -65,7 +65,9 @@ pointsControllers.updatePoint = async (req,res) =>{
       console.log(id)
       res.json({message:"point deleted!"})
     }
-    
+    else if(newDeprecatedLevel==0)res.json({message:"cant increase more the certainty of the data"})
+    else res.json({message:"can decrease more the certainty of the data"})
+        
 }
 
 deletePoint = async (id,lat,lng,type,frecuence,deprecated_level)=>{
