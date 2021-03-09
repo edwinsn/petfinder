@@ -18,7 +18,6 @@ pointsControllers.getDataBase = async (req, res)=>{
 }
 
 pointsControllers.postPoint = async (req, res)=>{
-    //resolve to an error in the catch  (400,500)
     
     try{
     
@@ -55,11 +54,12 @@ pointsControllers.updatePoint = async (req,res) =>{
     let pointToUpdate =await pointModel.findOne({lat, lng})
     
     let deleteOption = false;
+    let newDeprecatedLevel = pointToUpdate.deprecated_level+(isDeprecated?1:-1)
 
-    if(pointToUpdate.deprecated_level<5 || !deleteOption ){
-      await pointModel.updateOne({lat,lng},{deprecated_level:pointToUpdate.deprecated_level+(isDeprecated?1:-1)})
+    if(newDeprecatedLevel>0 && newDeprecatedLevel<10 ){
+      await pointModel.updateOne( {lat,lng},{deprecated_level:newDeprecatedLevel} );
       res.json({mesagge:"Point updated!"})
-    }else {
+    }else if(deleteOption&&newDeprecatedLevel==0){
       const {type, frecuence, deprecated_level, id} = pointToUpdate
       await deletePoint(id, lat, lng, type, frecuence, deprecated_level);
       console.log(id)
