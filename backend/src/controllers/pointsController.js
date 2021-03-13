@@ -24,7 +24,7 @@ pointsControllers.postPoint = async (req, res)=>{
         const {coords, type, frecuence} = req.body;
         const {lat, lng} = coords;
 
-        if(type.length&frecuence&lat&lng){
+        if(type.length&&frecuence&&lat&&lng){
 
             const newPoint = new pointModel({
                 lat,
