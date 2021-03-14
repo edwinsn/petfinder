@@ -1,6 +1,7 @@
 import {Component} from 'react'
 import './assets/Panel.css'
-
+import axios from 'axios'
+import closeIcon from './assets/images/closeIcon.svg'
 
 export class Panel extends Component{
 
@@ -29,47 +30,68 @@ export class Panel extends Component{
     }
   return( 
     <div className="panel" style={{display:this.state.display}}>
-      <div className="close" 
-           onClick={
+      <img
+          src={closeIcon} 
+          alt="close"
+          className="close" 
+          onClick={
              ()=>{
               this.setState({
                 display:"none"
               })
             }
-             }>X</div>
+             }/>
       <div className="container">
-        <br/><br />La probabilidad es:<br /><br/>
+        <div className="probabilitytext">La probabilidad es:</div>
              <div className="probabilitybars">
                {probabilityBars}
              </div>
         <p><input type="radio" name="dep" onChange={(ev)=>{
           if(ev.target.checked){
               this.isDeprecated=true
+              this.setState({
+                prob:this.state.prob-1
+              })
                     }
           
           }} /> Consideras el dato desactualizado?  </p>
         <p><input type="radio" name="dep" onChange={(ev)=>{
           if(ev.target.checked){
               this.isDeprecated=false
+              this.setState({
+              prob:this.state.prob+1
+              })
           
           }}}/> Confirmas la veracidad del dato?</p>
-        <button className="sendButton" onClick={()=>{this.updatedDeprecatedLevel(this.state.lat, this.state.lng, this.isDeprecated)}}>Enviar</button>
+        <button className="sendButton" 
+                onClick={()=>{
+                  this.updatedDeprecatedLevel(this.state.lat, this.state.lng, this.isDeprecated)
+                  }}>
+                   
+                    Enviar
+        </button>
       </div>
     </div>
     )
 }
 
-updatedDeprecatedLevel(lat=0,lng=0, isDeprecated=false){
-  console.log(lat+","+lng+"---"+isDeprecated)
-  //axios.post(REACT_APP_POINTS_URI,body{lat,lng,isDeprecated})
-}
-open(lat, lng, deprecated_level){
 
-  this.setState({
-    display:"block",
-    prob:10-deprecated_level,
-    lat,
-    lng
-  })
-}
+  async updatedDeprecatedLevel(lat=0,lng=0, isDeprecated=false){
+    console.log("enviando")
+    try{
+    await axios.put(process.env.REACT_APP_POINTS_URI,{lat,lng,isDeprecated})
+    console.log("--")
+  }catch( err){
+    console.log(err)
+  }
+    }
+  open(lat, lng, deprecated_level){
+
+    this.setState({
+      display:"block",
+      prob:10-deprecated_level,
+      lat,
+      lng
+    })
+  }
 }

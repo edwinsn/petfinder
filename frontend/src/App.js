@@ -1,56 +1,55 @@
 import React, {Component} from 'react';
-import { MapContainer, TileLayer, useMap } from "react-leaflet";
+import { MapContainer, TileLayer, useMap, useMapEvents} from "react-leaflet";
+import L from 'leaflet'
 import Search from "./Search";
 import './assets/App.css';
 import {Animal} from './Animal'
+import {Panel} from './Panel'
+import {About} from './About'
 import axios from 'axios'
-import L from 'leaflet'
 import dogIcon from './assets/images/dogIcon.png'
 import catIcon from './assets/images/catIcon.png'
-import {useMapEvents} from 'react-leaflet'
-import {Panel} from './Panel'
 
-//map centered in the user   location
 
 export class App extends Component{
 
   constructor(props) {
     super(props);
     this.child = React.createRef();
-    this.aux=this.aux.bind(this)
+    this.openPanel=this.openPanel.bind(this)
   }
 
-  aux(lat,lng,deprecated_level){
+  openPanel(lat,lng,deprecated_level){
     this.child.current.open(lat, lng, deprecated_level);
   }
 
-render(){
-  console.log("App rerendered")
+  render(){
+    console.log("App rendered")
 
-  return (
-    <div >
-      <div>
-    <MapContainer id="map" style={{"zIndex":0}} center={{ lat: 5.533, lng: -73.367}} zoom={16} zoomControl={false}>
-      <TileLayer
-        attribution="&copy; <a href='https://osm.org/copyright'>OpenStreetMap</a> contributors"
-        url={"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"}
-      >
-      </TileLayer>
-      <Search />
-      <Animal panelDisplay={this.aux}/>
-      <GetMarkers  open={this.aux} />      
-    </MapContainer>
-    </div>
-    <Panel ref={this.child}/>
-    </div>
-  );
+    return (
+      <div >
+        <div>
+          <MapContainer id="map" style={{"zIndex":0}} center={{ lat: 5.533, lng: -73.367}} zoom={16} zoomControl={false}>
+            <TileLayer
+              attribution="&copy; <a href='https://osm.org/copyright'>OpenStreetMap</a> contributors"
+              url={"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"}>
+            </TileLayer>
+            <Search className="search"/>
+            <Animal panelDisplay={this.openPanel}/>
+            <GetMarkers  open={this.openPanel} />     
+            <About className="about"></About> 
+          </MapContainer>
+        </div>
+      <Panel ref={this.child}/>
+      </div>
+    );
   }
 }
 
 
 let GetMarkers = React.memo((props)=>{
 
- console.log("Get markers redered")
+ console.log("Get markers rendered")
 
   let map = useMap ();
   map.locate()
@@ -65,7 +64,6 @@ let GetMarkers = React.memo((props)=>{
       if(res.status===200){
 
       res.data.forEach(marker => {
-        console.log(marker)
 
         var icon = new L.Icon({
         iconUrl: marker.type==="dog"?dogIcon:catIcon,

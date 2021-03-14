@@ -1,21 +1,34 @@
-.menu {
-    z-index:400
+.Animal{
+  display: flex;
+  bottom: 7%;
+  right: 2%;
+  z-index: 401;
+  position: fixed;
+  align-items: flex-end;
 }
 
-.selector {
-    background-color:white;
+.catOption{
+    background-image: url("./images/catIcon.png"); 
+    background-size: cover;
+}
+
+.cancelMarker{
+    background-color: white;
     border-radius: 50%;
-    height: 10vh;
-    width: 10vh;
-    min-height: 70px;
-    min-width: 70px;
+    display: block;
+    height: 9vh;
+    background-size: cover;
+    margin-bottom: 10px;
 }
 
-.options{
-    height: 0;
-    transition-property: height;
-    transition-duration: 0.5s;
-    overflow:hidden
+.dogOption{
+    background-image: url("./images/dogIcon.png");
+    background-size: cover;
+    
+}
+
+.menu {
+    z-index:402
 }
 
 .menu:hover .options {
@@ -29,22 +42,18 @@
     margin: auto;
 }
 
-.dogOption{
-    background-image: url("./images/dogIcon.png");
-    background-size: cover;
-    
-}
-.catOption{
-    background-image: url("./images/catIcon.png"); 
-    background-size: cover;
+.options{
+    height: 0;
+    transition-property: height;
+    transition-duration: 0.5s;
+    overflow:hidden
 }
 
-.reportMenu{
-   color: rgb(50, 199, 50);
-  display: flex;
-  bottom: 7%;
-  right: 2%;
-  z-index: 400;
-  position: fixed;
-  align-items: flex-end;
+.selector {
+    background-color:white;
+    border-radius: 50%;
+    height: 10vh;
+    width: 10vh;
+    min-height: 70px;
+    min-width: 70px;
 }
