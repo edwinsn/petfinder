@@ -1,0 +1,29 @@
+.about{
+    font-style: italic;
+    border-radius: 10%;
+    height: 10vh;
+    padding: 0 3px 0 3px;
+    font-family: 'Roboto';
+    font-weight: 500;
+    background-color: #F9FFE3;
+    margin-bottom: 5vh;
+    margin-left: 1%;
+}
+.plus{
+    font-weight: 800;
+    color: blue;
+}
+.info{
+    display: none;
+}
+.about:hover .info{
+    display: block;
+}
+.about:hover .infoIcon{
+    display: none;
+}
+.infoIcon{
+   font-size: x-large;
+   margin: 2vh;
+   font-weight: 1000;
+}

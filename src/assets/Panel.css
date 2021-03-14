@@ -1,24 +1,25 @@
 .close{
-    color:red;
-    font-size: 20px;
-    font-weight: 600;
     position: relative;
     float: right;
-    margin-top: 20px;
-    margin-right: 10px;
+    margin-top: 2vh;
+    margin-right: 13px;
+    height: 22px;
 }
+.loading{
+    display: none;
+}
+
 .panel{
-    color:#0543B3;
+    bottom: 0;
     line-height: 10px;
     font-size: 15px;
     font-weight: 500;
     z-index: 400;
-    background-color: white;
-    height: 100vh;
-    width: 25%;
-    position:relative;
+    background-color: #FCFFE4;
+    height: 100%;
+    width: 40vh;
     float: left;
-    position: relative;
+    position: absolute;
     margin-top: -100vh;
     transition-property: width;
     transition-duration: 0.5s;
@@ -39,20 +40,31 @@
     text-align: right;
 }
 .probabilitybars{
-    margin-top: 15px;
-    padding-bottom: 15px;
+    margin-top: 25px;
+    margin-bottom:25px;
+    border: 3px solid #C2C2C3
 }
 
 .probabilitybars>*{
    display: inline-block;
-   height: 30px;
-   width: 20px;
+   width: 10%;
+   height: 3.5vh;
+   box-sizing: border-box;
+   border-left:1px solid #c2c2c3;
 }
 .sendButton{
+    text-align: center;
     color:#37B258;
     font-weight: 600;
     border: 1px solid #37B258;
     border-radius: 18%;
     height: 40px;
     float: right;
+    margin-top: 5px;
+    width:26% ;
+
+}
+.probabilitytext{
+    font-size: medium;
+    font-weight: 550;
 }
