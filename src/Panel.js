@@ -11,7 +11,8 @@ export class Panel extends Component{
       display:"none",
       prob:"10",
       lat:0,
-      lng:0
+      lng:0,
+      loading:false
     }
     this.updatedDeprecatedLevel=this.updatedDeprecatedLevel.bind(this)
     this.open=this.open.bind(this)
@@ -20,7 +21,7 @@ export class Panel extends Component{
   
   render(){
 
-    console.log("Panel rendered")
+  console.log("Panel rendered")
 
   let probabilityBars = []
   for(let i=0;i<10;i++){
@@ -50,7 +51,7 @@ export class Panel extends Component{
           if(ev.target.checked){
               this.isDeprecated=true
               this.setState({
-                prob:this.state.prob-1
+                prob:this.state.prob<=1?1:this.state.prob-1
               })
                     }
           
@@ -59,27 +60,34 @@ export class Panel extends Component{
           if(ev.target.checked){
               this.isDeprecated=false
               this.setState({
-              prob:this.state.prob+1
+              prob:this.state.prob<10?this.state.prob+1:10
               })
           
           }}}/> Confirmas la veracidad del dato?</p>
         <button className="sendButton" 
                 onClick={()=>{
+                  this.setState({loading:true})
                   this.updatedDeprecatedLevel(this.state.lat, this.state.lng, this.isDeprecated)
                   }}>
-                   
-                    Enviar
+                   {this.state.loading&&<div class="loader"></div>}
+                   {!this.state.loading&&<span>Enviar</span>}
+
         </button>
       </div>
+     {this.state.excessOfRevitions&& <p className="excess">
+        No puedes incrementar o disminuir la probabilidad más de una vez
+      </p>}
     </div>
     )
 }
 
 
   async updatedDeprecatedLevel(lat=0,lng=0, isDeprecated=false){
+    
     console.log("enviando")
     try{
     await axios.put(process.env.REACT_APP_POINTS_URI,{lat,lng,isDeprecated})
+    this.setState({loading:false})
     console.log("--")
   }catch( err){
     console.log(err)
@@ -91,7 +99,8 @@ export class Panel extends Component{
       display:"block",
       prob:10-deprecated_level,
       lat,
-      lng
+      lng,
+   
     })
   }
 }

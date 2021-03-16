@@ -85,3 +85,18 @@ let GetMarkers = React.memo((props)=>{
    return null
 }
 )
+
+let GetMarkersbyLocation = ()=>{
+
+  let lat,lng = [0,0]
+  let earthRadious = 6371
+  let relativeRadious = earthRadious*Math.cos(lat)
+  let markslng = 10/relativeRadious
+  let markslat = 10/earthRadious
+  /*axios.get(process.env.REACT_APP_POINTS_URI,*/
+    console.log({minlat:lat-markslat,
+     maxlat:lat+markslat,
+     minlng:lng-markslng,
+     maxlng:lng+markslng
+    })
+}
