@@ -5,8 +5,24 @@
     margin-right: 13px;
     height: 22px;
 }
-.loading{
-    display: none;
+.excess{
+    color: red;
+    border-radius: 10%;
+    background-color: rgb(236, 124, 79);
+}
+.loader {
+  border: 10px solid #f3f3f3; /* Light grey */
+  border-top:7px solid #37B258; /* Blue */
+  border-radius: 50%;
+  width: 30%;
+  height: 30%;
+  animation: spin 2s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .panel{
