@@ -69,7 +69,7 @@ export class Panel extends Component{
                   this.setState({loading:true})
                   this.updatedDeprecatedLevel(this.state.lat, this.state.lng, this.isDeprecated)
                   }}>
-                   {this.state.loading&&<div class="loader"></div>}
+                   {this.state.loading&&<div className="loader"></div>}
                    {!this.state.loading&&<span>Enviar</span>}
 
         </button>

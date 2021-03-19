@@ -1,15 +1,8 @@
 .Animal{
   display: flex;
-  bottom: 7%;
-  right: 2%;
   z-index: 401;
   position: fixed;
   align-items: flex-end;
-}
-
-.catOption{
-    background-image: url("./images/catIcon.png"); 
-    background-size: cover;
 }
 
 .cancelMarker{
@@ -21,20 +14,12 @@
     margin-bottom: 10px;
 }
 
-.dogOption{
-    background-image: url("./images/dogIcon.png");
-    background-size: cover;
-    
-}
-
-.menu {
-    z-index:402
-}
-
 .menu:hover .options {
     height: 19.5vh;
 }
-.options div{
+
+.options img{
+    display: block;
     background-color: rgb(250, 111, 204);
     border-radius: 50%;
     width: 9vh;
@@ -54,6 +39,6 @@
     border-radius: 50%;
     height: 10vh;
     width: 10vh;
-    min-height: 70px;
-    min-width: 70px;
+    min-height: 65px;
+    min-width: 65px;
 }

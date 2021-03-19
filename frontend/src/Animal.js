@@ -4,13 +4,13 @@ import {Form} from './Form'
 import L from 'leaflet'
 import './assets/Animal.css'
 import axios from 'axios'
-import dogIcon from './assets/images/dogIcon.png'
-import catIcon from './assets/images/catIcon.png'
+import dogIcon from './assets/images/dogIcon.svg'
+import catIcon from './assets/images/catIcon.svg'
 import sendButtonIcon from './assets/images/SendButton.svg'
 import plusIcon from './assets/images/plus.svg'
 import closeIcon from './assets/images/closeIcon.svg'
-import activeDog from './assets/images/activeDog.png'   
-import activeCat from './assets/images/activeCat.png'   
+import activeDog from './assets/images/activeDog.svg'
+import activeCat from './assets/images/activeCat.svg'   
 
 
 let activeMarker = false
@@ -33,7 +33,8 @@ export let Animal=React.memo((props)=>{
     let typesOfAnimals = ["dog","cat"];
     const animalList = typesOfAnimals.map(
         (animalType)=>(
-            <div
+            <img
+                src={animalType=="dog"?dogIcon:catIcon}
                 key={animalType}
                 className = {[animalType+"Option"]}
 
@@ -52,7 +53,7 @@ export let Animal=React.memo((props)=>{
                     changeShowCancel(true)    
                 }
                 }>
-            </div>
+            </img>
         )
     );
 
