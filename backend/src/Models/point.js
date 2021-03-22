@@ -5,8 +5,8 @@ const pointSchema = new Schema({
         lat:{type:Number,require:true},
         lng:{type:Number,require:true},
         type:{type:String, require:true},
-        frecuence:{type:String, require:true},
-        deprecated_level:{type:Number}  
+        frecuence:{type:Number, require:true},
+        initialFrecuence:{type: Number, require:true}
     },
     {
         timestamps:true

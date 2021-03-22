@@ -36,7 +36,7 @@ pointsControllers.postPoint = async (req, res)=>{
                 lng,
                 type,
                 frecuence,
-                deprecated_level:9-2*frecuence
+                initialFrecuence: frecuence
             })
             await newPoint.save();
             
@@ -60,40 +60,38 @@ pointsControllers.updatePoint = async (req,res) =>{
 
 
     let deleteOption = false;
-    let newDeprecatedLevel
+    let newFrecuence
     try{
-        newDeprecatedLevel = pointToUpdate.deprecated_level+(isDeprecated?1:-1)
+        newFrecuence = pointToUpdate.frecuence+(isDeprecated?-0.5:1)
     }
     catch(err){
         console.log("Err")
-        newDeprecatedLevel = 0
+        newFrecuence = 5
     }
-    if(newDeprecatedLevel>0 && newDeprecatedLevel<10 ){
-      await pointModel.updateOne( {lat,lng},{deprecated_level:newDeprecatedLevel} );
+    newFrecuence=newFrecuence>5?5:newFrecuence
+    if(newFrecuence>=0){
+      await pointModel.updateOne( {lat,lng},{frecuence:newFrecuence} );
       res.json({mesagge:"Point updated!"})
-    }else if(deleteOption&&newDeprecatedLevel==0){
-      const {type, frecuence, deprecated_level, id} = pointToUpdate
-      await deletePoint(id, lat, lng, type, frecuence, deprecated_level);
+    }else if(deleteOption&&newFrecuence==0){
+      const {type, initialFrecuence, id} = pointToUpdate
+      await deletePoint(id, lat, lng, type, initialFrecuence);
       console.log(id)
       res.json({message:"point deleted!"})
     }
-    else if(newDeprecatedLevel==0)res.json({message:"cant increase more the certainty of the data"})
+    else if(newFrecuence==0)res.json({message:"cant increase more the certainty of the data"})
     else res.json({message:"can decrease more the certainty of the data"})
-        
 }
 
-deletePoint = async (id,lat,lng,type,frecuence,deprecated_level)=>{
+deletePoint = async (id,lat,lng,type,initialFrecuence)=>{
     //move to a back up and deprecated database
 
     const deprecatedPoint = await pointModel.findByIdAndDelete(id)
-
 
     const newPoint = new backupPointModel({
             lat,
             lng,
             type,
-            frecuence,
-            deprecated_level
+            intitialFrecuence
             })
     await newPoint.save();
 }

@@ -2,6 +2,12 @@ import {Component} from 'react'
 import './assets/Panel.css'
 import axios from 'axios'
 import closeIcon from './assets/images/closeIcon.svg'
+import {editFrecuences} from './GetMarkers'
+
+let actualCoords
+let actualFrecuence
+let previousOptio1key
+let previousOptio2key
 
 export class Panel extends Component{
 
@@ -14,7 +20,7 @@ export class Panel extends Component{
       lng:0,
       loading:false
     }
-    this.updatedDeprecatedLevel=this.updatedDeprecatedLevel.bind(this)
+    this.updatedFrecuence=this.updatedFrecuence.bind(this)
     this.open=this.open.bind(this)
     this.isDeprecated=false
   }
@@ -40,6 +46,7 @@ export class Panel extends Component{
               this.setState({
                 display:"none"
               })
+
             }
              }/>
       <div className="container">
@@ -47,27 +54,31 @@ export class Panel extends Component{
              <div className="probabilitybars">
                {probabilityBars}
              </div>
-        <p><input type="radio" name="dep" onChange={(ev)=>{
+        <p><input type="radio" name="dep" 
+        key={previousOptio1key}
+        onChange={(ev)=>{
           if(ev.target.checked){
               this.isDeprecated=true
               this.setState({
-                prob:this.state.prob<=1?1:this.state.prob-1
+                prob:actualFrecuence<=1?1:2*actualFrecuence-1
               })
-                    }
+          }
           
           }} /> Consideras el dato desactualizado?  </p>
-        <p><input type="radio" name="dep" onChange={(ev)=>{
+        <p><input type="radio" name="dep" 
+      key={previousOptio2key}
+        onChange={(ev)=>{
           if(ev.target.checked){
               this.isDeprecated=false
               this.setState({
-              prob:this.state.prob<10?this.state.prob+1:10
+              prob:this.state.prob<9?2*actualFrecuence+2:10
               })
           
           }}}/> Confirmas la veracidad del dato?</p>
         <button className="sendButton" 
                 onClick={()=>{
                   this.setState({loading:true})
-                  this.updatedDeprecatedLevel(this.state.lat, this.state.lng, this.isDeprecated)
+                  this.updatedFrecuence(this.state.lat, this.state.lng, this.isDeprecated)
                   }}>
                    {this.state.loading&&<div className="loader"></div>}
                    {!this.state.loading&&<span>Enviar</span>}
@@ -82,25 +93,34 @@ export class Panel extends Component{
 }
 
 
-  async updatedDeprecatedLevel(lat=0,lng=0, isDeprecated=false){
-    
+  async updatedFrecuence(lat=0,lng=0, isDeprecated=false){
+    if(isDeprecated){
+      editFrecuences(actualFrecuence-0.5, actualCoords)
+    }
+    else{
+      editFrecuences(actualFrecuence+1, actualCoords)
+    }
     console.log("enviando")
     try{
     await axios.put(process.env.REACT_APP_POINTS_URI,{lat,lng,isDeprecated})
     this.setState({loading:false})
-    console.log("--")
+    console.log("Dato Actualizado")
   }catch( err){
     console.log(err)
   }
     }
-  open(lat, lng, deprecated_level){
+  open(lat, lng, data){
+    console.log(data.frecuence)
+    actualCoords=lat+""+lng
+    actualFrecuence = data.frecuence
+    previousOptio1key=Math.random()
+    previousOptio2key=Math.random()
 
     this.setState({
       display:"block",
-      prob:10-deprecated_level,
+      prob:2*actualFrecuence,
       lat,
-      lng,
-   
+      lng
     })
   }
 }
