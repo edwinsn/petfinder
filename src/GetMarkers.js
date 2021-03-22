@@ -1,11 +1,10 @@
-
 import axios from 'axios'
 import dogIcon from './assets/images/dogIcon.svg'
 import catIcon from './assets/images/catIcon.svg'
 import {useMap} from "react-leaflet";
-import L from 'leaflet'
+import L, { Marker } from 'leaflet'
 
-let markersLoaded = [[1,2]]
+let markersLoaded = [{coordinates:"0"}]
 
 export let GetMarkers = (props)=>{
     console.log("Get markers render")
@@ -15,9 +14,16 @@ export let GetMarkers = (props)=>{
         getp(map, props)
      })
 
+     //hacer las peticiones solo en zoomout
+  let actualZoom = map.getZoom()
   map.on('zoomend', ()=>{
+    if (map.getZoom()<actualZoom){
         getp(map, props)
-  })
+        actualZoom=map.getZoom()
+      }
+    
+  }
+  )
   return null
 }
 
@@ -30,23 +36,18 @@ let getp = (map, props)=>{
     let lowerlng = _southWest.lng-0.1*diff
     let upperlng = _northEast.lng+0.1*diff
 
-    console.log({    
-      lowerlat,
-      upperlat,
-      lowerlng,
-      upperlng,diff,lat: _northEast.lng})
-
+    let coordsLoaded = Object.keys(markersLoaded)
     axios.get(process.env.REACT_APP_POINTS_URI,{
       params:{    
       lowerlat,
       upperlat,
       lowerlng,
       upperlng,
-      markersLoaded  }}).then((res)=>{
+      markersLoaded:coordsLoaded
+    }}).then((res)=>{
         if(res.status===200){
         console.log("ok")  
-        res.data.forEach(marker => {
-          console.log({mlat:marker.lat, mlng:marker.lng})
+        res.data.forEach((marker, index) => {
           var icon = new L.Icon({
           iconUrl: marker.type==="dog"?dogIcon:catIcon,
 
@@ -55,14 +56,31 @@ let getp = (map, props)=>{
 
           let newmarker = L.marker({lat:marker.lat,lng:marker.lng},{icon});
           newmarker.addTo(map)
+          
           newmarker.on("click",()=>{
-            props.open(marker.lat, marker.lng, marker.deprecated_level)
+            props.open(marker.lat, marker.lng,{frecuence:markersLoaded[marker.lat+""+marker.lng].frecuence})
           })
-          markersLoaded.push(marker.lat+""+marker.lng)
+          markersLoaded[marker.lat+""+marker.lng]={frecuence:marker.frecuence}
+        
         });
         }else{
           console.log("Db error")
         } 
       })
 
+}
+
+export let editFrecuences = (frecuence, coords, newMark=false)=>{
+  frecuence=frecuence>=5?5:frecuence
+  if(newMark){
+    frecuence = frecuence>10?10:frecuence
+    markersLoaded[coords]={frecuence:frecuence}
+
+  }
+  else{
+    markersLoaded[coords].frecuence = frecuence
+  }
+}
+export let getFrecuence = (coords)=>{
+  return markersLoaded[coords].frecuence
 }

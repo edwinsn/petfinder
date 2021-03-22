@@ -2,6 +2,7 @@ import React, {useState} from 'react'
 import {useMap} from 'react-leaflet'
 import {Form} from './Form'
 import L from 'leaflet'
+import {editFrecuences, getFrecuence} from "./GetMarkers";
 import './assets/Animal.css'
 import axios from 'axios'
 import dogIcon from './assets/images/dogIcon.svg'
@@ -14,21 +15,18 @@ import activeCat from './assets/images/activeCat.svg'
 
 
 let activeMarker = false
-let markSendit = false
 let markerActive = false
+const frecuence = {frecuence:4};
 
 export let Animal=React.memo((props)=>{
-    console.log("animal rerendered")
+    console.log("Animal rerendered")
     const [reportIcon,reportIconchange] = useState(plusIcon);
     const [coordinates,changeCoordinates] = useState();
     const [type, changeType] = useState();
     const [formDisplay, changeFormDisplay] = useState("none") 
     const [showCancel, changeShowCancel] = useState(false)
-    const frecuence = {frecuence:1};
-
 
     let map = useMap()
-
 
     let typesOfAnimals = ["dog","cat"];
     const animalList = typesOfAnimals.map(
@@ -42,14 +40,14 @@ export let Animal=React.memo((props)=>{
                 onDragEnd={(ev)=>{
                     changeFormDisplay("block")
                     changeType(animalType);
-                    addMark(reportIconchange, map, animalType, changeCoordinates, props.panelDisplay, ev)
+                    addMark(reportIconchange, map, animalType, changeCoordinates, props.panelDisplay, frecuence, ev)
                     changeShowCancel(true)  
                 }
                 }
                 onClick={()=>{
                     changeFormDisplay("block")
                     changeType(animalType);
-                    addMark(reportIconchange, map, animalType, changeCoordinates, props.panelDisplay)
+                    addMark(reportIconchange, map, animalType, changeCoordinates, props.panelDisplay,frecuence)
                     changeShowCancel(true)    
                 }
                 }>
@@ -58,28 +56,36 @@ export let Animal=React.memo((props)=>{
     );
 
     return (<div className="Animal">
-            <Form display={formDisplay} frecuence = {frecuence}/>
-            <div className="menu">
-                {!showCancel&&
-                <div className="options">
-                    {animalList}
-                </div>}
-                {showCancel&&<img src={closeIcon} alt="Cancel Mark" className="cancelMarker" onClick={()=>{cancelMarker(changeShowCancel, changeFormDisplay, reportIconchange)}} />}
-                <img    alt="Report an animal living in the street"
-                        className="selector"
-                        onClick={()=>{
-                            sendPoint(reportIconchange, coordinates, type, changeFormDisplay, frecuence, changeShowCancel)}} 
-                        src={reportIcon}
-                />
-            </div>    
+                <Form display={formDisplay} frecuence = {frecuence}/>
+                <div className="menu">
+                    {!showCancel&&
+                        <div className="options">
+                            {animalList}
+                        </div>
+                    }
+                    {showCancel&&
+                        <img src={closeIcon} 
+                            alt="Cancel Mark" 
+                            className="cancelMarker"
+                            onClick={()=>{
+                                cancelMarker(changeShowCancel, changeFormDisplay, reportIconchange)}
+                        }/>
+                    }
+                    <img    alt="Report an animal living in the street"
+                            className="selector"
+                            onClick={()=>{
+                                sendPoint(reportIconchange, coordinates, type, changeFormDisplay, frecuence, changeShowCancel)}} 
+                            src={reportIcon}
+                    />
+                </div>    
             </div>        
         )
 }
 )
  
-function addMark(reportIconchange, map, type, changeCoordinates, panelDisplay, ev={clientX:false}){
+function addMark(reportIconchange, map, type, changeCoordinates, panelDisplay, frecuence, ev={clientX:false}){
  
-    markSendit=false
+
     markerActive=true
     if(activeMarker){map.removeLayer(activeMarker)}
 
@@ -96,10 +102,10 @@ function addMark(reportIconchange, map, type, changeCoordinates, panelDisplay, e
         changeCoordinates(marker.getLatLng())
         })
         
-    marker.on('click',(e)=>{
-        if(markSendit){
-        let {lat,lng} = coordinates
-        panelDisplay(lat, lng, 1)
+    marker.on('click',()=>{
+        if(!markerActive){
+        let {lat,lng} = marker.getLatLng()
+        panelDisplay(lat, lng, {frecuence:getFrecuence(lat+""+lng)})
         }
     })
 
@@ -121,9 +127,9 @@ async function sendPoint(changesendBackgorund, coordinates, type, changeFormDisp
         changesendBackgorund(plusIcon);
         changeFormDisplay("none")
         changeShowCancel(false)
+        editFrecuences(frecuence.frecuence, coordinates.lat+""+coordinates.lng, true)
         let {status}=await axios.post(process.env.REACT_APP_POINTS_URI,{coords:coordinates, type, frecuence:frecuence.frecuence})
         console.log(status===200?"Dato registrado":"Error en el envio del punto")
-        markSendit=true
         markerActive=false
         }
 }
