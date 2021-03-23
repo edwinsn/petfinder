@@ -50,7 +50,7 @@ export class Panel extends Component{
             }
              }/>
       <div className="container">
-        <div className="probabilitytext">La probabilidad es:</div>
+        <div className="probabilitytext">La probabilidad de que le encuentres allí es:</div>
              <div className="probabilitybars">
                {probabilityBars}
              </div>
@@ -103,7 +103,7 @@ export class Panel extends Component{
     console.log("enviando")
     try{
     await axios.put(process.env.REACT_APP_POINTS_URI,{lat,lng,isDeprecated})
-    this.setState({loading:false})
+    this.setState({loading:false, display:"none"})
     console.log("Dato Actualizado")
   }catch( err){
     console.log(err)
