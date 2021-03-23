@@ -1,14 +1,23 @@
 import axios from 'axios'
 import dogIcon from './assets/images/dogIcon.svg'
 import catIcon from './assets/images/catIcon.svg'
-import {useMap} from "react-leaflet";
+import {useMap, useMapEvents} from "react-leaflet";
 import L, { Marker } from 'leaflet'
 
 let markersLoaded = [{coordinates:"0"}]
 
 export let GetMarkers = (props)=>{
     console.log("Get markers render")
-  let map = useMap();
+
+  let map = useMap ();
+  map.locate()
+
+  useMapEvents({
+    locationfound(e) {
+      map.panTo(e.latlng, map.getZoom())
+    }
+  })
+
   getp(map, props)
   map.on('dragend', ()=>{
         getp(map, props)
@@ -61,7 +70,6 @@ let getp = (map, props)=>{
             props.open(marker.lat, marker.lng,{frecuence:markersLoaded[marker.lat+""+marker.lng].frecuence})
           })
           markersLoaded[marker.lat+""+marker.lng]={frecuence:marker.frecuence}
-        
         });
         }else{
           console.log("Db error")
