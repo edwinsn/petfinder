@@ -10,15 +10,17 @@ export let GetMarkers = (props)=>{
     console.log("Get markers render")
 
   let map = useMap ();
+
   map.locate()
 
-  useMapEvents({
-    locationfound(e) {
+  getp(map, props)
+
+  map.on('locationfound',(e)=>{
+
       map.panTo(e.latlng, map.getZoom())
-    }
+      getp(map, props)
   })
 
-  getp(map, props)
   map.on('dragend', ()=>{
         getp(map, props)
      })
