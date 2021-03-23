@@ -50,12 +50,15 @@ export class Panel extends Component{
             }
              }/>
       <div className="container">
-        <div className="probabilitytext">La probabilidad de que le encuentres allí es:</div>
+        <p className="probabilitytext">La probabilidad de que le encuentres allí es:</p>
              <div className="probabilitybars">
                {probabilityBars}
              </div>
-        <p><input type="radio" name="dep" 
+        <p>
+         
+        <input type="radio" name="dep"
         key={previousOptio1key}
+        id="decrementProb"
         onChange={(ev)=>{
           if(ev.target.checked){
               this.isDeprecated=true
@@ -63,18 +66,23 @@ export class Panel extends Component{
                 prob:actualFrecuence<=1?1:2*actualFrecuence-1
               })
           }
-          
-          }} /> Consideras el dato desactualizado?  </p>
-        <p><input type="radio" name="dep" 
+          }} />  
+          <label for="decrementProb">Consideras el dato desactualizado?</label> 
+          </p>
+        <p>
+          <input type="radio" 
+          id="incrementProb"
+          name="dep" 
       key={previousOptio2key}
         onChange={(ev)=>{
           if(ev.target.checked){
               this.isDeprecated=false
               this.setState({
               prob:this.state.prob<9?2*actualFrecuence+2:10
-              })
-          
-          }}}/> Confirmas la veracidad del dato?</p>
+              })   
+          }}}/>
+          <label for="incrementProb">Confirmas la veracidad del dato?</label>
+          </p>
         <button className="sendButton" 
                 onClick={()=>{
                   this.setState({loading:true})
