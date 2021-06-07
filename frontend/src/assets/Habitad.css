@@ -1,0 +1,20 @@
+.habitadCircle{
+    border: 1px solid blue;
+    padding: 20px;
+    z-index: 6;
+}
+.markerContainer{
+    height: 100%;
+    width: 100vw;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    z-index: 6;
+    border: box;
+    bottom: 0;
+    z-index: -401;
+}
+
+.marker{
+    height: 6vh;
+}

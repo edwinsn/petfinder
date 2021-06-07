@@ -4,6 +4,7 @@
     margin-top: 2vh;
     height: 8vh;
     min-height: 20px;
+    cursor: pointer;
 }
 
 .excess{

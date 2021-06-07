@@ -1,7 +1,7 @@
 .Animal{
   display: flex;
   z-index: 401;
-  position: fixed;
+  position: absolute;
   align-items: flex-end;
 }
 
@@ -18,6 +18,10 @@
 
 .menu:hover .options {
     height: 19.5vh;
+}
+
+.menu{
+    z-index: 6;
 }
 
 .options img{
