@@ -67,7 +67,7 @@ export class Panel extends Component{
               })
           }
           }} />  
-          <label for="decrementProb">Consideras el dato desactualizado?</label> 
+          <label htmlFor="decrementProb">Consideras el dato desactualizado?</label> 
           </p>
         <p>
           <input type="radio" 
@@ -81,7 +81,7 @@ export class Panel extends Component{
               prob:this.state.prob<9?2*actualFrecuence+2:10
               })   
           }}}/>
-          <label for="incrementProb">Confirmas la veracidad del dato?</label>
+          <label htmlFor="incrementProb">Confirmas la veracidad del dato?</label>
           </p>
         <button className="sendButton" 
                 onClick={()=>{
@@ -118,7 +118,6 @@ export class Panel extends Component{
   }
     }
   open(lat, lng, data){
-    console.log(data.frecuence)
     actualCoords=lat+""+lng
     actualFrecuence = data.frecuence
     previousOptio1key=Math.random()

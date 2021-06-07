@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
-import { MapContainer, TileLayer, ZoomControl} from "react-leaflet";
+import { MapContainer, TileLayer, useMap, ZoomControl} from "react-leaflet";
 import Search from "./Search";
 import './assets/App.css';
 import {Animal} from './Animal'
 import {Panel} from './Panel'
 import {About} from './About'
 import {GetMarkers} from './GetMarkers'
+
 
 
 
