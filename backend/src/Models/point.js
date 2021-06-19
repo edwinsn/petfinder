@@ -7,8 +7,7 @@ const pointSchema = new Schema({
         type:{type:String, require:true},
         frecuence:{type:Number, require:true},
         initialFrecuence:{type: Number, require:true},
-        habitadx:{type:Number,require},
-        habitady:{type:Number,require}
+        range:{type:Number,require}
     },
     {
         timestamps:true

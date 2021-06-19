@@ -28,8 +28,7 @@ pointsControllers.postPoint = async (req, res)=>{
     try{
         const {coords, type, frecuence,range} = req.body;
         const {lat, lng} = coords;
-        const habitadx=range.lat
-        const habitady=range.lng
+      
 
         console.log(req.body.frecuence)
         if(type.length&&frecuence&&lat&&lng){
@@ -40,8 +39,7 @@ pointsControllers.postPoint = async (req, res)=>{
                 type,
                 frecuence,
                 initialFrecuence: frecuence,
-                habitadx,
-                habitady
+                range,
             })
             await newPoint.save();
             

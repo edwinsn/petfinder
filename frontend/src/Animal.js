@@ -1,4 +1,4 @@
-import React, { Component, createElement, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useMap } from 'react-leaflet'
 import { Form } from './Form'
 import L from 'leaflet'
@@ -14,39 +14,15 @@ import closeIcon from './assets/images/closeIcon.svg'
 
 
 let activeMarker = false
-let isanymarkerActive = false
-let previousCenter
+
 
 const frecuence = { frecuence: 4 };
 
 export let Animal = (props) => {
 
     let map = useMap()
-    useEffect(() => {
-        previousCenter = map.getCenter()
-
-        let recalculateCoords = () => {
-            let dify = previousCenter.lat - map.getCenter().lat
-            let difx = previousCenter.lng - map.getCenter().lng
-
-
-            setMarkerCoords((pre) => {
-                previousCenter = map.getCenter()
-                return {
-                    center: { lat: pre.center.lat - dify, lng: pre.center.lng - difx },
-                    range: { x: pre.range.x - dify, y: pre.range.y - difx }
-                }
-            })
-        }
-
-        map.on('dragend', recalculateCoords)
-        map.on('locationfound', recalculateCoords)
-        map.on('zoom', recalculateCoords)
-
-    }, [])
 
     console.log("Animal rerendered")
-
 
 
     let initiailCoords = map.containerPointToLatLng(map.latLngToContainerPoint(map.getCenter()))
@@ -79,6 +55,7 @@ export let Animal = (props) => {
 
 
     return (<div className="Animal">
+        <div style={{ top: "-50px" }}></div>
         <Form display={formDisplay} frecuence={frecuence} />
         <Habitad
             habitadVisible={areoptionsActive}
@@ -103,7 +80,7 @@ export let Animal = (props) => {
                 className="selector"
                 onClick={() => {
                     sendPoint(togleAreoptionsActive,
-                        type, changeFormDisplay, frecuence,
+                        type, changeFormDisplay,formDisplay, frecuence,
                         props.panelDisplay, map, markerCoords)
                 }}
                 src={areoptionsActive ? sendButtonIcon : plusIcon}
@@ -116,24 +93,27 @@ export let Animal = (props) => {
 
 function addMark(togleAreoptionsActive, map, setMarkerCoords) {
 
-    isanymarkerActive = true
     let center = map.latLngToContainerPoint(map.getCenter())
     if (activeMarker) { map.removeLayer(activeMarker) }
 
-    setMarkerCoords((prev) => {
+    setMarkerCoords(() => {
+        let border = map.containerPointToLatLng({ x: center.x + 75, y: center.y })
+        center = map.getCenter()
+        let range = map.distance(center, border)
         return {
-            center: map.getCenter(),
-            range: map.containerPointToLatLng({ x: center.x + 75, y: center.y + 75 })
+            center: center,
+            range
         }
     })
     togleAreoptionsActive(true)
 }
 
 async function sendPoint(togleAreoptionsActive, type,
-    changeFormDisplay, frecuence,
+    changeFormDisplay, formularyDisplay,frecuence,
     panelDisplay, map, markerCoords) {
 
-    if (isanymarkerActive) {
+
+    if (formularyDisplay==="block") {
         let icon = L.icon({
             iconUrl: type === "dog" ? dogIcon : catIcon,
             iconSize: [38, 38]
@@ -141,19 +121,20 @@ async function sendPoint(togleAreoptionsActive, type,
 
 
         let marker = L.marker(markerCoords.center, {
-            icon: icon, draggable
-                : "true"
+            icon: icon
         });
 
         marker.on('click', () => {
-
-            if (!isanymarkerActive) {
+            console.log(activeMarker)
+            if (!activeMarker) {
                 let { lat, lng } = marker.getLatLng()
+                console.log("oppening")
                 panelDisplay(lat, lng, { frecuence: getFrecuence(lat + "" + lng) })
             }
         })
 
         marker.addTo(map)
+        L.circle(markerCoords.center, { radius: markerCoords.range }).addTo(map);
         activeMarker = false;
 
 
@@ -170,7 +151,7 @@ async function sendPoint(togleAreoptionsActive, type,
                 range: markerCoords.range
             })
             console.log(status === 200 ? "Dato registrado" : "Error en el envio del punto")
-            isanymarkerActive = false
+
         } catch (err) {
             console.log(err)
         }
@@ -181,5 +162,4 @@ function cancelMarker(changeFormDisplay, togleAreoptionsActive) {
 
     changeFormDisplay("none")
     togleAreoptionsActive(false)
-    isanymarkerActive = false
 }

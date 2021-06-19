@@ -70,12 +70,15 @@ let getp = (map, props) => {
         iconSize: [37, 37]
       })
 
-      res.data.forEach((marker, index) => {
-
+      res.data.forEach((marker) => {
 
         let newmarker = L.marker({ lat: marker.lat, lng: marker.lng },
           { icon: marker.type === "dog" ? dogIconM : catIconM });
         newmarker.addTo(map)
+        
+        if (marker.range) {
+          L.circle({ lat: marker.lat, lng: marker.lng }, { radius: marker.range }).addTo(map);
+        }
 
         newmarker.on("click", () => {
           props.open(marker.lat, marker.lng, { frecuence: markersLoaded[marker.lat + "" + marker.lng].frecuence })
