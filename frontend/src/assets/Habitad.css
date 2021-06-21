@@ -1,0 +1,44 @@
+
+.markerContainer{
+    height: 100%;
+    width: 100vw;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    z-index: 6;
+}
+
+.borderball {
+    border-radius: 50%;
+    background-color: #37B258;
+    width: 15px;
+    height: 15px;
+    position: absolute;
+}
+
+.borderballcontainer{
+    min-width: 100%;
+    min-height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.top{
+    top: -7px;
+}
+.bottom{
+    bottom: -7px;
+}
+
+.left{
+    left: -7px;
+}
+
+.right{
+    right: -7px;
+}
+
+.marker{
+    height: 37px;
+}
