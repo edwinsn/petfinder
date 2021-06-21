@@ -1,5 +1,4 @@
 import './assets/uploadPhotos.css'
-import S3 from 'react-aws-s3'
 import closeIcon from './assets/images/closeIcon.svg'
 import { useState } from 'react'
 
