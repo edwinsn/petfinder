@@ -1,47 +1,81 @@
-.Animal{
-  display: flex;
-  z-index: 401;
-  position: absolute;
-  align-items: flex-end;
+.Animal {
+    display: flex;
+    z-index: 401;
+    position: absolute;
+    align-items: flex-end;
 }
 
-.cancelMarker{
-    background-color: white;
-    border-radius: 50%;
-    display: block;
-    height: 9vh;
-    min-width: 60px;
-    min-height: 60px;
-    background-size: cover;
-    margin-bottom: 10px;
-}
-
-.menu:hover .options {
-    height: 19.5vh;
-}
-
-.menu{
-    z-index: 6;
-}
-
-.options img{
+.animalOptions img {
     display: block;
     background-color: rgb(250, 111, 204);
     border-radius: 50%;
     width: 9vh;
-    height:9vh;
+    height: 9vh;
     margin: auto;
 }
 
-.options{
+.animalOptions {
     height: 0;
     transition-property: height;
     transition-duration: 0.5s;
-    overflow:hidden
+    overflow: hidden
+}
+
+.cameraIcon {
+    margin-bottom: 33%;
+    overflow: hidden;
+    display: flex !important;
+    align-items: center;
+}
+
+.cameraIcon>input {
+    display: none;
+}
+
+.cameraIcon>img {
+    width: 100%;
+}
+
+.cancelMarker {
+    margin-bottom: 10%;
+}
+
+.invalidRange {
+    color: rgb(230, 94, 53);
+    position: fixed;
+    top: 2%;
+    right: 10%;
+    font-size: 1.3em;
+    font-weight: bolder;
+    border-radius: 10px;
+    background-color: seashell;
+    width: 80%;
+    max-width: 10cm;
+    text-align: center;
+    padding: 10px;
+}
+
+.menu:hover .animalOptions {
+    height: 19.5vh;
+}
+
+.menu {
+    z-index: 6;
+}
+
+.options>img, .options>label {
+    display: block;
+    background-color: white;
+    border-radius: 50%;
+    height: 9vh;
+    width: 9vh;
+    min-width: 60px;
+    min-height: 60px;
+    background-size: cover;
 }
 
 .selector {
-    background-color:white;
+    background-color: white;
     border-radius: 50%;
     height: 10vh;
     width: 10vh;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { useMap } from 'react-leaflet'
 import { Form } from './Form'
 import L from 'leaflet'
@@ -11,10 +11,10 @@ import catIcon from './assets/images/catIcon.svg'
 import sendButtonIcon from './assets/images/SendButton.svg'
 import plusIcon from './assets/images/plus.svg'
 import closeIcon from './assets/images/closeIcon.svg'
-
+import { UploadPhoto } from './UploadPhoto'
+import cameraIcon from './assets/images/cameraIcon.svg'
 
 let activeMarker = false
-
 
 const frecuence = { frecuence: 4 };
 
@@ -27,10 +27,13 @@ export let Animal = (props) => {
 
     let initiailCoords = map.containerPointToLatLng(map.latLngToContainerPoint(map.getCenter()))
 
-    const [areoptionsActive, togleAreoptionsActive] = useState(false)
+    const [options, setOptions] = useState({ active: false, miniature: undefined })
+    //use useRef for no rendering data
     const [type, changeType] = useState();
-    const [formDisplay, changeFormDisplay] = useState("none")
     const [markerCoords, setMarkerCoords] = useState({ center: initiailCoords, range: 0 })
+    //
+    const [uploadPhotoWindow, togleUploadPhotoWindow] = useState(undefined)
+    const [isRangeInvalid, setIsRangeInvalid] = useState(false)
 
 
     let typesOfAnimals = ["dog", "cat"];
@@ -40,13 +43,11 @@ export let Animal = (props) => {
                 src={animalType == "dog" ? dogIcon : catIcon}
                 key={animalType}
                 className={[animalType + "Option"]}
-
                 draggable={false}
 
                 onClick={() => {
-                    changeFormDisplay("block")
                     changeType(animalType);
-                    addMark(togleAreoptionsActive, map, setMarkerCoords)
+                    addMark(setOptions, map, setMarkerCoords)
                 }
                 }>
             </img>
@@ -56,34 +57,61 @@ export let Animal = (props) => {
 
     return (<div className="Animal">
         <div style={{ top: "-50px" }}></div>
-        <Form display={formDisplay} frecuence={frecuence} />
+        <Form display={options.active ? "block" : "none"} frecuence={frecuence} />
         <Habitad
-            habitadVisible={areoptionsActive}
+            habitadVisible={options.active}
             type={type}
             setMarkerCoords={setMarkerCoords} />
+        <UploadPhoto
+            show={uploadPhotoWindow && options.active}
+            file={uploadPhotoWindow}
+            closeWindow={() => { togleUploadPhotoWindow(undefined) }}
+            setMiniature={
+                (miniature) => {
+                    setOptions((pre) => {
+                        return { active: pre.active, miniature }
+                    })
+                }
+            } />
+        {isRangeInvalid &&
+            <div className="invalidRange">El área verde debe ser menor a 1km</div>
+        }
         <div className="menu">
-            {!areoptionsActive &&
-                <div className="options">
+            {!options.active &&
+                <div className="animalOptions">
                     {animalList}
                 </div>
             }
-            {areoptionsActive &&
-                <img src={closeIcon}
-                    alt="Cancel Mark"
-                    className="cancelMarker"
-                    onClick={() => {
-                        cancelMarker(changeFormDisplay, togleAreoptionsActive)
-                    }
-                    } />
+            {options.active &&
+                <div className="options">
+
+                    <label
+                        className="cameraIcon"
+                        alt="add a picture">
+
+                        <img src={options.miniature ? options.miniature : cameraIcon} at="añade una imagen del animal" />
+                        <input type="file" onChange={(ev) => {
+                            togleUploadPhotoWindow(ev.target.files[0])
+                        }
+                        }></input>
+                    </label>
+                    <img src={closeIcon}
+                        alt="Cancel Mark"
+                        className="cancelMarker"
+                        onClick={() => {
+                            cancelMarker(setOptions)
+                        }
+                        } />
+                </div>
             }
             <img alt="Report an animal living in the street"
                 className="selector"
                 onClick={() => {
-                    sendPoint(togleAreoptionsActive,
-                        type, changeFormDisplay,formDisplay, frecuence,
-                        props.panelDisplay, map, markerCoords)
+                    sendPoint(setOptions,
+                        type, options.active, frecuence,
+                        props.panelDisplay, map, markerCoords, setIsRangeInvalid)
                 }}
-                src={areoptionsActive ? sendButtonIcon : plusIcon}
+                src={options.active ? sendButtonIcon : plusIcon}
             />
         </div>
     </div>
@@ -91,7 +119,7 @@ export let Animal = (props) => {
 }
 
 
-function addMark(togleAreoptionsActive, map, setMarkerCoords) {
+function addMark(setOptions, map, setMarkerCoords) {
 
     let center = map.latLngToContainerPoint(map.getCenter())
     if (activeMarker) { map.removeLayer(activeMarker) }
@@ -105,61 +133,66 @@ function addMark(togleAreoptionsActive, map, setMarkerCoords) {
             range
         }
     })
-    togleAreoptionsActive(true)
+    setOptions({ active: true, miniature: undefined })
 }
 
-async function sendPoint(togleAreoptionsActive, type,
-    changeFormDisplay, formularyDisplay,frecuence,
-    panelDisplay, map, markerCoords) {
+async function sendPoint(setOptions, type,
+    areoptionsActive, frecuence,
+    panelDisplay, map, markerCoords, setIsRangeInvalid) {
 
 
-    if (formularyDisplay==="block") {
-        let icon = L.icon({
-            iconUrl: type === "dog" ? dogIcon : catIcon,
-            iconSize: [38, 38]
-        });
+    if (areoptionsActive) {
+        if (markerCoords.range > 1000) {
+            setTimeout(()=>{
+                setIsRangeInvalid(false)
+            },3000)
+            setIsRangeInvalid(true)
+        }
+        else {
+            let icon = L.icon({
+                iconUrl: type === "dog" ? dogIcon : catIcon,
+                iconSize: [38, 38]
+            });
 
 
-        let marker = L.marker(markerCoords.center, {
-            icon: icon
-        });
+            let marker = L.marker(markerCoords.center, {
+                icon: icon
+            });
 
-        marker.on('click', () => {
-            console.log(activeMarker)
-            if (!activeMarker) {
-                let { lat, lng } = marker.getLatLng()
-                console.log("oppening")
-                panelDisplay(lat, lng, { frecuence: getFrecuence(lat + "" + lng) })
-            }
-        })
-
-        marker.addTo(map)
-        L.circle(markerCoords.center, { radius: markerCoords.range }).addTo(map);
-        activeMarker = false;
-
-
-        togleAreoptionsActive(false);
-        changeFormDisplay("none")
-        editFrecuences(frecuence.frecuence,
-            markerCoords.center.lat + "" + markerCoords.center.lng,
-            true)
-        try {
-            let { status } = await axios.post(process.env.REACT_APP_POINTS_URI, {
-                coords: markerCoords.center,
-                type,
-                frecuence: frecuence.frecuence,
-                range: markerCoords.range
+            marker.on('click', () => {
+                console.log(activeMarker)
+                if (!activeMarker) {
+                    let { lat, lng } = marker.getLatLng()
+                    console.log("oppening")
+                    panelDisplay(lat, lng, { frecuence: getFrecuence(lat + "" + lng) })
+                }
             })
-            console.log(status === 200 ? "Dato registrado" : "Error en el envio del punto")
 
-        } catch (err) {
-            console.log(err)
+            marker.addTo(map)
+            L.circle(markerCoords.center, { radius: markerCoords.range }).addTo(map);
+            activeMarker = false;
+
+
+            setOptions({ active: false, miniature: undefined });
+            editFrecuences(frecuence.frecuence,
+                markerCoords.center.lat + "" + markerCoords.center.lng,
+                true)
+            try {
+                let { status } = await axios.post(process.env.REACT_APP_POINTS_URI, {
+                    coords: markerCoords.center,
+                    type,
+                    frecuence: frecuence.frecuence,
+                    range: markerCoords.range
+                })
+                console.log(status === 200 ? "Dato registrado" : "Error en el envio del punto")
+
+            } catch (err) {
+                console.log(err)
+            }
         }
     }
 }
 
-function cancelMarker(changeFormDisplay, togleAreoptionsActive) {
-
-    changeFormDisplay("none")
-    togleAreoptionsActive(false)
+function cancelMarker(setOptions) {
+    setOptions({ active: false, miniature: undefined })
 }
