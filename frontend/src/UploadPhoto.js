@@ -4,14 +4,6 @@ import { useState } from 'react'
 
 const url = "https://0bgpfisqlk.execute-api.us-east-1.amazonaws.com/default/petfinderPhotosFunction"
 
-const config = {
-    bucketName: '',
-    dirName: 'photos',
-    region: 'us-east-1',
-    accessKeyId: '',
-    secretAccessKey: ''
-}
-
 export let UploadPhoto = (props) => {
 
     const { file, closeWindow, show, setMiniature } = props
@@ -66,8 +58,5 @@ const handleSubmmit = (e, file) => {
         catch(err=>console.log(err))
     }).catch(err=>console.log(err))
 
-    //const reactS3Client = new S3(config)
-    /*reactS3Client.uploadFile(file, "test1").
-        then((data) => { console.log(data) }).
-        catch((err) => { console.log(err) })*/
+
 }
