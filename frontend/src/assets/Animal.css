@@ -12,6 +12,7 @@
     width: 9vh;
     height: 9vh;
     margin: auto;
+    cursor: pointer;
 }
 
 .animalOptions {
@@ -40,21 +41,6 @@
     margin-bottom: 10%;
 }
 
-.invalidRange {
-    color: rgb(230, 94, 53);
-    position: fixed;
-    top: 2%;
-    right: 10%;
-    font-size: 1.3em;
-    font-weight: bolder;
-    border-radius: 10px;
-    background-color: seashell;
-    width: 80%;
-    max-width: 10cm;
-    text-align: center;
-    padding: 10px;
-}
-
 .menu:hover .animalOptions {
     height: 19.5vh;
 }
@@ -72,6 +58,7 @@
     min-width: 60px;
     min-height: 60px;
     background-size: cover;
+    cursor: pointer;
 }
 
 .selector {
@@ -81,4 +68,5 @@
     width: 10vh;
     min-height: 65px;
     min-width: 65px;
+    cursor: pointer;
 }

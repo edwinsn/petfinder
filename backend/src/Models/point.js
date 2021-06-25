@@ -7,7 +7,9 @@ const pointSchema = new Schema({
         type:{type:String, require:true},
         frecuence:{type:Number, require:true},
         initialFrecuence:{type: Number, require:true},
-        range:{type:Number,require}
+        range:{type:Number,require:true},
+        imgurl:{type:String}
+
     },
     {
         timestamps:true

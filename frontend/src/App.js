@@ -9,7 +9,6 @@ import {GetMarkers} from './GetMarkers'
 
 
 
-
 export class App extends Component{
 
   constructor(props) {
@@ -35,9 +34,9 @@ export class App extends Component{
             </TileLayer>
             <ZoomControl position="bottomleft" />
             <Search className="search"/>
-            <Animal panelDisplay={this.openPanel}/>   
+            <Animal panelDisplay={this.openPanel}/>
             <GetMarkers open={this.openPanel}/>
-            <About className="about"></About> 
+            <About className="about"></About>
           </MapContainer>
         </div>
       <Panel ref={this.child}/>

@@ -2,6 +2,7 @@
     border: 3px solid #C2C2C3;
     overflow: hidden;
     display: flex;
+    cursor: pointer;
 }
 
 .frecuences >*{
@@ -24,4 +25,5 @@
     background-color: white;
     position: absolute;
     right: 11vh;
+    z-index: 8;
 }

@@ -8,10 +8,11 @@
     width: 90vw;
     height: 90%;
     max-width: 20cm;
-    padding: 5% 10%;
+    padding:2% 10% 5% 10%;
     box-sizing: border-box;
-    z-index:7;
+    z-index: 7;
     position: absolute;
+    
 }
 
 .uploadPhotos>input[type=submit] {
@@ -19,7 +20,7 @@
     border-radius: 50%;
     aspect-ratio: 1;
     position: absolute;
-    bottom: 7%;
+    bottom: 4%;
     right: 5%;
     background-image: url(./images/uploadIcon.svg);
     height: 10vh;
@@ -28,23 +29,52 @@
     background-color: white;
 }
 
-.uploadPhotos>img {
+.uploadPhotos> img {
     position: absolute;
     right: 0;
     top: 0;
 }
 
 .uploadPhotos>label {
-    height: 65%;
+    height: 55%;
     border: 1px solid black;
     box-shadow: 10px 10px gray;
     background-size: cover;
     display: flex;
     align-items: center;
     overflow: scroll;
+    margin-top: 6%;
+    margin-bottom:2%;
 }
 
 .uploadPhotos>label>img {
+    width: 100%;
+}
+
+.uploadPhotos>progress {
+    height: 5%;
+    margin-top: 3%;
+    width: 100%;
+}
+
+.uploadPhotos>progress::-webkit-progress-bar {
+    height: 5%;
+    margin-top: 3%;
+    color: green;
+    flex-grow: 1;
+    width: 100%;
+}
+
+.uploadPhotos>progress::-webkit-progress-value {
+    height: 5%;
+    margin-top: 3%;
+    color: green;
+    width: 100%;
+}
+
+.uploadPhotos>progress::-moz-progress-bar {
+    height: 5%;
+    margin-top: 3%;
     width: 100%;
 }
 

@@ -3,6 +3,7 @@ import { useMap } from 'react-leaflet'
 import { Form } from './Form'
 import L from 'leaflet'
 import { editFrecuences, getFrecuence } from "./GetMarkers";
+import { UploadPhoto } from './UploadPhoto'
 import { Habitad } from './Habitad'
 import './assets/Animal.css'
 import axios from 'axios'
@@ -11,8 +12,17 @@ import catIcon from './assets/images/catIcon.svg'
 import sendButtonIcon from './assets/images/SendButton.svg'
 import plusIcon from './assets/images/plus.svg'
 import closeIcon from './assets/images/closeIcon.svg'
-import { UploadPhoto } from './UploadPhoto'
 import cameraIcon from './assets/images/cameraIcon.svg'
+import { Notifications } from './Notifications'
+
+
+import firebase from 'firebase/app'
+import 'firebase/storage'
+import { config } from './config'
+
+firebase.initializeApp(config)
+const storage = firebase.storage()
+
 
 let activeMarker = false
 
@@ -28,10 +38,24 @@ export let Animal = (props) => {
     let initiailCoords = map.containerPointToLatLng(map.latLngToContainerPoint(map.getCenter()))
 
     const [options, setOptions] = useState({ active: false, miniature: undefined })
-    //use useRef for no rendering data
-    const [type, changeType] = useState();
-    const [markerCoords, setMarkerCoords] = useState({ center: initiailCoords, range: 0 })
-    //
+    const file = useRef(undefined)
+    const notifications = useRef()
+    const updateNotifications = (progress, showProgress, showOutOfRange) => { notifications.current.update(progress, showProgress, showOutOfRange) }
+    const type = useRef();
+
+
+    const markerCoords = useRef({ center: initiailCoords, range: 0 })
+    let setMarkerCoords = (newCurrent) => {
+
+        if ((typeof newCurrent) === "function") {
+            markerCoords.current = newCurrent(markerCoords.current)
+        }
+        else {
+            markerCoords.current = newCurrent
+        }
+
+    }
+
     const [uploadPhotoWindow, togleUploadPhotoWindow] = useState(undefined)
     const [isRangeInvalid, setIsRangeInvalid] = useState(false)
 
@@ -46,7 +70,7 @@ export let Animal = (props) => {
                 draggable={false}
 
                 onClick={() => {
-                    changeType(animalType);
+                    type.current = animalType;
                     addMark(setOptions, map, setMarkerCoords)
                 }
                 }>
@@ -60,7 +84,7 @@ export let Animal = (props) => {
         <Form display={options.active ? "block" : "none"} frecuence={frecuence} />
         <Habitad
             habitadVisible={options.active}
-            type={type}
+            type={type.current}
             setMarkerCoords={setMarkerCoords} />
         <UploadPhoto
             show={uploadPhotoWindow && options.active}
@@ -71,11 +95,14 @@ export let Animal = (props) => {
                     setOptions((pre) => {
                         return { active: pre.active, miniature }
                     })
-                }
-            } />
-        {isRangeInvalid &&
-            <div className="invalidRange">El área verde debe ser menor a 1km</div>
-        }
+                }}
+            saveFile={(newFile) => {
+                file.current = newFile
+                console.log(file.current)
+            }}
+        />
+        <Notifications ref={notifications} />
+
         <div className="menu">
             {!options.active &&
                 <div className="animalOptions">
@@ -93,7 +120,8 @@ export let Animal = (props) => {
                         <input type="file" onChange={(ev) => {
                             togleUploadPhotoWindow(ev.target.files[0])
                         }
-                        }></input>
+                        }
+                            accept="image/*"></input>
                     </label>
                     <img src={closeIcon}
                         alt="Cancel Mark"
@@ -108,8 +136,9 @@ export let Animal = (props) => {
                 className="selector"
                 onClick={() => {
                     sendPoint(setOptions,
-                        type, options.active, frecuence,
-                        props.panelDisplay, map, markerCoords, setIsRangeInvalid)
+                        type.current, options.active, frecuence,
+                        props.panelDisplay, map, markerCoords.current,
+                        updateNotifications, file)
                 }}
                 src={options.active ? sendButtonIcon : plusIcon}
             />
@@ -138,15 +167,16 @@ function addMark(setOptions, map, setMarkerCoords) {
 
 async function sendPoint(setOptions, type,
     areoptionsActive, frecuence,
-    panelDisplay, map, markerCoords, setIsRangeInvalid) {
+    panelDisplay, map, markerCoords,
+    updateNotifications, file) {
 
 
     if (areoptionsActive) {
-        if (markerCoords.range > 1000) {
-            setTimeout(()=>{
-                setIsRangeInvalid(false)
-            },3000)
-            setIsRangeInvalid(true)
+        if (markerCoords.range > 400) {
+            setTimeout(() => {
+                updateNotifications(0, false, false)
+            }, 3000)
+            updateNotifications(0, false, true)
         }
         else {
             let icon = L.icon({
@@ -159,32 +189,109 @@ async function sendPoint(setOptions, type,
                 icon: icon
             });
 
-            marker.on('click', () => {
-                console.log(activeMarker)
-                if (!activeMarker) {
-                    let { lat, lng } = marker.getLatLng()
-                    console.log("oppening")
-                    panelDisplay(lat, lng, { frecuence: getFrecuence(lat + "" + lng) })
-                }
-            })
 
             marker.addTo(map)
-            L.circle(markerCoords.center, { radius: markerCoords.range }).addTo(map);
+            const circle = L.circle(markerCoords.center, { radius: markerCoords.range })
+            circle.addTo(map);
             activeMarker = false;
 
 
             setOptions({ active: false, miniature: undefined });
-            editFrecuences(frecuence.frecuence,
-                markerCoords.center.lat + "" + markerCoords.center.lng,
-                true)
+
             try {
-                let { status } = await axios.post(process.env.REACT_APP_POINTS_URI, {
-                    coords: markerCoords.center,
-                    type,
-                    frecuence: frecuence.frecuence,
-                    range: markerCoords.range
-                })
-                console.log(status === 200 ? "Dato registrado" : "Error en el envio del punto")
+                //console.log(file.current)
+                if (file.current) {
+                    let fileName = markerCoords.center + ""
+                    const uploadTask = storage.ref(`images/${fileName}`).put(file.current);
+
+                    uploadTask.on(
+                        "state_changed",
+                        (snapshot) => {
+
+                            const progress = Math.round(100 * snapshot.bytesTransferred / snapshot.totalBytes)
+                            updateNotifications(progress, true)
+                            //console.log(progress)
+                            if (progress == 100) {
+                                setTimeout(() => { updateNotifications(0, false) }, 400)
+                            }
+
+                        },
+                        err => {
+                            //by some misterious reazon i can't pass more than 3 arguments
+                            updateNotifications()
+                            marker.removeFrom(map)
+                            circle.removeFrom(map)
+                        },
+                        async () => {
+                            let imgurl = await storage
+                                .ref("images")
+                                .child(fileName)
+                                .getDownloadURL()
+
+                            console.log(imgurl)
+
+                            marker.on('click', () => {
+                                //console.log(activeMarker)
+                                if (!activeMarker) {
+                                    let { lat, lng } = marker.getLatLng()
+                                    //console.log("oppening")
+                                    panelDisplay(lat, lng, { frecuence: getFrecuence(lat + "" + lng), imgurl })
+                                }
+                            })
+                            try {
+                                let { status } = await axios.post(process.env.REACT_APP_POINTS_URI, {
+                                    coords: markerCoords.center,
+                                    type,
+                                    frecuence: frecuence.frecuence,
+                                    range: markerCoords.range,
+                                    imgurl
+                                }, config)
+                                console.log(status === 200 ? "Dato registrado" : "Error en el envio del punto")
+                            } catch (err) {
+                                console.log(err)
+                            }
+                        }
+                    )
+
+                    let imgurl = URL.createObjectURL(file.current)
+
+                    marker.on('click', () => {
+                        //console.log(activeMarker)
+                        if (!activeMarker) {
+                            let { lat, lng } = marker.getLatLng()
+                            //console.log("oppening")
+                            panelDisplay(lat, lng, { frecuence: getFrecuence(lat + "" + lng), imgurl })
+                        }
+                    })
+
+                }
+                else {
+
+                    marker.on('click', () => {
+                        //console.log(activeMarker)
+                        if (!activeMarker) {
+                            let { lat, lng } = marker.getLatLng()
+                            //console.log("oppening")
+                            panelDisplay(lat, lng, { frecuence: getFrecuence(lat + "" + lng) })
+                        }
+                    })
+
+                    let { status } = await axios.post(process.env.REACT_APP_POINTS_URI, {
+                        coords: markerCoords.center,
+                        type,
+                        frecuence: frecuence.frecuence,
+                        range: markerCoords.range
+                    }, config)
+                    console.log(status === 200 ? "Dato registrado" : "Error en el envio del punto")
+
+                }
+
+
+                editFrecuences(frecuence.frecuence,
+                    markerCoords.center.lat + "" + markerCoords.center.lng,
+                    true)
+
+                file.current = undefined
 
             } catch (err) {
                 console.log(err)

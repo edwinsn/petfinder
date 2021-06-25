@@ -1,0 +1,33 @@
+.notifications {
+    position: fixed;
+    top: 2%;
+    right: 10%;
+    width: 80%;
+    max-width: 10cm;
+    cursor: default;
+    z-index: 8;
+}
+
+.notifications div {
+    font-size: 1.3em;
+    font-weight: bolder;
+    border-radius: 10px;
+    text-align: center;
+    padding: 10px;
+    width: 100%;
+    background-color: seashell;
+    margin-bottom: 10px;
+}
+
+.error {
+    color: rgb(230, 94, 53);
+    border: 2px solid rgb(230, 94, 53);
+}
+
+.uploading {
+    color: #37B258;
+}
+
+.notifications div progress {
+    width: 80%;
+}

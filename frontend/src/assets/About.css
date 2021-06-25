@@ -1,29 +1,56 @@
-.about{
+.about {
     font-style: italic;
     border-radius: 10%;
     padding: 0.2% 0.8%;
     font-family: 'Roboto';
     background-color: #3B72E1;
+    z-index: 408;
 }
-.plus{
-    font-weight: 800;
+
+.bolder {
+    font-weight: bolder;
+}
+
+.blue {
     color: blue;
 }
-.info{
-    display: none;
+
+.about:hover {
+    background-color: white;
 }
-.about:hover{
-  background-color: white;
-}
-.about:hover .info{
+
+.about:hover .info {
     display: block;
 }
-.about:hover .infoIcon{
+
+.about:hover .infoIcon {
     display: none;
 }
-.infoIcon{
-   font-size: x-large;
-   margin: 2vh;
-   font-weight: 1000;
-   color: white;
+
+.green {
+    color: green;
+}
+
+.info {
+    display: none;
+}
+
+.info p{
+    margin-bottom: -6;
+}
+
+.info ul {
+padding-left: 12;
+}
+
+.infoIcon {
+    font-size: x-large;
+    margin: 2vh;
+    font-weight: 1000;
+    color: white;
+}
+
+.plus {
+    font-weight: 800;
+    color: blue;
 }

@@ -4,13 +4,12 @@ import { Rnd } from "react-rnd";
 import './assets/Habitad.css'
 import catIcon from './assets/images/catIcon.svg'
 import dogIcon from './assets/images/dogIcon.svg'
-//min radius
 
 let width = 150
 let height = 150
 let x, y
 
-export let Habitad = function (props) {
+export let Habitad = React.memo( function (props) {
 
     useEffect(() => {
 
@@ -25,11 +24,9 @@ export let Habitad = function (props) {
 
             let zoomRatio = 2 ** (previousZoom - map.getZoom())
 
-
             setMarkerCoords((pre) => {
 
                 previousZoom = map.getZoom()
-
                 return {
                     center,
                     range: pre.range * zoomRatio
@@ -146,10 +143,10 @@ export let Habitad = function (props) {
                     <div className="borderball bottom"></div>
                     <div className="borderball left"></div>
                     <div className="borderball right"></div>
-                   
+
                     <img className="marker" draggable={false} src={type == "dog" ? dogIcon : catIcon}></img>
                 </div>
             </Rnd>}
         </div >
     )
-}
+})

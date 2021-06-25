@@ -81,7 +81,7 @@ let getp = (map, props) => {
         }
 
         newmarker.on("click", () => {
-          props.open(marker.lat, marker.lng, { frecuence: markersLoaded[marker.lat + "" + marker.lng].frecuence })
+          props.open(marker.lat, marker.lng, { frecuence: markersLoaded[marker.lat + "" + marker.lng].frecuence,imgurl:marker.imgurl })
         })
         markersLoaded[marker.lat + "" + marker.lng] = { frecuence: marker.frecuence }
       });

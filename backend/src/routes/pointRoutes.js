@@ -4,6 +4,7 @@ const {getPoints, postPoint, updatePoint, deletePoint, getDataBase} = require('.
 
 const router = Router();
 
+
 router.route("/").get(getPoints)
                  .post(postPoint)
                  .put(updatePoint)
