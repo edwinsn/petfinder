@@ -15,10 +15,9 @@ html, body, #map {
 }
 
 .about{
-  position: fixed;
+  position: absolute;
   top: 8px;
   right: 2%;
-  z-index: 400;
 }
 .animal{
   bottom: 3%;

@@ -1,3 +1,11 @@
+span img{
+
+    padding: 0;
+    height: 2em;
+    position: relative;
+    top: 0.8em;
+}
+
 .about {
     font-style: italic;
     border-radius: 10%;
@@ -19,7 +27,7 @@
     background-color: white;
 }
 
-.about:hover .info {
+.about:hover .hide {
     display: block;
 }
 
@@ -31,9 +39,10 @@
     color: green;
 }
 
-.info {
+.hide{
     display: none;
 }
+
 
 .info p{
     margin-bottom: -6;

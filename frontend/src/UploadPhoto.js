@@ -12,7 +12,6 @@ export let UploadPhoto = (props) => {
 
     return (
         <div
-            
             style={style}
             className="uploadPhototsContainer">
             <form className="uploadPhotos"
