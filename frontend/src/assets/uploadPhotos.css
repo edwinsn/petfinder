@@ -10,7 +10,7 @@
     max-width: 20cm;
     padding:0% 10% 5% 10%;
     box-sizing: border-box;
-    z-index:410;
+    z-index:9;
     position: relative;
     top:5%;
     
@@ -87,7 +87,7 @@
     align-items: center;
     justify-content: center;
     top: 0;
-    z-index: 7;
+    z-index: 9;
     left: 0;
     bottom: 0;
 }

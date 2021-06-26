@@ -3,6 +3,7 @@ import './assets/Panel.css'
 import axios from 'axios'
 import closeIcon from './assets/images/closeIcon.svg'
 import { editFrecuences } from './GetMarkers'
+import { LoadingCircles } from './Loading'
 
 let actualCoords
 let actualFrecuence
@@ -90,15 +91,19 @@ export class Panel extends Component {
               this.setState({ loading: true })
               this.updatedFrecuence(this.state.lat, this.state.lng, this.isDeprecated)
             }}>
-            {this.state.loading && <div className="loader"></div>}
+            {this.state.loading && <LoadingCircles />}
             {!this.state.loading && <span>Enviar</span>}
 
           </button>
-          {this.state.imgUrl && <img  className="animalImg" key={Math.random()} src={this.state.imgUrl} />}
+          {this.state.imgUrl && <img className="animalImg" key={Math.random()} src={this.state.imgUrl} />}
         </div>
-        {this.state.excessOfRevitions && <p className="excess">
-          No puedes incrementar o disminuir la probabilidad más de una vez
-      </p>}
+        {this.state.excessOfRevitions &&
+          <p className="excess">
+            No puedes incrementar o disminuir la probabilidad más de una vez
+          </p>}
+        { this.state.updatedFrecuence&&
+          <p className="frecuenceUpdated">Dato actualizado!</p>
+        }
       </div>
     )
   }
@@ -114,7 +119,9 @@ export class Panel extends Component {
     console.log("enviando")
     try {
       await axios.put(process.env.REACT_APP_POINTS_URI, { lat, lng, isDeprecated })
-      this.setState({ loading: false, display: "none" })
+      this.setState({ loading: false, updatedFrecuence: true })
+      setTimeout(() => { this.setState({ display: "none", updatedFrecuence: false }) }, 600)
+
       console.log("Dato Actualizado")
     } catch (err) {
       console.log(err)

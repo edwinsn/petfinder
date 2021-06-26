@@ -24,8 +24,14 @@ p label{
 
 .excess{
     color: red;
-    border-radius: 10%;
-    background-color: rgb(236, 124, 79);
+    margin-left: 10%;
+}
+
+.frecuenceUpdated{
+    color: #37B258;
+    font-weight: bolder;
+    margin-left: 12%;
+    margin-top:5% ;
 }
 
 .loader {
@@ -65,7 +71,6 @@ p label{
 }
 
 .panel p{
-    display: flex;
     line-height: 18px;
 }
 .panel input{
