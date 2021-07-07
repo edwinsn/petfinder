@@ -27,7 +27,7 @@ pointsControllers.getDataBase = async (req, res) => {
 pointsControllers.postPoint = async (req, res) => {
 
     try {
-        const { coords, type, frecuence, range, imgurl } = req.body;
+        const { coords, type, frecuence, range, imgurl, description, contact } = req.body;
 
         const { lat, lng } = coords
 
@@ -40,7 +40,9 @@ pointsControllers.postPoint = async (req, res) => {
                 frecuence,
                 initialFrecuence: frecuence,
                 range,
-                imgurl
+                imgurl,
+                description,
+                contact
             })
 
 

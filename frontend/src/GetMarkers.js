@@ -75,13 +75,20 @@ let getp = (map, props) => {
         let newmarker = L.marker({ lat: marker.lat, lng: marker.lng },
           { icon: marker.type === "dog" ? dogIconM : catIconM });
         newmarker.addTo(map)
-        
+
         if (marker.range) {
           L.circle({ lat: marker.lat, lng: marker.lng }, { radius: marker.range }).addTo(map);
         }
 
         newmarker.on("click", () => {
-          props.open(marker.lat, marker.lng, { frecuence: markersLoaded[marker.lat + "" + marker.lng].frecuence,imgurl:marker.imgurl })
+    
+          props.open(marker.lat, marker.lng,
+            {
+              frecuence: markersLoaded[marker.lat + "" + marker.lng].frecuence,
+              imgurl: marker.imgurl?marker.imgurl:marker.type=="dog"?dogIcon:catIcon,
+              description: marker.description,
+              contact: marker.contact
+            })
         })
         markersLoaded[marker.lat + "" + marker.lng] = { frecuence: marker.frecuence }
       });

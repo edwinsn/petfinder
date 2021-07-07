@@ -3,7 +3,11 @@ import './assets/Panel.css'
 import axios from 'axios'
 import closeIcon from './assets/images/closeIcon.svg'
 import { editFrecuences } from './GetMarkers'
-import { LoadingCircles } from './Loading'
+import UserIcon from './assets/images/userIcon.svg'
+import frecuenceIcon from './assets/images/frecuenceIcon.svg'
+import petsIcon from './assets/images/petsIcon.jpg'
+import plus from './assets/images/plus.svg'
+import minus from './assets/images/minus.svg'
 
 let actualCoords
 let actualFrecuence
@@ -51,57 +55,77 @@ export class Panel extends Component {
 
             }
           } />
-        <div className="container">
-          <p className="probabilitytext">La probabilidad de que le encuentres allí es:</p>
-          <div className="probabilitybars">
-            {probabilityBars}
+        <div className="infoContainer">
+
+          <div>
+
+            <div>
+              <div className="verticalCentered">
+                <img src={petsIcon} />
+                <span>Descripcion</span>
+              </div>
+              <p>
+                {this.state.description ? this.state.description : "No hay descripción"}
+              </p>
+            </div>
+
+            <div>
+              <div className="verticalCentered">
+                <img src={frecuenceIcon} />
+                <span>Avistamientos</span>
+              </div>
+              <div className="probabilityContainer">
+                <p className="probabilitybars">
+                  {probabilityBars}
+                </p>
+
+                <label htmlFor="decrementProb">
+                  <input type="radio" name="dep"
+                    className="hidden"
+                    key={previousOptio1key}
+                    id="decrementProb"
+                    onChange={(ev) => {
+                      if (ev.target.checked) { this.updatedFrecuence(this.state.lat, this.state.lng, true) }
+                    }} />
+                  <img src={minus} />
+                </label>
+
+                <label htmlFor="incrementProb">
+                  <input type="radio"
+                    className="hidden"
+                    id="incrementProb"
+                    name="dep"
+                    key={previousOptio2key}
+                    onChange={(ev) => {
+                      if (ev.target.checked) {
+                        this.updatedFrecuence(this.state.lat, this.state.lng, false)
+                      }
+                    }} />
+                  <img src={plus} />
+                </label>
+              </div>
+            </div>
+
+            <div>
+              <div className="verticalCentered">
+                <img src={UserIcon} />
+                <span>Contacto</span>
+              </div>
+
+              <p>
+                {this.state.contact ? this.state.contact : "No hay contacto"}
+              </p>
+            </div>
+
           </div>
-          <p>
-
-            <input type="radio" name="dep"
-              key={previousOptio1key}
-              id="decrementProb"
-              onChange={(ev) => {
-                if (ev.target.checked) {
-                  this.isDeprecated = true
-                  this.setState({
-                    prob: actualFrecuence <= 1 ? 1 : 2 * actualFrecuence - 1
-                  })
-                }
-              }} />
-            <label htmlFor="decrementProb">Consideras el dato desactualizado?</label>
-          </p>
-          <p>
-            <input type="radio"
-              id="incrementProb"
-              name="dep"
-              key={previousOptio2key}
-              onChange={(ev) => {
-                if (ev.target.checked) {
-                  this.isDeprecated = false
-                  this.setState({
-                    prob: this.state.prob < 9 ? 2 * actualFrecuence + 2 : 10
-                  })
-                }
-              }} />
-            <label htmlFor="incrementProb">Confirmas la veracidad del dato?</label>
-          </p>
-          <button className="sendButton"
-            onClick={() => {
-              this.setState({ loading: true })
-              this.updatedFrecuence(this.state.lat, this.state.lng, this.isDeprecated)
-            }}>
-            {this.state.loading && <LoadingCircles />}
-            {!this.state.loading && <span>Enviar</span>}
-
-          </button>
-          {this.state.imgUrl && <img className="animalImg" key={Math.random()} src={this.state.imgUrl} />}
+          <img className="animalImg" key={Math.random()} src={this.state.imgUrl ? this.state.imgUrl : petsIcon} />
         </div>
+
         {this.state.excessOfRevitions &&
           <p className="excess">
             No puedes incrementar o disminuir la probabilidad más de una vez
           </p>}
-        { this.state.updatedFrecuence&&
+        {this.state.updatedFrecuence &&
           <p className="frecuenceUpdated">Dato actualizado!</p>
         }
       </div>
@@ -111,12 +135,14 @@ export class Panel extends Component {
 
   async updatedFrecuence(lat = 0, lng = 0, isDeprecated = false) {
     if (isDeprecated) {
+      this.setState({ prob: actualFrecuence <= 1 ? 1 : 2 * actualFrecuence - 1 })
       editFrecuences(actualFrecuence - 0.5, actualCoords)
     }
     else {
+      this.setState({ prob: this.state.prob < 9 ? 2 * actualFrecuence + 2 : 10 })
       editFrecuences(actualFrecuence + 1, actualCoords)
     }
-    console.log("enviando")
+    //console.log("enviando")
     try {
       await axios.put(process.env.REACT_APP_POINTS_URI, { lat, lng, isDeprecated })
       this.setState({ loading: false, updatedFrecuence: true })
@@ -127,19 +153,23 @@ export class Panel extends Component {
       console.log(err)
     }
   }
+
   open(lat, lng, data) {
     actualCoords = lat + "" + lng
     actualFrecuence = data.frecuence
     previousOptio1key = Math.random()
     previousOptio2key = Math.random()
 
+    console.log(data)
 
     this.setState({
       display: "block",
       prob: 2 * actualFrecuence,
       lat,
       lng,
-      imgUrl: data.imgurl
+      imgUrl: data.imgurl,
+      contact: data.contact,
+      description: data.description
     })
   }
 }

@@ -8,7 +8,9 @@ const pointSchema = new Schema({
         frecuence:{type:Number, require:true},
         initialFrecuence:{type: Number, require:true},
         range:{type:Number,require:true},
-        imgurl:{type:String}
+        imgurl:{type:String},
+        description:{type:String},
+        contact:{type:String}
 
     },
     {

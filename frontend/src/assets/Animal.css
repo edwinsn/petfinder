@@ -1,7 +1,8 @@
 .Animal {
-    display: flex;
     z-index: 401;
     position: absolute;
+    display: flex;
+    width: 100%;
     align-items: flex-end;
 }
 
@@ -17,16 +18,27 @@
 
 .animalOptions {
     height: 0;
-    transition-property: height;
+}
+
+.animalOptions, .moreOptionsContainer {
+    transition-property: height, width;
     transition-duration: 0.5s;
     overflow: hidden
 }
 
 .cameraIcon {
-    margin-bottom: 33%;
-    overflow: hidden;
-    display: flex !important;
+    /*display: flex 
+    align-items: center;*/
+    height: 6vh;
+}
+
+.cameraIconContainer {
+    display: flex;
     align-items: center;
+    justify-content: center;
+    background-color: #6868EE;
+    color: white;
+    font-size: 1.2em;
 }
 
 .cameraIcon>input {
@@ -34,11 +46,15 @@
 }
 
 .cameraIcon>img {
-    width: 100%;
+    height: 100%;
 }
 
-.cancelMarker {
-    margin-bottom: 10%;
+.contactContainer {
+    position: relative;
+}
+
+.contactContainer>input {
+    padding-left: 4vh;
 }
 
 .menu:hover .animalOptions {
@@ -47,18 +63,119 @@
 
 .menu {
     z-index: 6;
+    position: absolute;
+    right: 2%;
 }
 
-.options>img, .options>label {
+.mainOptions {
+    display: flex;
+    justify-content: space-between;
+    width: 23vh;
+}
+
+.mainOptions>img, .mainOptions>input {
     display: block;
     background-color: white;
     border-radius: 50%;
-    height: 9vh;
-    width: 9vh;
+    height: 10vh;
+    width: 10vh;
     min-width: 60px;
     min-height: 60px;
     background-size: cover;
     cursor: pointer;
+    border: none;
+}
+
+.moreOptions {
+    height: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    overflow: hidden;
+    font-size: 1.2em;
+}
+
+.moreOptions>* {
+    width: 80%;
+    position: relative;
+}
+
+.moreOptions>*>input, .moreOptions>*>textarea, .form {
+    width: 100%;
+    height: 5vh;
+    resize: vertical;
+    max-height: 3cm;
+}
+
+.moreOptions>*>div {
+    margin-bottom: 3%;
+}
+
+.moreOptions>div>textarea {
+    padding-left: 5vh;
+    padding-top: 1.5vh;
+    min-height: 5vh;
+    height: 9vh;
+}
+
+.moreOptionsContainer:hover>.moreOptions, .moreOptionsContainer:hover {
+    height: 70vh;
+    background-color: white;
+    animation: none;
+}
+
+.moreOptionsContainer:hover {
+    min-width: 6cm;
+    width: 85%;
+}
+
+.moreOptionsContainer {
+    height: 2vh;
+    margin-bottom: 1%;
+    box-sizing: border-box;
+    background-color: white;
+    text-align: center;
+    width: 2cm;
+    border-radius: 5px;
+    max-width: 13cm;
+    animation: blinker 1.5s linear infinite;
+    cursor: pointer;
+}
+
+.moreOptionsContainer>span {
+    font-weight: bolder;
+}
+
+.options {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.optionsContainer {
+    width: 100%;
+    z-index: 7;
+    text-align: center;
+}
+
+@keyframes blinker {
+    50% {
+        opacity: 0;
+    }
+}
+
+.petsIcon {
+    height: 2.5vh;
+    position: absolute;
+    top: 5.5vh;
+    left: 0.2vh;
+}
+
+.sendPoint{
+    background-image: url(./images/SendButton.svg);
 }
 
 .selector {
@@ -69,4 +186,11 @@
     min-height: 65px;
     min-width: 65px;
     cursor: pointer;
+}
+
+.userIcon {
+    height: 3.5vh;
+    position: absolute;
+    bottom: 0.75vh;
+    left: 0.5vh;
 }

@@ -9,10 +9,11 @@ import './assets/Animal.css'
 import axios from 'axios'
 import dogIcon from './assets/images/dogIcon.svg'
 import catIcon from './assets/images/catIcon.svg'
-import sendButtonIcon from './assets/images/SendButton.svg'
 import plusIcon from './assets/images/plus.svg'
 import closeIcon from './assets/images/closeIcon.svg'
 import cameraIcon from './assets/images/cameraIcon.svg'
+import userIcon from './assets/images/userIcon.svg'
+import petsIcon from './assets/images/petsIcon.jpg'
 import { Notifications } from './Notifications'
 
 
@@ -79,71 +80,123 @@ export let Animal = (props) => {
     );
 
 
-    return (<div className="Animal">
-        <div style={{ top: "-50px" }}></div>
-        <Form display={options.active ? "block" : "none"} frecuence={frecuence} />
-        <Habitad
-            habitadVisible={options.active}
-            type={type.current}
-            setMarkerCoords={setMarkerCoords} />
-        <UploadPhoto
-            show={uploadPhotoWindow && options.active}
-            file={uploadPhotoWindow}
-            closeWindow={() => { togleUploadPhotoWindow(undefined) }}
-            setMiniature={
-                (miniature) => {
-                    setOptions((pre) => {
-                        return { active: pre.active, miniature }
-                    })
-                }}
-            saveFile={(newFile) => {
-                file.current = newFile
-                console.log(file.current)
-            }}
-        />
-        <Notifications ref={notifications} />
+    return (
+        <div className="Animal">
+            <Habitad
+                habitadVisible={options.active}
+                type={type.current}
+                setMarkerCoords={setMarkerCoords} />
 
-        <div className="menu">
-            {!options.active &&
-                <div className="animalOptions">
-                    {animalList}
-                </div>
-            }
+            <Notifications ref={notifications} />
+
+
+            <div className="menu">
+                {!options.active &&
+                    <>
+                        <div className="animalOptions">
+                            {animalList}
+                        </div>
+                        <img alt="Report an animal living in the street"
+                            className="selector"
+                            src={plusIcon}
+                        />
+                    </>
+                }
+            </div>
+
             {options.active &&
-                <div className="options">
+                <div className="optionsContainer">
 
-                    <label
-                        className="cameraIcon"
-                        alt="add a picture">
+                    <UploadPhoto
+                        show={uploadPhotoWindow && options.active}
+                        file={uploadPhotoWindow}
+                        closeWindow={() => { togleUploadPhotoWindow(undefined) }}
+                        setMiniature={
+                            (miniature) => {
+                                setOptions((pre) => {
+                                    return { active: pre.active, miniature }
+                                })
+                            }}
+                        saveFile={(newFile) => {
+                            file.current = newFile
+                            console.log(file.current)
+                        }}
+                    />
 
-                        <img src={options.miniature ? options.miniature : cameraIcon} at="añade una imagen del animal" />
-                        <input type="file" onChange={(ev) => {
-                            togleUploadPhotoWindow(ev.target.files[0])
+                    <form className="options"
+                        onSubmit={(ev) => {
+                            ev.preventDefault()
+                            sendPoint(setOptions,
+                                type.current, options.active, frecuence,
+                                props.panelDisplay, map, markerCoords.current,
+                                updateNotifications, file, ev)
+                        }}
+
+                        onMouseEnter={() => { map.dragging.disable() }
                         }
-                        }
-                            accept="image/*"></input>
-                    </label>
-                    <img src={closeIcon}
-                        alt="Cancel Mark"
-                        className="cancelMarker"
-                        onClick={() => {
-                            cancelMarker(setOptions)
-                        }
-                        } />
+                        onMouseLeave={() => { map.dragging.enable() }}
+                    >
+                        <div className="moreOptionsContainer">
+
+                            <div className="moreOptions">
+                                <div>
+                                    <div>Descripción</div>
+                                    <img src={petsIcon} alt="descripción" className="petsIcon" />
+                                    <textarea type="text"></textarea>
+                                </div>
+                                <div className="contactContainer">
+                                    <div>Contacto</div>
+                                    <img className="userIcon" src={userIcon}></img>
+                                    <input type="text"></input>
+                                </div>
+                                <div>
+                                    <div>¿Cuantas veces le has visto?</div>
+                                    {true && <Form display={options.active || true ? "block" : "none"} frecuence={frecuence} />}
+                                </div>
+
+                                <label className="cameraIconContainer">
+                                    <label
+                                        className="cameraIcon"
+                                        alt="add a picture">
+
+                                        <img src={options.miniature ? options.miniature : cameraIcon} at="añade una imagen del animal" />
+                                        <input type="file" onChange={(ev) => {
+                                            let actualImg = ev.target.files[0]
+                                            file.current = actualImg
+                                            togleUploadPhotoWindow(actualImg)
+                                        }
+                                        }
+                                            accept="image/*"></input>
+                                    </label>
+                                    <span>Añade  una foto</span>
+                                </label>
+
+                            </div>
+                            <span>...</span>
+
+                        </div>
+
+                        <div className="mainOptions">
+
+                            <input type="submit" value="" className="sendPoint"></input>
+
+                            <img src={closeIcon}
+                                alt="cancelar"
+                                className="cancelMarker"
+                                onClick={() => {
+                                    cancelMarker(setOptions)
+                                }
+                                } />
+
+                        </div>
+
+                    </form>
                 </div>
+
             }
-            <img alt="Report an animal living in the street"
-                className="selector"
-                onClick={() => {
-                    sendPoint(setOptions,
-                        type.current, options.active, frecuence,
-                        props.panelDisplay, map, markerCoords.current,
-                        updateNotifications, file)
-                }}
-                src={options.active ? sendButtonIcon : plusIcon}
-            />
-        </div>
-    </div>
+
+
+        </div >
     )
 }
 
@@ -168,10 +221,14 @@ function addMark(setOptions, map, setMarkerCoords) {
 async function sendPoint(setOptions, type,
     areoptionsActive, frecuence,
     panelDisplay, map, markerCoords,
-    updateNotifications, file) {
+    updateNotifications, file, ev) {
 
 
     if (areoptionsActive) {
+
+        let description = ev.target[0].value
+        let contact = ev.target[1].value
+
         if (markerCoords.range > 400) {
             setTimeout(() => {
                 updateNotifications(0, false, false)
@@ -244,7 +301,9 @@ async function sendPoint(setOptions, type,
                                     type,
                                     frecuence: frecuence.frecuence,
                                     range: markerCoords.range,
-                                    imgurl
+                                    imgurl,
+                                    description,
+                                    contact
                                 }, config)
                                 console.log(status === 200 ? "Dato registrado" : "Error en el envio del punto")
                             } catch (err) {
@@ -276,13 +335,15 @@ async function sendPoint(setOptions, type,
                         }
                     })
 
-                    let { status } = await axios.post(process.env.REACT_APP_POINTS_URI, {
-                        coords: markerCoords.center,
-                        type,
-                        frecuence: frecuence.frecuence,
-                        range: markerCoords.range
-                    }, config)
-                    console.log(status === 200 ? "Dato registrado" : "Error en el envio del punto")
+                     let { status } = await axios.post(process.env.REACT_APP_POINTS_URI, {
+                         coords: markerCoords.center,
+                         type,
+                         frecuence: frecuence.frecuence,
+                         range: markerCoords.range,
+                         description,
+                         contact
+                     }, config)
+                     console.log(status === 200 ? "Dato registrado" : "Error en el envio del punto")
 
                 }
 

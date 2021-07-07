@@ -3,16 +3,17 @@
     overflow: hidden;
     display: flex;
     cursor: pointer;
+    height: 100%;
+    box-sizing: border-box;
 }
 
 .frecuences >*{
     border: 1px solid white;
     display: inline-block;
-    height: 2vh;
-    max-height: 2vh;
+    height: 100%;
     min-height: 20px;
-    min-width: 50px;
-    background-color: #396EE3;
+    width: 20%;
+
 }
 
 .form{
@@ -22,8 +23,6 @@
     font-weight: 800;
     border-radius: 5%;
     text-align: center;
-    background-color: white;
-    position: absolute;
-    right: 11vh;
     z-index: 8;
+    height: 100%;
 }
