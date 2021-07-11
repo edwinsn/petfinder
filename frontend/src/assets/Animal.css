@@ -10,8 +10,8 @@
     display: block;
     background-color: rgb(250, 111, 204);
     border-radius: 50%;
-    width: 9vh;
-    height: 9vh;
+    width: var(--circularBtnHeight);
+    height: var(--circularBtnHeight);
     margin: auto;
     cursor: pointer;
 }
@@ -77,8 +77,8 @@
     display: block;
     background-color: white;
     border-radius: 50%;
-    height: 10vh;
-    width: 10vh;
+    height: var(--circularBtnHeight);
+    width: var(--circularBtnHeight);
     min-width: 60px;
     min-height: 60px;
     background-size: cover;
@@ -168,7 +168,8 @@
 }
 
 .petsIcon {
-    height: 2.5vh;
+    --smallHeight:2.7vh;
+    height: var(--smallHeight);
     position: absolute;
     top: 5.5vh;
     left: 0.2vh;
@@ -181,15 +182,15 @@
 .selector {
     background-color: white;
     border-radius: 50%;
-    height: 10vh;
-    width: 10vh;
+    height: var(--circularBtnHeight);
+    width: var(--circularBtnHeight);
     min-height: 65px;
     min-width: 65px;
     cursor: pointer;
 }
 
 .userIcon {
-    height: 3.5vh;
+    height: var(--smallHeight);
     position: absolute;
     bottom: 0.75vh;
     left: 0.5vh;

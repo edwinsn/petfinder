@@ -42,7 +42,7 @@ export class Panel extends Component {
       )
     }
     return (
-      <div className="panel" style={{ display: this.state.display }}>
+      <div className={this.state.show?"panel active":"panel inactive"} >
         <img
           src={closeIcon}
           alt="close"
@@ -50,7 +50,7 @@ export class Panel extends Component {
           onClick={
             () => {
               this.setState({
-                display: "none"
+                show: false
               })
 
             }
@@ -75,9 +75,9 @@ export class Panel extends Component {
                 <span>Avistamientos</span>
               </div>
               <div className="probabilityContainer">
-                <p className="probabilitybars">
+                <div className="probabilitybars">
                   {probabilityBars}
-                </p>
+                </div>
 
                 <label htmlFor="decrementProb">
                   <input type="radio" name="dep"
@@ -164,6 +164,7 @@ export class Panel extends Component {
 
     this.setState({
       display: "block",
+      show:true,
       prob: 2 * actualFrecuence,
       lat,
       lng,

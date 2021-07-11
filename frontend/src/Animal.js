@@ -17,12 +17,7 @@ import petsIcon from './assets/images/petsIcon.jpg'
 import { Notifications } from './Notifications'
 
 
-import firebase from 'firebase/app'
-import 'firebase/storage'
-import { config } from './config'
-
-firebase.initializeApp(config)
-const storage = firebase.storage()
+import {storage, config} from './fire'
 
 
 let activeMarker = false

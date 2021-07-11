@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import './assets/About.css'
+import './assets/AboutRec.css'
 import animalsIcon from './assets/images/animalsIcon.png'
 
 export function About() {
@@ -13,8 +13,7 @@ export function About() {
     }, [])
 
 
-
-    return <div className="about" style={{ backgroundColor: visible ? "white" : undefined }}>
+    return <div className={"about"} style={{ backgroundColor: visible ? "white" : undefined }}>
 
         {visible &&
             <div className="info">
@@ -28,7 +27,7 @@ export function About() {
 
         {
             !visible && <>
-                <p className="infoIcon">i</p>
+                <div className="infoIcon">i</div>
                 <div className="info hide">
                     <p>Encuentra y reporta animales <span><img src={animalsIcon}></img></span>en la calle</p>
                     <ul >

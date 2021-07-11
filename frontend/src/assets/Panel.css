@@ -11,7 +11,7 @@ p label {
     float: right;
     margin-top: 1vh;
     height: 8vh;
-    min-height: 20px;
+    min-height: var(--minCloseIconHeigh);
     cursor: pointer;
 }
 
@@ -28,14 +28,13 @@ p label {
     justify-content: center;
     box-sizing: border-box;
     flex-wrap: wrap;
-   /* border: 1px solid black;*/
-    
+    /* border: 1px solid black;*/
 }
 
 .infoContainer>* {
     min-width: 6cm;
     flex-grow: 1;
-   /* border: 1px solid red;*/
+    /* border: 1px solid red;*/
 }
 
 .infoContainer>div {
@@ -75,18 +74,35 @@ p label {
     color: #37B258;
     font-weight: bolder;
 }
+.panel label img{
+    cursor: pointer;
+    padding: 15px 0;
+}
 
 .panel {
     bottom: 0;
     z-index: 400;
     background-color: white;
     height: 100%;
-    width: 100%;
     max-width: 12cm;
+    width: 0;
     position: absolute;
     margin-top: -100vh;
     overflow-y: scroll;
+    transition: var(--fastTransition);
+    overflow-x: hidden;
+    z-index: 402;
 }
+
+.active {
+    transition: var(--slowTransition);
+    width: 100%;
+}
+
+.inactive p{
+    min-width: 9.5cm;
+}
+
 
 .panel label>img {
     width: 3.5vh;
@@ -96,12 +112,14 @@ p label {
 .probabilitybars {
     border: 3px solid #C2C2C3;
     width: 80%;
+    margin: 1em 0;
 }
 
 .probabilitybars>* {
     display: inline-block;
     width: 10%;
     height: 3.5vh;
+    min-height: 22px;
     box-sizing: border-box;
     border-left: 1px solid #c2c2c3;
 }
@@ -117,5 +135,7 @@ p label {
 .verticalCentered>img {
     width: 4vh;
     max-height: 4vh;
+    min-height: 20px;
+    min-width: 20px;
     margin-right: 2vh;
 }

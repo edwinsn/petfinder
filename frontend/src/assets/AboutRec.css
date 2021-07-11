@@ -1,5 +1,4 @@
-span img{
-
+.about span img {
     padding: 0;
     height: 2em;
     position: relative;
@@ -8,11 +7,13 @@ span img{
 
 .about {
     font-style: italic;
-    border-radius: 10%;
-    padding: 0.2% 0.8%;
+    padding: 0 12px;
     font-family: 'Roboto';
     background-color: #3B72E1;
     z-index: 408;
+    position: absolute;
+    cursor: pointer;
+    border-radius: var(--border-radius);
 }
 
 .bolder {
@@ -39,27 +40,25 @@ span img{
     color: green;
 }
 
-.hide{
+.hide {
     display: none;
 }
 
-
-.info p{
+.info p {
     margin-bottom: -6;
 }
 
 .info ul {
-padding-left: 12;
+    padding-left: 12;
 }
 
 .infoIcon {
-    font-size: x-large;
-    margin: 2vh;
+    font-size: 23;
     font-weight: 1000;
     color: white;
 }
 
 .plus {
-    font-weight: 800;
+    font-weight: 900;
     color: blue;
 }

@@ -1,0 +1,135 @@
+.googleBtnDiv {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    position: relative;
+}
+
+.googleBtnDiv>button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #3b6ebb;
+    cursor: pointer;
+}
+
+.googleBtnDiv>button>img {
+    margin-right: 1vh;
+}
+
+.appIcon {
+    height: 14vh;
+    box-shadow: 1px 2px 1px 1px rgba(75, 74, 74, 0.314);
+    border-radius: 50%;
+}
+
+.goBack {
+    position: absolute;
+    top: 5vh;
+    left: 4vh;
+    cursor: pointer;
+}
+
+.login {
+    padding: 7vh 0 7vh 0;
+    height: 100%;
+    background: radial-gradient(80.42% 80.42% at 88.5% 12.34%, #4780D4 0%, #417DD6 48.96%, #46699D 98.28%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    box-sizing: border-box;
+}
+
+.login>div {
+    text-align: center;
+}
+
+.login>div>p {
+    color: white;
+    text-align: center;
+    line-height: 3.2vh;
+}
+
+.loginContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.loginContainer>* {
+    margin: 1vh;
+}
+
+.loginContainer span {
+    color: white;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.loginContainer>div>p {
+    color: rgb(36, 36, 36);
+}
+
+.loginContainer>div>p {
+    text-align: right;
+}
+
+.loginContainer span:hover {
+    color: rgb(255, 94, 0);
+    text-decoration: underline;
+}
+
+.loginContainer>div>input, .login button {
+    height: 6vh;
+    width: 100%;
+    max-width: 8cm;
+    border-radius: 4px;
+    margin: 0;
+    padding: 0;
+    border: n;
+}
+
+.loginContainer>div {
+    width: 100%;
+}
+
+.loginContainer>div>input {
+    padding-left: 4.5vh;
+}
+
+.loginContainer>div>img {
+    position: absolute;
+    z-index: 2;
+    height: 3.5vh;
+    margin-top: 1.2vh;
+    padding-left: 1.2vh;
+}
+
+.loginContainer>div {
+    width: 70%;
+    max-width: 8cm;
+}
+
+.loginContainer button {
+    height: 6vh;
+    width: 100%;
+    border-radius: 4px;
+}
+
+.loginContainer button {
+    border: none;
+    color: white;
+    box-shadow: 1px 2px 1px 1px rgba(75, 74, 74, 0.314);
+    font-size: 1em;
+    cursor: pointer;
+}
+
+.signInBtn {
+    background-color: #378AFD;
+}
+
+.signUpBtn {
+    background-color: #2EEE35;
+}

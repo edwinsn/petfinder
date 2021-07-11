@@ -1,24 +1,41 @@
 .leaflet-container {
-    width: 100%;
-    height: 640px;
-  }
+  width: 100%;
+  height: 640px;
+}
 
 body {
-    padding: 0;
-    margin: 0;
-    position: relative;
+  padding: 0;
+  margin: 0;
+  position: relative;
 }
 
 html, body, #map {
-    height: 100%;
-    width: 100vw;
+  height: 100%;
+  width: 100vw;
 }
 
-.about{
-  position: absolute;
-  top: 8px;
-  right: 2%;
+.about {
+  margin-top: 45px;
+  margin-left: 10px;
 }
-.animal{
+
+.animal {
   bottom: 3%;
+}
+
+:root {
+  --largeHeight: 7vh;
+  --mediumHeight: 5vh;
+  --smallHeight: 3.5vh;
+  --circularBtnHeight: 10vh;
+  --appColor: #3B72E1;
+  --minCloseIconHeigh: 1.2cm;
+  --minIconHeight: 0.7cm;
+  --border-radius: 5px;
+  --fastTransition:300ms ;
+  --slowTransition:450ms
+}
+
+.closeIcon {
+  cursor: pointer;
 }
