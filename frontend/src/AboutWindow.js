@@ -5,8 +5,9 @@ import animalsIcon from './assets/images/animalsIcon.png'
 
 export const AboutWindow = (props) => {
     return (
-        <section className="aboutWindowContainer" onClick={props.close}>
-            <div className="aboutWindow">
+        <section className="aboutWindowContainer emergentContainer">
+            <div onClick={props.close} className="background"></div>
+            <div className="aboutWindow emergentWindow">
                 <img src={closeIcon} className="closeIcon" onClick={props.close} />
                 <p className="title">
                     Acerca de
@@ -24,7 +25,7 @@ export const AboutWindow = (props) => {
                     </ul>
                 </p>
                 <p>
-                    Si deseas adoptar un peludito o te sobra un poco de comida puedes estar seguro 
+                    Si deseas adoptar un peludito o te sobra un poco de comida puedes estar seguro
                     de que un animal callejero te agradecerá tu ayuda
                 </p>
 

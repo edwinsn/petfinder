@@ -24,8 +24,8 @@ export class MainPage extends Component {
   }
 
   render() {
-    console.log("MainPage rendered")
-    console.log(this.props.useruid)
+    //console.log("MainPage rendered")
+    //console.log(this.props.useruid)
     return (
       <div >
         <div>
@@ -36,8 +36,8 @@ export class MainPage extends Component {
             </TileLayer>
             <ZoomControl position="bottomleft" />
             <Search className="search" />
-            <Animal panelDisplay={this.openPanel} />
-            <GetMarkers open={this.openPanel} />
+            <Animal panelDisplay={this.openPanel} userid={this.props.useruid} />
+            <GetMarkers open={this.openPanel} userid={this.props.useruid} />
             <About></About>
           </MapContainer>
         </div>
@@ -47,7 +47,7 @@ export class MainPage extends Component {
           <SideBar handleLogout={this.props.handleLogout} />
           :
           <Link to="/login">
-            <img className="loginBtn" src={userIcon}/>
+            <img className="loginBtn" src={userIcon} />
           </Link>}
 
       </div>

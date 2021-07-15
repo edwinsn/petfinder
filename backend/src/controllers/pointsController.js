@@ -3,31 +3,55 @@ const { pointModel, backupPointModel } = require("../Models/point")
 const pointsControllers = {}
 
 pointsControllers.getPoints = async (req, res) => {
-    const { lowerlat, upperlat, lowerlng, upperlng, markersLoaded } = req.query
+    const { lowerlat, upperlat, lowerlng, upperlng, markersLoaded, userid } = req.query
 
     let points = await pointModel.find({
         lat: { $gt: lowerlat, $lt: upperlat },
         lng: { $gt: lowerlng, $lt: upperlng }
     });
+
+    points = points.map((e) => {
+        let { lat, lng, type, frecuence, range, imgurl, description, contact, _id } = e
+        if (e.userid === userid) {
+            return { lat, lng, type, frecuence, range, imgurl, description, contact, _id, userid }
+        }
+        return { lat, lng, type, frecuence, range, imgurl, description, contact, _id }
+    })
+
     points = points.filter(e => {
         if (markersLoaded.includes(e.lat + "" + e.lng)) {
             return false
         }
         return true
     })
-    console.log("-returned:" + points.length)
+    //console.log("-returned:" + points.length)
     res.json(points);
 }
 
 pointsControllers.getDataBase = async (req, res) => {
     const points = await pointModel.find();
-    res.json(points);
+
+    let database = "lat|lng|type|frecuence|area|ingurl|description\n"
+
+    points.forEach((point) => {
+        let { lat, lng, type, frecuence, range, imgurl, description } = point
+        database += [lat, lng, type, frecuence, range, imgurl, description].join("|") + "\n"
+    })
+
+
+    var filename = 'miociddb.json';
+    var mimetype = 'application/json';
+
+    res.setHeader('Content-disposition', 'attachment; filename=' + filename);
+    res.setHeader('Content-type', mimetype);
+    res.send(database);
+
 }
 
 pointsControllers.postPoint = async (req, res) => {
 
     try {
-        const { coords, type, frecuence, range, imgurl, description, contact } = req.body;
+        const { coords, type, frecuence, range, imgurl, description, contact, userid } = req.body;
 
         const { lat, lng } = coords
 
@@ -42,7 +66,8 @@ pointsControllers.postPoint = async (req, res) => {
                 range,
                 imgurl,
                 description,
-                contact
+                contact,
+                userid
             })
 
 
@@ -84,7 +109,7 @@ pointsControllers.updatePoint = async (req, res) => {
     } else if (deleteOption && newFrecuence == 0) {
         const { type, initialFrecuence, id } = pointToUpdate
         await deletePoint(id, lat, lng, type, initialFrecuence);
-        console.log(id)
+        //console.log(id)
         res.json({ message: "point deleted!" })
     }
     else if (newFrecuence == 0) res.json({ message: "cant increase more the certainty of the data" })

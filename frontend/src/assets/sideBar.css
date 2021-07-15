@@ -1,4 +1,10 @@
-.closeSection{
+
+
+.inactiveBtn:hover, .inactiveBtn:hover img {
+    background-color: white !important;
+}
+
+.closeSection {
     height: 100vh;
     width: 100vw;
     position: absolute;
@@ -11,22 +17,36 @@
     display: flex;
     align-items: center;
     cursor: pointer;
+    padding-left: 7vh;
+    width: 90%;
+    transition: color var(--transition-time), background-color var(--transition-time);
+}
+
+.items>div:hover {
+    background-color: var(--appColor);
+    color: white;
+}
+
+.items>div:hover img {
+    filter: brightness(0) invert(1);
 }
 
 .items img {
     height: var(--smallHeight);
     min-height: var(--minIconHeight);
     margin-right: 2vh;
+    transition: filter var(--transition-time);
 }
 
-.items p{
+.items p {
     white-space: nowrap;
 }
 
 .sidebar {
+    border-left: var(--emergentBorder);
     height: 100vh;
     width: 0;
-    max-width: 12cm;
+    max-width: 10cm;
     background-color: white;
     transition-property: right;
     transition: var(--fastTransition);
@@ -41,6 +61,8 @@
 
 .sidebar .closeIcon {
     position: absolute;
+    left: 2vh;
+    top: 2vh;
     height: var(--largeHeight);
     min-height: var(--minCloseIconHeigh);
     cursor: pointer;
@@ -49,7 +71,6 @@
 .sidebar .items {
     top: 13vh;
     position: relative;
-    left: 5vh;
 }
 
 .sidebarContainer {

@@ -8,26 +8,31 @@ import dbIcon from './assets/images/dbIcon.svg'
 import logoutIcon from './assets/images/logoutIcon.svg'
 import feedBackIcon from './assets/images/feedBackIcon.svg'
 import { AboutWindow } from './AboutWindow'
+import { FeedBack } from "./feedBack"
+import axios from "axios"
+import download from 'downloadjs'
 
 export const SideBar = (props) => {
 
     const [show, setShow] = useState(false)
     const [showAboutW, setShowAboutW] = useState(false)
+    const [showFeedBack, setShowFeedBack] = useState(false)
 
     return (
         <div className="sidebarContainer">
             {showAboutW && <AboutWindow close={() => { setShowAboutW(false) }} />}
+            {showFeedBack && <FeedBack close={() => { setShowFeedBack(false) }} />}
             <FaIcons.FaBars style={{ height: "80%", width: "40%", minHeight: "30px", color: "rgb(44, 44, 44)", cursor: "pointer" }} onClick={() => { setShow(!show) }} />
 
             {show && <div className="closeSection" onClick={() => { setShow(false) }}></div>}
             <div className={show ? "sidebar active" : "sidebar"}>
                 <img src={closeIcon} className="closeIcon" onClick={() => { setShow(false) }} />
                 <div className="items">
-                    <div>
+                    {/*<div className="inactiveBtn">
                         <img src={modifyIcon} />
-                        <p>Modo edición</p>
-                    </div>
-                    <div>
+                        <p >Modo edición</p>
+    </div>*/}
+                    <div onClick={getDb}>
                         <img src={dbIcon} />
                         <p>Descargar Base de Datos</p>
                     </div>
@@ -38,7 +43,10 @@ export const SideBar = (props) => {
                         <img src={infoIcon} />
                         <p>Acerca de</p>
                     </div>
-                    <div>
+                    <div onClick={() => {
+                        setShowFeedBack(true)
+                        setShow(false)
+                    }}>
                         <img src={feedBackIcon} />
                         <p>Sugerencias</p>
                     </div>
@@ -51,4 +59,11 @@ export const SideBar = (props) => {
             </div>
         </div>
     )
+}
+let getDb = async () => {
+    //send only the lat, lng, fre, and type data
+    let res = await fetch(process.env.REACT_APP_POINTS_URI + "/database")
+    const blob = await res.blob();
+    download(blob, 'database.cvs');
+
 }

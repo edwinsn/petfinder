@@ -21,7 +21,7 @@ export function Form(props) {
         listOfFrecuences.push(
             <div
                 key={i}
-                style={{ background: active[i] ? "#6868EE" : "#E3E3E3" }}
+                style={{ background: active[i] ? "#3B72E1" : "#E3E3E3" }}
                 onClick={() => {
                     selectFrecuence(i, props.frecuence, setActiveFrecuences)
                 }}></div>

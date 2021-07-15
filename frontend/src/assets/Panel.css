@@ -3,7 +3,15 @@ p label {
 }
 
 .animalImg {
+    object-fit: cover;
+    height: 100% !important;
+}
+
+.animalImgcontainer {
+    overflow-x: scroll;
+    height: 45%;
     background-color: #F2EFE9;
+    text-align: center;
 }
 
 .close {
@@ -37,7 +45,7 @@ p label {
     /* border: 1px solid red;*/
 }
 
-.infoContainer>div {
+.infoContainer>div:nth-child(1) {
     height: 50%;
     display: flex;
     flex-direction: column;
@@ -73,8 +81,12 @@ p label {
 .frecuenceUpdated {
     color: #37B258;
     font-weight: bolder;
+    margin-top: 4vh;
+    margin-left: 3vh;
+    position: absolute;
 }
-.panel label img{
+
+.panel label img {
     cursor: pointer;
     padding: 15px 0;
 }
@@ -84,25 +96,32 @@ p label {
     z-index: 400;
     background-color: white;
     height: 100%;
-    max-width: 12cm;
+    max-width: 11cm;
     width: 0;
     position: absolute;
     margin-top: -100vh;
     overflow-y: scroll;
-    transition: var(--fastTransition);
+    transition: width var(--fastTransition);
     overflow-x: hidden;
-    z-index: 402;
+    border-right: var(--emergentBorder);
+}
+
+.panelContainer {
+    width: 0;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    transition: width var(--fastTransition);
 }
 
 .active {
-    transition: var(--slowTransition);
-    width: 100%;
+    transition: width var(--slowTransition);
+    width: 100vw;
 }
 
-.inactive p{
+.inactive p {
     min-width: 9.5cm;
 }
-
 
 .panel label>img {
     width: 3.5vh;

@@ -10,9 +10,10 @@
     padding: 0 12px;
     font-family: 'Roboto';
     background-color: #3B72E1;
+    min-width: 0.25cm;
     z-index: 408;
     position: absolute;
-    cursor: pointer;
+    cursor: pointer; 
     border-radius: var(--border-radius);
 }
 
@@ -42,7 +43,10 @@
 
 .hide {
     display: none;
+    transition: display 1s;
 }
+
+
 
 .info p {
     margin-bottom: -6;

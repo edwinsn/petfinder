@@ -55,7 +55,8 @@ let getp = (map, props) => {
       upperlat,
       lowerlng,
       upperlng,
-      markersLoaded: coordsLoaded
+      markersLoaded: coordsLoaded,
+      userid: props.userid
     }
   }).then((res) => {
     if (res.status === 200) {
@@ -70,28 +71,38 @@ let getp = (map, props) => {
         iconSize: [37, 37]
       })
 
+      console.log(res.data)
       res.data.forEach((marker) => {
 
         let newmarker = L.marker({ lat: marker.lat, lng: marker.lng },
           { icon: marker.type === "dog" ? dogIconM : catIconM });
         newmarker.addTo(map)
 
+        let circle
         if (marker.range) {
-          L.circle({ lat: marker.lat, lng: marker.lng }, { radius: marker.range }).addTo(map);
+          circle = L.circle({ lat: marker.lat, lng: marker.lng }, { radius: marker.range })
+          circle.addTo(map);
         }
 
         newmarker.on("click", () => {
-    
+          /*if (false/*no update) {*/
           props.open(marker.lat, marker.lng,
             {
               frecuence: markersLoaded[marker.lat + "" + marker.lng].frecuence,
-              imgurl: marker.imgurl?marker.imgurl:marker.type=="dog"?dogIcon:catIcon,
+              imgurl: marker.imgurl ? marker.imgurl : marker.type == "dog" ? dogIcon : catIcon,
               description: marker.description,
               contact: marker.contact
             })
+          /*} else {
+            circle.removeFrom(map)
+            newmarker.removeFrom(map)
+            
+
+          }*/
         })
         markersLoaded[marker.lat + "" + marker.lng] = { frecuence: marker.frecuence }
-      });
+      }
+      );
     } else {
       console.log("Db error")
     }

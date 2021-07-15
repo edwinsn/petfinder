@@ -9,15 +9,16 @@ import './assets/Animal.css'
 import axios from 'axios'
 import dogIcon from './assets/images/dogIcon.svg'
 import catIcon from './assets/images/catIcon.svg'
-import plusIcon from './assets/images/plus.svg'
+import plusIcon from './assets/images/plus .svg'
 import closeIcon from './assets/images/closeIcon.svg'
 import cameraIcon from './assets/images/cameraIcon.svg'
 import userIcon from './assets/images/userIcon.svg'
-import petsIcon from './assets/images/petsIcon.jpg'
+import petsIcon from './assets/images/petsIcon.png'
+import pointsIcon from './assets/images/points.svg'
 import { Notifications } from './Notifications'
 
 
-import {storage, config} from './fire'
+import { storage } from './fire'
 
 
 let activeMarker = false
@@ -32,6 +33,7 @@ export let Animal = (props) => {
 
 
     let initiailCoords = map.containerPointToLatLng(map.latLngToContainerPoint(map.getCenter()))
+
 
     const [options, setOptions] = useState({ active: false, miniature: undefined })
     const file = useRef(undefined)
@@ -124,7 +126,7 @@ export let Animal = (props) => {
                             sendPoint(setOptions,
                                 type.current, options.active, frecuence,
                                 props.panelDisplay, map, markerCoords.current,
-                                updateNotifications, file, ev)
+                                updateNotifications, file, ev, props.userid)
                         }}
 
                         onMouseEnter={() => { map.dragging.disable() }
@@ -167,7 +169,7 @@ export let Animal = (props) => {
                                 </label>
 
                             </div>
-                            <span>...</span>
+                            <span><img src={pointsIcon}/></span>
 
                         </div>
 
@@ -180,6 +182,7 @@ export let Animal = (props) => {
                                 className="cancelMarker"
                                 onClick={() => {
                                     cancelMarker(setOptions)
+                                    map.dragging.enable()
                                 }
                                 } />
 
@@ -216,13 +219,17 @@ function addMark(setOptions, map, setMarkerCoords) {
 async function sendPoint(setOptions, type,
     areoptionsActive, frecuence,
     panelDisplay, map, markerCoords,
-    updateNotifications, file, ev) {
+    updateNotifications, file, ev, userid) {
+
 
 
     if (areoptionsActive) {
 
         let description = ev.target[0].value
         let contact = ev.target[1].value
+
+        description = description ? description : undefined
+        contact = contact ? contact : undefined
 
         if (markerCoords.range > 400) {
             setTimeout(() => {
@@ -298,8 +305,9 @@ async function sendPoint(setOptions, type,
                                     range: markerCoords.range,
                                     imgurl,
                                     description,
-                                    contact
-                                }, config)
+                                    contact,
+                                    userid
+                                })//, config)
                                 console.log(status === 200 ? "Dato registrado" : "Error en el envio del punto")
                             } catch (err) {
                                 console.log(err)
@@ -330,15 +338,16 @@ async function sendPoint(setOptions, type,
                         }
                     })
 
-                     let { status } = await axios.post(process.env.REACT_APP_POINTS_URI, {
-                         coords: markerCoords.center,
-                         type,
-                         frecuence: frecuence.frecuence,
-                         range: markerCoords.range,
-                         description,
-                         contact
-                     }, config)
-                     console.log(status === 200 ? "Dato registrado" : "Error en el envio del punto")
+                    let { status } = await axios.post(process.env.REACT_APP_POINTS_URI, {
+                        coords: markerCoords.center,
+                        type,
+                        frecuence: frecuence.frecuence,
+                        range: markerCoords.range,
+                        description,
+                        contact,
+                        userid
+                    })//, config)
+                    console.log(status === 200 ? "Dato registrado" : "Error en el envio del punto")
 
                 }
 

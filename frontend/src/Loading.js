@@ -6,3 +6,11 @@ export function LoadingRectangles(){
 export function LoadingCircles(){
     return <div className="lds-ring"><div></div><div></div><div></div><div></div></div>
 }
+
+export const Loading = ()=>{
+    return(
+        <div className="loadinBackground background">
+            <LoadingCircles/>
+        </div>
+    )
+}

@@ -3,6 +3,13 @@
   height: 640px;
 }
 
+.background{
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  z-index: 1;
+}
+
 body {
   padding: 0;
   margin: 0;
@@ -32,10 +39,60 @@ html, body, #map {
   --minCloseIconHeigh: 1.2cm;
   --minIconHeight: 0.7cm;
   --border-radius: 5px;
-  --fastTransition:300ms ;
-  --slowTransition:450ms
+  --fastTransition: 300ms;
+  --slowTransition: 450ms;
+  --emergentWindowWithd: 90%;
+  --emergentWindowHeight: 80%;
+  --emergentMaxWidth: 10cm;
+  --emergentMaxHeight: 15cm;
+  --emergentColor: white;
+  --emergentBorder: 2px solid hsla(38, 6%, 75%, 0.8);
+  --gray:#DDDDDD;
+  --topMargin: 9px;
+  --transition-time:600ms ;
+}
+
+.emergentWindow {
+  width: var(--emergentWindowWithd);
+  height: var(--emergentWindowHeight);
+  max-width: var(--emergentMaxWidth);
+  max-height: var(--emergentMaxHeight);
+  background-color: var(--emergentColor);
+  border: var(--emergentBorder);
+  border-radius: var(--border-radius);
+  position: relative;
+  margin-top: var(--topMargin);
+  overflow-y: scroll;
+  padding: 8vh 2vh 2vh 2vh;
+  z-index: 2;
+}
+
+.emergentContainer {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  right: 0;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  z-index: 3;
+  background-color: hsla(0, 0%, 100%, 0.5);
+}
+
+.aboutWindowContainer .closeIcon, .feedBack .closeIcon {
+  position: absolute;
+  top: 1vh;
+  right: 0;
+  height: var(--mediumHeight);
 }
 
 .closeIcon {
   cursor: pointer;
+}
+
+.title {
+  font-size: 1.5em;
+  margin-top: 0;
+  margin-bottom: 5vh;
 }

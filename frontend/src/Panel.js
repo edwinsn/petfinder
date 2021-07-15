@@ -5,8 +5,8 @@ import closeIcon from './assets/images/closeIcon.svg'
 import { editFrecuences } from './GetMarkers'
 import UserIcon from './assets/images/userIcon.svg'
 import frecuenceIcon from './assets/images/frecuenceIcon.svg'
-import petsIcon from './assets/images/petsIcon.jpg'
-import plus from './assets/images/plus.svg'
+import petsIcon from './assets/images/petsIcon.png'
+import plus from './assets/images/plus .svg'
 import minus from './assets/images/minus.svg'
 
 let actualCoords
@@ -33,7 +33,7 @@ export class Panel extends Component {
 
   render() {
 
-    console.log("Panel rendered")
+    //console.log("Panel rendered")
 
     let probabilityBars = []
     for (let i = 0; i < 10; i++) {
@@ -42,93 +42,99 @@ export class Panel extends Component {
       )
     }
     return (
-      <div className={this.state.show?"panel active":"panel inactive"} >
-        <img
-          src={closeIcon}
-          alt="close"
-          className="close"
-          onClick={
-            () => {
-              this.setState({
-                show: false
-              })
+      <div className="panelContainer">
 
-            }
-          } />
-        <div className="infoContainer">
+        <div className={this.state.show ? "panel active" : "panel inactive"} >
+          <img
+            src={closeIcon}
+            alt="close"
+            className="close"
+            onClick={
+              () => {
+                this.setState({
+                  show: false
+                })
 
-          <div>
-
-            <div>
-              <div className="verticalCentered">
-                <img src={petsIcon} />
-                <span>Descripcion</span>
-              </div>
-              <p>
-                {this.state.description ? this.state.description : "No hay descripción"}
-              </p>
-            </div>
+              }
+            } />
+          {this.state.excessOfRevitions &&
+            <p className="excess">
+              No puedes incrementar o disminuir la probabilidad más de una vez
+            </p>}
+          {this.state.updatedFrecuence &&
+            <p className="frecuenceUpdated">Dato actualizado!</p>
+          }
+          <div className="infoContainer">
 
             <div>
-              <div className="verticalCentered">
-                <img src={frecuenceIcon} />
-                <span>Avistamientos</span>
+
+              <div>
+                <div className="verticalCentered">
+                  <img src={petsIcon} />
+                  <span>Descripcion</span>
+                </div>
+                <p>
+                  {this.state.description ? this.state.description : "No hay descripción"}
+                </p>
               </div>
-              <div className="probabilityContainer">
-                <div className="probabilitybars">
-                  {probabilityBars}
+
+              <div>
+                <div className="verticalCentered">
+                  <img src={frecuenceIcon} />
+                  <span>Avistamientos</span>
+                </div>
+                <div className="probabilityContainer">
+                  <div className="probabilitybars">
+                    {probabilityBars}
+                  </div>
+
+                  <label htmlFor="decrementProb">
+                    <input type="radio" name="dep"
+                      className="hidden"
+                      key={previousOptio1key}
+                      id="decrementProb"
+                      onChange={(ev) => {
+                        if (ev.target.checked) { this.updatedFrecuence(this.state.lat, this.state.lng, true) }
+                      }} />
+                    <img src={minus} />
+                  </label>
+
+                  <label htmlFor="incrementProb">
+                    <input type="radio"
+                      className="hidden"
+                      id="incrementProb"
+                      name="dep"
+                      key={previousOptio2key}
+                      onChange={(ev) => {
+                        if (ev.target.checked) {
+                          this.updatedFrecuence(this.state.lat, this.state.lng, false)
+                        }
+                      }} />
+                    <img src={plus} />
+                  </label>
+                </div>
+              </div>
+
+              <div>
+                <div className="verticalCentered">
+                  <img src={UserIcon} />
+                  <span>Contacto</span>
                 </div>
 
-                <label htmlFor="decrementProb">
-                  <input type="radio" name="dep"
-                    className="hidden"
-                    key={previousOptio1key}
-                    id="decrementProb"
-                    onChange={(ev) => {
-                      if (ev.target.checked) { this.updatedFrecuence(this.state.lat, this.state.lng, true) }
-                    }} />
-                  <img src={minus} />
-                </label>
-
-                <label htmlFor="incrementProb">
-                  <input type="radio"
-                    className="hidden"
-                    id="incrementProb"
-                    name="dep"
-                    key={previousOptio2key}
-                    onChange={(ev) => {
-                      if (ev.target.checked) {
-                        this.updatedFrecuence(this.state.lat, this.state.lng, false)
-                      }
-                    }} />
-                  <img src={plus} />
-                </label>
-              </div>
-            </div>
-
-            <div>
-              <div className="verticalCentered">
-                <img src={UserIcon} />
-                <span>Contacto</span>
+                <p>
+                  {this.state.contact ? this.state.contact : "No hay contacto"}
+                </p>
               </div>
 
-              <p>
-                {this.state.contact ? this.state.contact : "No hay contacto"}
-              </p>
             </div>
-
+            <div className="animalImgcontainer">
+              <img className="animalImg" key={Math.random()} src={this.state.imgUrl ? this.state.imgUrl : petsIcon} />
+            </div>
           </div>
-          <img className="animalImg" key={Math.random()} src={this.state.imgUrl ? this.state.imgUrl : petsIcon} />
-        </div>
 
-        {this.state.excessOfRevitions &&
-          <p className="excess">
-            No puedes incrementar o disminuir la probabilidad más de una vez
-          </p>}
-        {this.state.updatedFrecuence &&
-          <p className="frecuenceUpdated">Dato actualizado!</p>
-        }
-      </div>
+
+        </div>
+      </div >
     )
   }
 
@@ -164,7 +170,7 @@ export class Panel extends Component {
 
     this.setState({
       display: "block",
-      show:true,
+      show: true,
       prob: 2 * actualFrecuence,
       lat,
       lng,

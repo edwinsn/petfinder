@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { fire, auth, provider } from './fire'
 import { Login } from "./login";
-import { Aux } from './Aux.js';
 import { MainPage } from './MainPage'
 import './assets/App.css'
 import {
@@ -9,6 +8,7 @@ import {
     Route,
     Switch
 } from "react-router-dom";
+import {Loading} from './Loading'
 
 export const App = () => {
 
@@ -119,13 +119,13 @@ export const App = () => {
 
     switch (user) {
         case "noUserYet":
-            view = <div>Cargando</div>
+            view = <Loading />
             break;
         case "noUser":
             view = <Router>
                 
                 <Route path="/" exact>
-                    <MainPage useruid={false} />
+                    <MainPage /*useruid={false}*/ />
                 </Route>
                 <Route path="/login">
                     <Login
