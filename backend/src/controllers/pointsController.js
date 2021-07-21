@@ -88,34 +88,61 @@ pointsControllers.postPoint = async (req, res) => {
 pointsControllers.updatePoint = async (req, res) => {
 
 
-    const { lat, lng, isDeprecated } = req.body
-
-    let pointToUpdate = await pointModel.findOne({ lat, lng })
+    const { lat, lng, isDeprecated, userid, newlat, newlng, _id, description, contact, frecuence, imgurl, relocating, range } = req.body
 
 
-    let deleteOption = false;
-    let newFrecuence
-    try {
-        newFrecuence = pointToUpdate.frecuence + (isDeprecated ? -0.5 : 1)
+    //console.log({ lat, lng, isDeprecated, userid, newlat, newlng, _id, description, contact, frecuence, imgurl, relocating })
+
+    let pointToUpdate = await pointModel.findById(_id)
+    
+    if (relocating && userid === pointToUpdate.userid) {
+
+        let data = {}
+
+        if (description) {
+            data = { ...data, description }
+        }
+        if (contact) {
+            data = { ...data, contact }
+        }
+        if (frecuence) {
+            data = { ...data, frecuence }
+        }
+        if (imgurl) {
+            data = { ...data, imgurl }
+        }
+
+        await pointModel.findByIdAndUpdate(_id, { lat: newlat, lng: newlng, ...data, range });
+        res.json({message:"updated!"})
+
     }
-    catch (err) {
-        console.log("Err")
-        newFrecuence = 5
+    else {
+
+        let pointToUpdate = await pointModel.findOne({ lat, lng })
+        let deleteOption = false;
+        let newFrecuence
+
+        try {
+            newFrecuence = pointToUpdate.frecuence + (isDeprecated ? -0.5 : 1)
+        }
+        catch (err) {
+            console.log("Err")
+            newFrecuence = 5
+        }
+        newFrecuence = newFrecuence > 5 ? 5 : newFrecuence
+        if (newFrecuence >= 0) {
+            await pointModel.updateOne({ lat, lng }, { frecuence: newFrecuence });
+            res.json({ mesagge: "Point updated!" })
+        } else if (deleteOption && newFrecuence == 0) {
+            const { type, initialFrecuence, id } = pointToUpdate
+            await deletePoint(id, lat, lng, type, initialFrecuence);
+            //console.log(id)
+            res.json({ message: "point deleted!" })
+        }
+        else if (newFrecuence == 0) res.json({ message: "cant increase more the certainty of the data" })
+        else res.json({ message: "can decrease more the certainty of the data" })
     }
-    newFrecuence = newFrecuence > 5 ? 5 : newFrecuence
-    if (newFrecuence >= 0) {
-        await pointModel.updateOne({ lat, lng }, { frecuence: newFrecuence });
-        res.json({ mesagge: "Point updated!" })
-    } else if (deleteOption && newFrecuence == 0) {
-        const { type, initialFrecuence, id } = pointToUpdate
-        await deletePoint(id, lat, lng, type, initialFrecuence);
-        //console.log(id)
-        res.json({ message: "point deleted!" })
-    }
-    else if (newFrecuence == 0) res.json({ message: "cant increase more the certainty of the data" })
-    else res.json({ message: "can decrease more the certainty of the data" })
 }
-
 deletePoint = async (id, lat, lng, type, initialFrecuence) => {
     //move to a back up and deprecated database
 

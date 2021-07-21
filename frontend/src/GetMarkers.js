@@ -1,44 +1,86 @@
 import axios from 'axios'
 import dogIcon from './assets/images/dogIcon.svg'
 import catIcon from './assets/images/catIcon.svg'
-import { useMap, useMapEvents } from "react-leaflet";
-import L, { divIcon, Marker } from 'leaflet'
+import { useMap } from "react-leaflet";
+import L from 'leaflet'
+import { Animal } from './Animal'
+import { useEffect, useState } from 'react';
+import store from './store'
+import { useDispatch } from 'react-redux'
+import { showNotifications } from "./features/notificationsSlice"
 
+//of-on icon 
 let markersLoaded = [{ coordinates: "0" }]
+let panes = []
 
 export let GetMarkers = (props) => {
-  console.log("Get markers render")
+
+  //console.log("Get markers render")
+
+  let [editing, setEditing] = useState({ active: false, type: "dog", coords: { lat: false, lng: false } })
+
+  let dispatch = useDispatch()
+  const updateNotifications = (noEditable, withoutConnection) => {
+    dispatch(showNotifications({ noEditable, withoutConnection }))
+  }
 
   let map = useMap();
 
-  map.locate()
+  useEffect(() => {
+    map.locate()
+    getp(map, props, setEditing, updateNotifications)
 
-  getp(map, props)
+    map.on('locationfound', (e) => {
 
-  map.on('locationfound', (e) => {
+      map.panTo(e.latlng, map.getZoom())
+      getp(map, props, setEditing, updateNotifications)
+    })
 
-    map.panTo(e.latlng, map.getZoom())
-    getp(map, props)
-  })
+    map.on('dragend', () => {
+      getp(map, props, setEditing, updateNotifications)
+    })
+    map.on('zoomend', () => {
+      if (map.getZoom() < actualZoom) {
+        getp(map, props, setEditing, updateNotifications)
+        actualZoom = map.getZoom()
+      }
+    }
+    )
+    store.subscribe(() => {
+      //console.log(store.getState().editing.value)
+      //console.log(panes)
+      //console.log("...")
+      for (let i = 0; i < panes.length; i++) {
 
-  map.on('dragend', () => {
-    getp(map, props)
-  })
+        if (panes[i].editable) {
+          //          console.log(panes[i].pane.setStyle)
+          panes[i].pane.setStyle({
+            color: store.getState().editing.value ? '#ffab2e79' : "#3388FF"
+          });
+        }
+      }
+
+    })
+  }, [])
+
 
   //hacer las peticiones solo en zoomout
   let actualZoom = map.getZoom()
-  map.on('zoomend', () => {
-    if (map.getZoom() < actualZoom) {
-      getp(map, props)
-      actualZoom = map.getZoom()
-    }
 
-  }
-  )
-  return null
+  return (
+    <Animal editing={editing.active}
+      setEditing={setEditing}
+      userid={props.userid}
+      panelDisplay={props.open}
+      open={props.open}
+      panes={panes}
+      defaultMarkerData={editing.markerData}
+    />)
+
 }
 
-let getp = (map, props) => {
+let getp = (map, props, setEditing, updateNotifications) => {
+  //console.log("...")
   let { _northEast, _southWest } = map.getBounds()
 
   let lowerlat = 1.1 * _southWest.lat - Math.abs(0.1 * _northEast.lat)
@@ -63,15 +105,17 @@ let getp = (map, props) => {
       //console.log("ok")
       let dogIconM = new L.icon({
         iconUrl: dogIcon,
-        iconSize: [37, 37]
+        iconSize: [35, 35]
       })
 
       let catIconM = new L.icon({
         iconUrl: catIcon,
-        iconSize: [37, 37]
+        iconSize: [35, 35]
       })
 
-      console.log(res.data)
+      let editing = store.getState().editing.value
+
+      //      console.log(res.data)
       res.data.forEach((marker) => {
 
         let newmarker = L.marker({ lat: marker.lat, lng: marker.lng },
@@ -79,26 +123,71 @@ let getp = (map, props) => {
         newmarker.addTo(map)
 
         let circle
+        let editable = marker.userid === props.userid && editing
+        let color = editable ? '#ffab2e79' : "#3388FF"
         if (marker.range) {
-          circle = L.circle({ lat: marker.lat, lng: marker.lng }, { radius: marker.range })
+          circle = L.circle({ lat: marker.lat, lng: marker.lng }, {
+            radius: marker.range,
+            color
+          })
           circle.addTo(map);
         }
-
+        else {
+          circle = L.circle({ lat: marker.lat, lng: marker.lng }, { radius: 100, color })
+          circle.addTo(map);
+        }
+        panes.push({ pane: circle, editable: marker.userid == props.userid })
+        //console.log(panes)
+        //console.log(panes)
         newmarker.on("click", () => {
-          /*if (false/*no update) {*/
-          props.open(marker.lat, marker.lng,
-            {
-              frecuence: markersLoaded[marker.lat + "" + marker.lng].frecuence,
-              imgurl: marker.imgurl ? marker.imgurl : marker.type == "dog" ? dogIcon : catIcon,
-              description: marker.description,
-              contact: marker.contact
-            })
-          /*} else {
+
+          if (!store.getState().editing.value) {
+            props.open(marker.lat, marker.lng,
+              {
+                frecuence: markersLoaded[marker.lat + "" + marker.lng].frecuence,
+                imgurl: marker.imgurl ? marker.imgurl : marker.type == "dog" ? dogIcon : catIcon,
+                description: marker.description,
+                contact: marker.contact
+              })
+          }
+          else if (marker.userid != props.userid) {
+            updateNotifications(true)
+            setTimeout(() => {
+              updateNotifications(false)
+            }, 2500)
+          }
+          else {
+            //console.log(marker)
             circle.removeFrom(map)
             newmarker.removeFrom(map)
-            
+            setEditing({
+              active: true,
 
-          }*/
+              markerData: {
+                type: marker.type,
+                defaultMarkerData: {
+                  type: marker.type,
+                  coords: { lat: marker.lat, lng: marker.lng },
+                  range: marker.range,
+                  frecuence: marker.frecuence,
+                  imgurl: marker.imgurl,
+                  description: marker.description,
+                  contact: marker.contact,
+                  range: marker.range ? marker.range : 100,
+                  _id: marker._id
+
+                },
+                coords: { lat: marker.lat, lng: marker.lng },
+                frecuence: marker.frecuence,
+                imgurl: marker.imgurl,
+                description: marker.description,
+                contact: marker.contact,
+                range: marker.range ? marker.range : 100,
+                _id: marker._id
+              }
+            })
+            //console.log(editing)
+          }
         })
         markersLoaded[marker.lat + "" + marker.lng] = { frecuence: marker.frecuence }
       }
@@ -107,6 +196,9 @@ let getp = (map, props) => {
       console.log("Db error")
     }
   }).catch((err) => {
+    //console.log(err)
+    updateNotifications(false, true)
+    setTimeout(() => { updateNotifications() }, 3000)
     console.log("Network error")
   })
 

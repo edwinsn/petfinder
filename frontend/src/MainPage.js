@@ -9,7 +9,8 @@ import { GetMarkers } from './GetMarkers'
 import { Link } from "react-router-dom";
 import './assets/mainPage.css'
 import { SideBar } from './sideBar';
-import userIcon from './assets/images/userIcon.svg'
+import userIcon from './assets/images/userIconFilled.svg'
+import { Notifications } from './Notifications';
 
 export class MainPage extends Component {
 
@@ -36,18 +37,19 @@ export class MainPage extends Component {
             </TileLayer>
             <ZoomControl position="bottomleft" />
             <Search className="search" />
-            <Animal panelDisplay={this.openPanel} userid={this.props.useruid} />
             <GetMarkers open={this.openPanel} userid={this.props.useruid} />
             <About></About>
           </MapContainer>
         </div>
         <Panel ref={this.child} />
-
+        <Notifications />
         {this.props.useruid ?
           <SideBar handleLogout={this.props.handleLogout} />
           :
           <Link to="/login">
-            <img className="loginBtn" src={userIcon} />
+            <div className="loginBtnContainer">
+              <img className="loginBtn" src={userIcon} />
+            </div>
           </Link>}
 
       </div>

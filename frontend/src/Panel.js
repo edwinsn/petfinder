@@ -5,9 +5,11 @@ import closeIcon from './assets/images/closeIcon.svg'
 import { editFrecuences } from './GetMarkers'
 import UserIcon from './assets/images/userIcon.svg'
 import frecuenceIcon from './assets/images/frecuenceIcon.svg'
-import petsIcon from './assets/images/petsIcon.png'
+import petsIcon from './assets/images/petsIcon.svg'
 import plus from './assets/images/plus .svg'
 import minus from './assets/images/minus.svg'
+import dogIcon from './assets/images/dogIcon.svg'
+import catIcon from './assets/images/catIcon.svg'
 
 let actualCoords
 let actualFrecuence
@@ -70,7 +72,7 @@ export class Panel extends Component {
 
               <div>
                 <div className="verticalCentered">
-                  <img src={petsIcon} />
+                  <img src={petsIcon} className="petsImg"/>
                   <span>Descripcion</span>
                 </div>
                 <p>
@@ -128,7 +130,7 @@ export class Panel extends Component {
 
             </div>
             <div className="animalImgcontainer">
-              <img className="animalImg" key={Math.random()} src={this.state.imgUrl ? this.state.imgUrl : petsIcon} />
+              <img className="animalImg" key={Math.random()} src={this.state.imgUrl ? this.state.imgUrl : undefined} />
             </div>
           </div>
 
@@ -166,7 +168,7 @@ export class Panel extends Component {
     previousOptio1key = Math.random()
     previousOptio2key = Math.random()
 
-    console.log(data)
+    //console.log(data)
 
     this.setState({
       display: "block",
@@ -174,7 +176,7 @@ export class Panel extends Component {
       prob: 2 * actualFrecuence,
       lat,
       lng,
-      imgUrl: data.imgurl,
+      imgUrl: data.imgurl ? data.imgurl : (data.type === "dog" ? dogIcon : catIcon),
       contact: data.contact,
       description: data.description
     })

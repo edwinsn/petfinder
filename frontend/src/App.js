@@ -8,7 +8,7 @@ import {
     Route,
     Switch
 } from "react-router-dom";
-import {Loading} from './Loading'
+import { Loading } from './Loading'
 
 export const App = () => {
 
@@ -106,6 +106,14 @@ export const App = () => {
     }
 
 
+    /*
+    
+    sobreposicion
+    
+    */
+
+
+
     const resetPassword = () => {
         this.clearErrors()
         fire.auth().sendPasswordResetEmail(this.state.email)
@@ -117,15 +125,17 @@ export const App = () => {
     }, [])
     let view
 
+    let main = <MainPage useruid={user != "noUser" ? user.uid : false} handleLogout={handleLogout} />
+
     switch (user) {
         case "noUserYet":
             view = <Loading />
             break;
         case "noUser":
             view = <Router>
-                
+
                 <Route path="/" exact>
-                    <MainPage /*useruid={false}*/ />
+                    {main}
                 </Route>
                 <Route path="/login">
                     <Login
@@ -143,7 +153,7 @@ export const App = () => {
 
             break;
         default:
-            view = <MainPage useruid={user.uid} handleLogout={handleLogout}/>
+            view = main
     }
 
     return (<div className="App">

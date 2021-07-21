@@ -3,17 +3,22 @@ import './assets/feedBack.css'
 import { useRef, useState } from 'react'
 import axios from 'axios'
 import { LoadingCircles } from './Loading'
-import { Notifications } from './Notifications'
 import { setOptions } from 'leaflet'
+import { useDispatch } from 'react-redux'
+import { showNotifications } from "./features/notificationsSlice"
+
 
 export const FeedBack = (props) => {
 
 
     const [options, setOptions] = useState({ isSlow: false, isConfuse: false })
     const [loading, setLoading] = useState(false)
-    const notifications = useRef()
-    const updateNotifications = (feedBack, withoutConection) => {
-        notifications.current.update(false, false, false, withoutConection, feedBack)
+
+
+    let dispatch = useDispatch()
+    const updateNotifications = (feedBack, withoutConnection) => {
+
+        dispatch(showNotifications({ feedBack, withoutConnection }))
     }
     const resetOptions = () => {
         setOptions({ isSlow: false, isConfuse: false })
@@ -25,7 +30,6 @@ export const FeedBack = (props) => {
         <form onSubmit={(ev) => { sendFeedBack(ev, options.isSlow, options.isConfuse, setLoading, updateNotifications, resetOptions) }} className="emergentContainer feedBackContainer">
             <div onClick={props.close} className="background"></div>
 
-            <Notifications ref={notifications} />
             <div className="emergentWindow feedBack">
                 <img src={closeIcon} className="closeIcon" onClick={props.close} />
                 <p className="title">Ayudanos a mejorar!</p>
@@ -80,7 +84,7 @@ let sendFeedBack = async (ev, isSlow, isConfuse, setLoading, updateNotifications
             updateNotifications(false, false)
         }, 2000)
     } catch (err) {
-        console.log(err)
+        //console.log(err)
         updateNotifications(false, true)
         setLoading(false)
         setTimeout(() => {

@@ -1,9 +1,3 @@
-
-
-.inactiveBtn:hover, .inactiveBtn:hover img {
-    background-color: white !important;
-}
-
 .closeSection {
     height: 100vh;
     width: 100vw;
@@ -91,4 +85,8 @@
 .sidebarContainer .active {
     width: 80vw;
     transition: var(--slowTransition);
+}
+
+.switch{
+    margin-left: 10px;
 }

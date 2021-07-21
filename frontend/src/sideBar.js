@@ -11,12 +11,21 @@ import { AboutWindow } from './AboutWindow'
 import { FeedBack } from "./feedBack"
 import axios from "axios"
 import download from 'downloadjs'
+import { useSelector, useDispatch } from 'react-redux'
+import { activate, deactivate } from './features/editingSlice'
+import { hideNotifications, showNotifications } from "./features/notificationsSlice"
+import Switch from "react-switch";
 
 export const SideBar = (props) => {
 
     const [show, setShow] = useState(false)
     const [showAboutW, setShowAboutW] = useState(false)
     const [showFeedBack, setShowFeedBack] = useState(false)
+    const editing = useSelector(state => {
+        //console.log("..")
+        return state.editing.value
+    })
+    const dispatch = useDispatch()
 
     return (
         <div className="sidebarContainer">
@@ -28,11 +37,30 @@ export const SideBar = (props) => {
             <div className={show ? "sidebar active" : "sidebar"}>
                 <img src={closeIcon} className="closeIcon" onClick={() => { setShow(false) }} />
                 <div className="items">
-                    {/*<div className="inactiveBtn">
+                    {<div
+                        onClick={!editing ?
+                            () => {
+                                dispatch(activate())
+                                setTimeout(() => {
+                                    dispatch(showNotifications({ editInstructions: true }))
+                                }, 500)
+                                setTimeout(() => {
+                                    dispatch(hideNotifications())
+                                }, 3000)
+                                setTimeout(() => {
+                                    setShow(false)
+                                }, 500)
+                            } :
+                            () => { dispatch(deactivate()) }}>
                         <img src={modifyIcon} />
-                        <p >Modo edición</p>
-    </div>*/}
-                    <div onClick={getDb}>
+                        <p >Modo edición</p> <Switch
+                            onChange={() => { }}
+                            className="switch"
+                            offColor="#CFCDC9"
+                            onColor="#73f27e"
+                            checked={editing} />
+                    </div>}
+                    <div onClick={() => { getDb(dispatch) }}>
                         <img src={dbIcon} />
                         <p>Descargar Base de Datos</p>
                     </div>
@@ -51,19 +79,24 @@ export const SideBar = (props) => {
                         <p>Sugerencias</p>
                     </div>
 
-                    <div>
+                    <div onClick={props.handleLogout}>
                         <img src={logoutIcon} />
-                        <p onClick={props.handleLogout}>Salir</p>
+                        <p>Salir</p>
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     )
 }
-let getDb = async () => {
+let getDb = async (dispatch) => {
     //send only the lat, lng, fre, and type data
-    let res = await fetch(process.env.REACT_APP_POINTS_URI + "/database")
-    const blob = await res.blob();
-    download(blob, 'database.cvs');
+    try {
+        let res = await fetch(process.env.REACT_APP_POINTS_URI + "/database")
+        const blob = await res.blob();
+        download(blob, 'database.cvs');
+    } catch (err) {
+        dispatch(showNotifications({ withoutConnection: true }))
+        setTimeout(() => { dispatch(showNotifications({ withoutConnection: false })) }, 2000)
+    }
 
 }

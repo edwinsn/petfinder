@@ -1,8 +1,8 @@
-import React, { useRef, useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useMap } from 'react-leaflet'
+import L, { marker } from 'leaflet'
 import { Form } from './Form'
-import L from 'leaflet'
-import { editFrecuences, getFrecuence } from "./GetMarkers";
+import { editFrecuences } from "./GetMarkers";
 import { UploadPhoto } from './UploadPhoto'
 import { Habitad } from './Habitad'
 import './assets/Animal.css'
@@ -13,15 +13,20 @@ import plusIcon from './assets/images/plus .svg'
 import closeIcon from './assets/images/closeIcon.svg'
 import cameraIcon from './assets/images/cameraIcon.svg'
 import userIcon from './assets/images/userIcon.svg'
-import petsIcon from './assets/images/petsIcon.png'
+import petsIcon from './assets/images/petsIcon.svg'
 import pointsIcon from './assets/images/points.svg'
-import { Notifications } from './Notifications'
-
-
+import { useDispatch } from 'react-redux'
+import { showNotifications } from "./features/notificationsSlice"
+import { deactivate } from './features/editingSlice';
+import store from './store'
 import { storage } from './fire'
 
 
 let activeMarker = false
+let lastMarkAdded = undefined
+let lastCircleAdded = undefined
+let markerData = {}
+let updateNotifications
 
 const frecuence = { frecuence: 4 };
 
@@ -29,33 +34,67 @@ export let Animal = (props) => {
 
     let map = useMap()
 
-    console.log("Animal rerendered")
+    //console.log("Animal rerendered")
+    let { defaultMarkerData, editing, setEditing, panes } = props
 
+    defaultMarkerData = defaultMarkerData ? defaultMarkerData : {}
 
-    let initiailCoords = map.containerPointToLatLng(map.latLngToContainerPoint(map.getCenter()))
+    markerData = markerData._id === defaultMarkerData._id ? markerData : { ...defaultMarkerData }
+    markerData.range = markerData.range ? markerData.range : 178
+    markerData.frecuence = markerData.frecuence ? markerData.frecuence : 3
 
+    //console.log(markerData.defaultMarkerData)
 
-    const [options, setOptions] = useState({ active: false, miniature: undefined })
-    const file = useRef(undefined)
-    const notifications = useRef()
-    const updateNotifications = (progress, showProgress, showOutOfRange) => { notifications.current.update(progress, showProgress, showOutOfRange) }
-    const type = useRef();
+    const [options, setOptions] = useState({ active: editing, miniature: undefined })
+    const [uploadPhotoWindow, togleUploadPhotoWindow] = useState(undefined)
 
+    let setMiniature = (miniature) => {
+        setOptions((pre) => {
+            return { active: pre.active, miniature }
+        })
+    }
 
-    const markerCoords = useRef({ center: initiailCoords, range: 0 })
-    let setMarkerCoords = (newCurrent) => {
+    let setMarkerCoordsandRange = (newCurrent) => {
 
         if ((typeof newCurrent) === "function") {
-            markerCoords.current = newCurrent(markerCoords.current)
+            let newData = newCurrent({ coords: markerData.coords, range: markerData.range })
+            markerData.coords = newData.coords
+            markerData.range = newData.range
+
         }
         else {
-            markerCoords.current = newCurrent
+            markerData.coords = newCurrent.coords
+            markerData.range = newCurrent.range
         }
 
     }
 
-    const [uploadPhotoWindow, togleUploadPhotoWindow] = useState(undefined)
-    const [isRangeInvalid, setIsRangeInvalid] = useState(false)
+    let dispatch = useDispatch()
+
+    useEffect(() => {
+
+        updateNotifications = (progress, showProgress, showOutOfRange, noEditable, withoutConnection) => {
+            dispatch(showNotifications({ progress, showProgress, showOutOfRange, noEditable, withoutConnection }))
+        }
+
+        window.onkeydown = (ev) => {
+            if (ev.key === "Escape") {
+                cancelMarker(setOptions)
+                if (store.getState().editing.value) {
+                    dispatch(deactivate())
+                }
+            }
+        }
+
+        store.subscribe(() => {
+            if (!store.getState().editing.value && !editing) {
+                //console.log("closing")
+                //error recordar asignar markerdata.coords
+                cancelMarker(setOptions, markerData, editing, map, setEditing, panes, props.open)
+            }
+        })
+
+    }, [])
 
 
     let typesOfAnimals = ["dog", "cat"];
@@ -68,8 +107,9 @@ export let Animal = (props) => {
                 draggable={false}
 
                 onClick={() => {
-                    type.current = animalType;
-                    addMark(setOptions, map, setMarkerCoords)
+                    if (activeMarker) { map.removeLayer(activeMarker) }
+                    markerData.type = animalType;
+                    setOptions({ active: true, miniature: undefined })
                 }
                 }>
             </img>
@@ -80,15 +120,13 @@ export let Animal = (props) => {
     return (
         <div className="Animal">
             <Habitad
-                habitadVisible={options.active}
-                type={type.current}
-                setMarkerCoords={setMarkerCoords} />
+                habitadVisible={options.active || editing}
+                markerData={markerData}
+                setMarkerCoords={setMarkerCoordsandRange}
+            />
 
-            <Notifications ref={notifications} />
-
-
-            <div className="menu">
-                {!options.active &&
+            {(!editing && !options.active) &&
+                <div className="menu">
                     <>
                         <div className="animalOptions">
                             {animalList}
@@ -98,39 +136,32 @@ export let Animal = (props) => {
                             src={plusIcon}
                         />
                     </>
-                }
-            </div>
-
-            {options.active &&
+                </div>}
+            {(options.active || editing) &&
                 <div className="optionsContainer">
 
                     <UploadPhoto
                         show={uploadPhotoWindow && options.active}
                         file={uploadPhotoWindow}
                         closeWindow={() => { togleUploadPhotoWindow(undefined) }}
-                        setMiniature={
-                            (miniature) => {
-                                setOptions((pre) => {
-                                    return { active: pre.active, miniature }
-                                })
-                            }}
+                        setMiniature={setMiniature}
                         saveFile={(newFile) => {
-                            file.current = newFile
-                            console.log(file.current)
+                            markerData.file = newFile
                         }}
                     />
 
                     <form className="options"
                         onSubmit={(ev) => {
                             ev.preventDefault()
-                            sendPoint(setOptions,
-                                type.current, options.active, frecuence,
-                                props.panelDisplay, map, markerCoords.current,
-                                updateNotifications, file, ev, props.userid)
+                            if (options.active || editing) {
+                                console.log("sending")
+                                sendPoint(setOptions, props.panelDisplay, map,
+                                    updateNotifications, ev, props.userid,
+                                    props.editing, setEditing, markerData, panes)
+                            }
                         }}
 
-                        onMouseEnter={() => { map.dragging.disable() }
-                        }
+                        onMouseEnter={() => { map.dragging.disable() }}
                         onMouseLeave={() => { map.dragging.enable() }}
                     >
                         <div className="moreOptionsContainer">
@@ -139,16 +170,16 @@ export let Animal = (props) => {
                                 <div>
                                     <div>Descripción</div>
                                     <img src={petsIcon} alt="descripción" className="petsIcon" />
-                                    <textarea type="text"></textarea>
+                                    <textarea type="text" defaultValue={markerData.description}></textarea>
                                 </div>
                                 <div className="contactContainer">
                                     <div>Contacto</div>
                                     <img className="userIcon" src={userIcon}></img>
-                                    <input type="text"></input>
+                                    <input type="text" defaultValue={markerData.contact}></input>
                                 </div>
                                 <div>
                                     <div>¿Cuantas veces le has visto?</div>
-                                    {true && <Form display={options.active || true ? "block" : "none"} frecuence={frecuence} />}
+                                    <Form display="block" frecuence={frecuence} defaultValue={markerData.frecuence} setFrecuence={(f) => { markerData.frecuence = f }} />
                                 </div>
 
                                 <label className="cameraIconContainer">
@@ -159,17 +190,17 @@ export let Animal = (props) => {
                                         <img src={options.miniature ? options.miniature : cameraIcon} at="añade una imagen del animal" />
                                         <input type="file" onChange={(ev) => {
                                             let actualImg = ev.target.files[0]
-                                            file.current = actualImg
+                                            markerData.file = actualImg
                                             togleUploadPhotoWindow(actualImg)
                                         }
                                         }
                                             accept="image/*"></input>
                                     </label>
-                                    <span>Añade  una foto</span>
+                                    <span>Añade una foto</span>
                                 </label>
 
                             </div>
-                            <span><img src={pointsIcon}/></span>
+                            <span><img src={pointsIcon} /></span>
 
                         </div>
 
@@ -181,190 +212,199 @@ export let Animal = (props) => {
                                 alt="cancelar"
                                 className="cancelMarker"
                                 onClick={() => {
-                                    cancelMarker(setOptions)
-                                    map.dragging.enable()
+                                    cancelMarker(setOptions, markerData, editing, map, setEditing, panes, props.open)
                                 }
                                 } />
-
                         </div>
 
                     </form>
                 </div>
-
             }
-
 
         </div >
     )
 }
 
-
-function addMark(setOptions, map, setMarkerCoords) {
-
-    let center = map.latLngToContainerPoint(map.getCenter())
-    if (activeMarker) { map.removeLayer(activeMarker) }
-
-    setMarkerCoords(() => {
-        let border = map.containerPointToLatLng({ x: center.x + 75, y: center.y })
-        center = map.getCenter()
-        let range = map.distance(center, border)
-        return {
-            center: center,
-            range
-        }
-    })
-    setOptions({ active: true, miniature: undefined })
-}
-
-async function sendPoint(setOptions, type,
-    areoptionsActive, frecuence,
-    panelDisplay, map, markerCoords,
-    updateNotifications, file, ev, userid) {
+async function sendPoint(setOptions, panelDisplay, map,
+    updateNotifications, ev, userid,
+    editing, setEditing, markerData, panes) {
 
 
+    if (setEditing) setEditing({ active: false })
 
-    if (areoptionsActive) {
+    map.dragging.enable()
 
-        let description = ev.target[0].value
-        let contact = ev.target[1].value
+    let newdescription = ev.target[0].value
+    let newcontact = ev.target[1].value
 
-        description = description ? description : undefined
-        contact = contact ? contact : undefined
+    markerData.description = newdescription ? newdescription : markerData.description
+    markerData.contact = newcontact ? newcontact : markerData.contact
 
-        if (markerCoords.range > 400) {
-            setTimeout(() => {
-                updateNotifications(0, false, false)
-            }, 3000)
-            updateNotifications(0, false, true)
-        }
-        else {
-            let icon = L.icon({
-                iconUrl: type === "dog" ? dogIcon : catIcon,
-                iconSize: [38, 38]
-            });
+    if (markerData.range > 400) {
+        setTimeout(() => {
+            updateNotifications(0, false, false)
+        }, 3000)
+        updateNotifications(0, false, true)
+    }
+    else {
 
+        activeMarker = false;
 
-            let marker = L.marker(markerCoords.center, {
-                icon: icon
-            });
+        setOptions({ active: false, miniature: undefined });
 
+        try {
 
-            marker.addTo(map)
-            const circle = L.circle(markerCoords.center, { radius: markerCoords.range })
-            circle.addTo(map);
-            activeMarker = false;
+            let localimgurl
 
+            if (markerData.file) {
+                let { lat, lng } = markerData.coords
+                let fileName = `LatLng(${lat}, ${lng})${markerData.file.name}`
 
-            setOptions({ active: false, miniature: undefined });
+                const uploadTask = storage.ref(`images/${fileName}`).put(markerData.file);
 
-            try {
-                //console.log(file.current)
-                if (file.current) {
-                    let fileName = markerCoords.center + ""
-                    const uploadTask = storage.ref(`images/${fileName}`).put(file.current);
+                uploadTask.on(
+                    "state_changed",
+                    (snapshot) => {
 
-                    uploadTask.on(
-                        "state_changed",
-                        (snapshot) => {
-
-                            const progress = Math.round(100 * snapshot.bytesTransferred / snapshot.totalBytes)
-                            updateNotifications(progress, true)
-                            //console.log(progress)
-                            if (progress == 100) {
-                                setTimeout(() => { updateNotifications(0, false) }, 400)
-                            }
-
-                        },
-                        err => {
-                            //by some misterious reazon i can't pass more than 3 arguments
-                            updateNotifications()
-                            marker.removeFrom(map)
-                            circle.removeFrom(map)
-                        },
-                        async () => {
-                            let imgurl = await storage
-                                .ref("images")
-                                .child(fileName)
-                                .getDownloadURL()
-
-                            console.log(imgurl)
-
-                            marker.on('click', () => {
-                                //console.log(activeMarker)
-                                if (!activeMarker) {
-                                    let { lat, lng } = marker.getLatLng()
-                                    //console.log("oppening")
-                                    panelDisplay(lat, lng, { frecuence: getFrecuence(lat + "" + lng), imgurl })
-                                }
-                            })
-                            try {
-                                let { status } = await axios.post(process.env.REACT_APP_POINTS_URI, {
-                                    coords: markerCoords.center,
-                                    type,
-                                    frecuence: frecuence.frecuence,
-                                    range: markerCoords.range,
-                                    imgurl,
-                                    description,
-                                    contact,
-                                    userid
-                                })//, config)
-                                console.log(status === 200 ? "Dato registrado" : "Error en el envio del punto")
-                            } catch (err) {
-                                console.log(err)
-                            }
+                        const progress = Math.round(snapshot.bytesTransferred / snapshot.totalBytes)
+                        updateNotifications(progress, true)
+                        //console.log(progress)
+                        if (progress == 1) {
+                            setTimeout(() => { updateNotifications(0, false) }, 400)
                         }
-                    )
 
-                    let imgurl = URL.createObjectURL(file.current)
+                    },
+                    err => {
+                        updateNotifications()
+                        lastMarkAdded.removeFrom(map)
+                        lastCircleAdded.removeFrom(map)
+                    },
+                    async () => {
+                        let imgurl = await storage
+                            .ref("images")
+                            .child(fileName)
+                            .getDownloadURL()
 
-                    marker.on('click', () => {
-                        //console.log(activeMarker)
-                        if (!activeMarker) {
-                            let { lat, lng } = marker.getLatLng()
-                            //console.log("oppening")
-                            panelDisplay(lat, lng, { frecuence: getFrecuence(lat + "" + lng), imgurl })
-                        }
-                    })
+                        lastMarkAdded.removeFrom(map)
+                        lastCircleAdded.removeFrom(map)
+                        markerData = { ...markerData, imgurl, localimgurl: undefined }
+                        addPermanentMark(markerData, panelDisplay,
+                            userid, editing, setEditing, map, panes)
 
-                }
-                else {
-
-                    marker.on('click', () => {
-                        //console.log(activeMarker)
-                        if (!activeMarker) {
-                            let { lat, lng } = marker.getLatLng()
-                            //console.log("oppening")
-                            panelDisplay(lat, lng, { frecuence: getFrecuence(lat + "" + lng) })
-                        }
-                    })
-
-                    let { status } = await axios.post(process.env.REACT_APP_POINTS_URI, {
-                        coords: markerCoords.center,
-                        type,
-                        frecuence: frecuence.frecuence,
-                        range: markerCoords.range,
-                        description,
-                        contact,
-                        userid
-                    })//, config)
-                    console.log(status === 200 ? "Dato registrado" : "Error en el envio del punto")
-
-                }
-
-
-                editFrecuences(frecuence.frecuence,
-                    markerCoords.center.lat + "" + markerCoords.center.lng,
-                    true)
-
-                file.current = undefined
-
-            } catch (err) {
-                console.log(err)
+                    }
+                )
+                localimgurl = URL.createObjectURL(markerData.file)
+                markerData = { ...markerData, localimgurl }
+                addPermanentMark(
+                    markerData, panelDisplay,
+                    userid, editing, setEditing, map, panes)
             }
+            else {
+
+                addPermanentMark(
+                    markerData, panelDisplay,
+                    userid, editing, setEditing, map, panes)
+            }
+
+            editFrecuences(frecuence.frecuence,
+                markerData.coords.lat + "" + markerData.coords.lng, true)
+
+            markerData.file = undefined
+
+        } catch (err) {
+
+            //mostrar error de conexion o de repeticion de dato (dato guardado :))
+            console.log(err)
         }
     }
 }
 
-function cancelMarker(setOptions) {
+async function addPermanentMark(markerData, panelDisplay,
+    userid, editing, setEditing, map, panes) {
+
+    //console.log(panes)
+
+    addMarkToMap(markerData, map, setEditing, panes, panelDisplay)
+
+    if (!markerData.localimgurl) {
+
+        let data = {
+            newlat: markerData.coords.lat,
+            newlng: markerData.coords.lng,
+            ...markerData,
+            userid,
+        }
+
+        let res
+
+        try {
+            if (!editing) {
+                console.log("postin")
+                res = await axios.post(process.env.REACT_APP_POINTS_URI, data)//, config)
+            } else {
+                console.log("updating")
+                res = await axios.put(process.env.REACT_APP_POINTS_URI, { ...data, relocating: true })//, config)
+            }
+            console.log(res.status === 200 ? "Dato registrado" : "Error en el envio del punto")
+        } catch (err) {
+            updateNotifications(false, false, false, false, true)
+            lastMarkAdded.removeFrom(map)
+            lastCircleAdded.removeFrom(map)
+            setTimeout(updateNotifications, 2500)
+        }
+    }
+}
+
+function addMarkToMap(markerData, map, setEditing, panes, open) {
+
+    //console.log(markerData)
+
+    if (setEditing) { setEditing({ active: false }) }
+
+    let icon = L.icon({
+        iconUrl: markerData.type === "dog" ? dogIcon : catIcon,
+        iconSize: [35, 35]
+    });
+    let marker = L.marker(markerData.coords, {
+        icon: icon
+    });
+
+    marker.addTo(map)
+
+    const circle = L.circle(markerData.coords, { radius: markerData.range, color: store.getState().editing.value ? "#ffab2e79" : "#3388FF" })
+    circle.addTo(map);
+
+    panes.push({ pane: circle, editable: true })
+    //probar sin conexion la ultima marca debe ser eliminada
+    lastMarkAdded = marker
+    lastCircleAdded = circle
+
+    marker.on("click", () => {
+
+        if (!store.getState().editing.value) {
+            open(markerData.coords.lat, markerData.coords.lng, markerData)
+        }
+        else {
+            circle.removeFrom(map)
+            marker.removeFrom(map)
+            setEditing({
+                active: true,
+                markerData
+            })
+        }
+    })
+
+    map.dragging.enable()
+}
+
+function cancelMarker(setOptions, markerData, editing, map, setEditing, panes, open) {
     setOptions({ active: false, miniature: undefined })
+    //console.log(markerData.defaultMarkerData)
+    if (setEditing && markerData.defaultMarkerData) {
+        let aux = { ...markerData }
+        aux.defaultMarkerData = undefined
+        markerData = markerData.defaultMarkerData
+        markerData.defaultMarkerData = aux
+        addMarkToMap(markerData, map, setEditing, panes, open)
+    }
 }

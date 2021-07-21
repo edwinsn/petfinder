@@ -128,6 +128,11 @@ p label {
     margin-left: 1vh;
 }
 
+.panel .petsImg {
+    width: 4.5vh;
+    margin-left: -0.5vh;
+}
+
 .probabilitybars {
     border: 3px solid #C2C2C3;
     width: 80%;

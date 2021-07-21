@@ -1,6 +1,12 @@
 import { render } from 'react-dom';
-import {App} from './App.js'
+import { App } from './App.js'
+
+import store from './store'
+import { Provider } from 'react-redux'
+
 require('dotenv').config()
 
-
-render(<App />, document.getElementById('app'));
+render(
+    <Provider store={store}>
+        <App />
+    </Provider>, document.getElementById('app'));
