@@ -41,12 +41,11 @@ export let GetMarkers = (props) => {
 
   useEffect(() => {
 
-    map.locate()
+    map.locate({ setView: true, maxZoom: 16 })
     getp(map, props, setEditing, updateNotifications)
 
     map.on('locationfound', (e) => {
 
-      map.panTo(e.latlng, map.getZoom())
       getp(map, props, setEditing, updateNotifications)
     })
 
