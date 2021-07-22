@@ -154,7 +154,7 @@ export let Animal = (props) => {
                         onSubmit={(ev) => {
                             ev.preventDefault()
                             if (options.active || editing) {
-                                console.log("sending")
+
                                 sendPoint(setOptions, props.panelDisplay, map,
                                     updateNotifications, ev, props.userid,
                                     props.editing, setEditing, markerData, panes)
@@ -228,7 +228,6 @@ export let Animal = (props) => {
 async function sendPoint(setOptions, panelDisplay, map,
     updateNotifications, ev, userid,
     editing, setEditing, markerData, panes) {
-
 
     if (setEditing) setEditing({ active: false })
 
@@ -341,15 +340,26 @@ async function addPermanentMark(markerData, panelDisplay,
             if (!editing) {
                 console.log("postin")
                 res = await axios.post(process.env.REACT_APP_POINTS_URI, data)//, config)
+                console.log(res.data)
+                markerData._id = res.data._id
+                lastMarkAdded.removeFrom(map)
+                lastCircleAdded.removeFrom(map)
+                console.log("345")
+                addMarkToMap(markerData, map, setEditing, panes, panelDisplay)
+
             } else {
                 console.log("updating")
                 res = await axios.put(process.env.REACT_APP_POINTS_URI, { ...data, relocating: true })//, config)
             }
             console.log(res.status === 200 ? "Dato registrado" : "Error en el envio del punto")
         } catch (err) {
+            console.log(err)
             updateNotifications(false, false, false, false, true)
-            lastMarkAdded.removeFrom(map)
-            lastCircleAdded.removeFrom(map)
+            try {
+                lastMarkAdded.removeFrom(map)
+                lastCircleAdded.removeFrom(map)
+            }
+            catch (err) { console.log(err) }
             setTimeout(updateNotifications, 2500)
         }
     }
@@ -357,7 +367,7 @@ async function addPermanentMark(markerData, panelDisplay,
 
 function addMarkToMap(markerData, map, setEditing, panes, open) {
 
-    //console.log(markerData)
+    //console.log("adding mark")
 
     if (setEditing) { setEditing({ active: false }) }
 
@@ -379,6 +389,10 @@ function addMarkToMap(markerData, map, setEditing, panes, open) {
     lastMarkAdded = marker
     lastCircleAdded = circle
 
+    markerData.defaultMarkerData = markerData.defaultMarkerData ? markerData.defaultMarkerData : { ...markerData }
+    markerData.defaultMarkerData.coords = markerData.coords
+    markerData.defaultMarkerData.range = markerData.range
+
     marker.on("click", () => {
 
         if (!store.getState().editing.value) {
@@ -399,7 +413,9 @@ function addMarkToMap(markerData, map, setEditing, panes, open) {
 
 function cancelMarker(setOptions, markerData, editing, map, setEditing, panes, open) {
     setOptions({ active: false, miniature: undefined })
-    //console.log(markerData.defaultMarkerData)
+    map.dragging.enable()
+    console.log("canceling")
+
     if (setEditing && markerData.defaultMarkerData) {
         let aux = { ...markerData }
         aux.defaultMarkerData = undefined

@@ -2,11 +2,9 @@ import React, { Component } from 'react';
 import { MapContainer, TileLayer, ZoomControl } from "react-leaflet";
 import Search from "./Search";
 import './assets/App.css';
-import { Animal } from './Animal'
 import { Panel } from './Panel'
 import { About } from './AboutRec'
 import { GetMarkers } from './GetMarkers'
-import { Link } from "react-router-dom";
 import './assets/mainPage.css'
 import { SideBar } from './sideBar';
 import userIcon from './assets/images/userIconFilled.svg'
@@ -27,8 +25,9 @@ export class MainPage extends Component {
   render() {
     //console.log("MainPage rendered")
     //console.log(this.props.useruid)
+
     return (
-      <div >
+      <div style={{ display: this.props.show ? undefined : "none" }}>
         <div>
           <MapContainer className="mapp" id="map" style={{ "zIndex": 0 }} center={{ lat: 5.533, lng: -73.367 }} zoom={16} zoomControl={false}>
             <TileLayer
@@ -46,13 +45,13 @@ export class MainPage extends Component {
         {this.props.useruid ?
           <SideBar handleLogout={this.props.handleLogout} />
           :
-          <Link to="/login">
-            <div className="loginBtnContainer">
-              <img className="loginBtn" src={userIcon} />
-            </div>
-          </Link>}
-
+          <div className="loginBtnContainer" onClick={this.props.showLogin}>
+            <img className="loginBtn" src={userIcon} />
+          </div>
+        }
       </div>
-    );
+
+    )
+
   }
 }

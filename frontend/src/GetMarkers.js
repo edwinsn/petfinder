@@ -10,13 +10,17 @@ import { useDispatch } from 'react-redux'
 import { showNotifications } from "./features/notificationsSlice"
 
 //of-on icon 
-let markersLoaded = [{ coordinates: "0" }]
+let markersLoadedCoords = [{ coordinates: "0" }]
+let markersLoaded = []
 let panes = []
+let prevUserid = false
 
 export let GetMarkers = (props) => {
 
   //console.log("Get markers render")
 
+
+  let map = useMap();
   let [editing, setEditing] = useState({ active: false, type: "dog", coords: { lat: false, lng: false } })
 
   let dispatch = useDispatch()
@@ -24,9 +28,19 @@ export let GetMarkers = (props) => {
     dispatch(showNotifications({ noEditable, withoutConnection }))
   }
 
-  let map = useMap();
+  if (prevUserid != props.userid) {
+    prevUserid = props.userid
+    //console.log("updating marks")
+    markersLoadedCoords = [{ coordinates: "0" }]
+    getp(map, props, setEditing, updateNotifications)
+    for (let i = 0; i < markersLoaded.length; i++) {
+      markersLoaded[i].removeFrom(map)
+      panes[i].pane.removeFrom(map)
+    }
+  }
 
   useEffect(() => {
+
     map.locate()
     getp(map, props, setEditing, updateNotifications)
 
@@ -90,7 +104,7 @@ let getp = (map, props, setEditing, updateNotifications) => {
   let lowerlng = _southWest.lng - 0.1 * diff
   let upperlng = _northEast.lng + 0.1 * diff
 
-  let coordsLoaded = Object.keys(markersLoaded)
+  let coordsLoaded = Object.keys(markersLoadedCoords)
   axios.get(process.env.REACT_APP_POINTS_URI, {
     params: {
       lowerlat,
@@ -137,14 +151,15 @@ let getp = (map, props, setEditing, updateNotifications) => {
           circle.addTo(map);
         }
         panes.push({ pane: circle, editable: marker.userid == props.userid })
+        markersLoaded.push(newmarker)
         //console.log(panes)
-        //console.log(panes)
+
         newmarker.on("click", () => {
 
           if (!store.getState().editing.value) {
             props.open(marker.lat, marker.lng,
               {
-                frecuence: markersLoaded[marker.lat + "" + marker.lng].frecuence,
+                frecuence: markersLoadedCoords[marker.lat + "" + marker.lng].frecuence,
                 imgurl: marker.imgurl ? marker.imgurl : marker.type == "dog" ? dogIcon : catIcon,
                 description: marker.description,
                 contact: marker.contact
@@ -189,7 +204,7 @@ let getp = (map, props, setEditing, updateNotifications) => {
             //console.log(editing)
           }
         })
-        markersLoaded[marker.lat + "" + marker.lng] = { frecuence: marker.frecuence }
+        markersLoadedCoords[marker.lat + "" + marker.lng] = { frecuence: marker.frecuence }
       }
       );
     } else {
@@ -208,12 +223,12 @@ export let editFrecuences = (frecuence, coords, newMark = false) => {
   frecuence = frecuence >= 5 ? 5 : frecuence
   if (newMark) {
     frecuence = frecuence > 10 ? 10 : frecuence
-    markersLoaded[coords] = { frecuence: frecuence }
+    markersLoadedCoords[coords] = { frecuence: frecuence }
   }
   else {
-    markersLoaded[coords].frecuence = frecuence
+    markersLoadedCoords[coords].frecuence = frecuence
   }
 }
 export let getFrecuence = (coords) => {
-  return markersLoaded[coords].frecuence
+  return markersLoadedCoords[coords].frecuence
 }

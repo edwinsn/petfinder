@@ -71,9 +71,9 @@ pointsControllers.postPoint = async (req, res) => {
             })
 
 
-            await newPoint.save();
+            let { id } = await newPoint.save();
 
-            return res.json({ mesagge: "Point saved!" })
+            return res.json({ mesagge: "Point saved!", _id: id })
         }
         else {
             return res.status(400).send({ mesage: "Data incomplete" })
@@ -92,9 +92,14 @@ pointsControllers.updatePoint = async (req, res) => {
 
 
     //console.log({ lat, lng, isDeprecated, userid, newlat, newlng, _id, description, contact, frecuence, imgurl, relocating })
+    let pointToUpdate
 
-    let pointToUpdate = await pointModel.findById(_id)
-    
+    try {
+        pointToUpdate = await pointModel.findById(_id)
+    } catch (err) {
+        res.status(500).send({ message: "internal error" })
+    }
+
     if (relocating && userid === pointToUpdate.userid) {
 
         let data = {}
@@ -113,7 +118,7 @@ pointsControllers.updatePoint = async (req, res) => {
         }
 
         await pointModel.findByIdAndUpdate(_id, { lat: newlat, lng: newlng, ...data, range });
-        res.json({message:"updated!"})
+        res.json({ message: "updated!" })
 
     }
     else {

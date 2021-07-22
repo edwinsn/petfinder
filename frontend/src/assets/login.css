@@ -113,23 +113,24 @@
 }
 
 .loginContainer button {
+    border: none;
+    color: white;
+    font-size: 1em;
+    cursor: pointer;
+    background-color: transparent;
+}
+
+.login .BtnContainer {
+    box-shadow: 1px 2px 1px 1px rgba(75, 74, 74, 0.314);
     height: 6vh;
     width: 100%;
     border-radius: 4px;
-}
-
-.loginContainer button {
-    border: none;
-    color: white;
-    box-shadow: 1px 2px 1px 1px rgba(75, 74, 74, 0.314);
-    font-size: 1em;
-    cursor: pointer;
-}
-
-.signInBtn {
     background-color: #378AFD;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .signUpBtn {
-    background-color: #2EEE35;
+    background-color: #2EEE35 !important;
 }

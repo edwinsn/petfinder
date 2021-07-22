@@ -3,12 +3,9 @@ import { fire, auth, provider } from './fire'
 import { Login } from "./login";
 import { MainPage } from './MainPage'
 import './assets/App.css'
-import {
-    BrowserRouter as Router,
-    Route,
-    Switch
-} from "react-router-dom";
 import { Loading } from './Loading'
+
+let loading
 
 export const App = () => {
 
@@ -17,7 +14,7 @@ export const App = () => {
     const email = useRef("")
     const [errors, setErrors] = useState({})
     const [hasAccount, setHasAccount] = useState(true)
-
+    const [showMap, setShowMap] = useState(true)
 
     const clearInput = () => {
         password.current = ''
@@ -32,11 +29,13 @@ export const App = () => {
         auth.signInWithRedirect(provider);
     }
 
-    const handleLogin = () => {
+    const handleLogin = (endLoading) => {
+        loading = true
         clearErrors()
         auth
             .signInWithEmailAndPassword(email.current, password.current)
             .catch(err => {
+                loading = false
                 switch (err.code) {
                     case "auth/Invalid-email":
                         setErrors({ emailError: "Email inválido" })
@@ -67,11 +66,13 @@ export const App = () => {
     }
 
     const handleSingUp = () => {
+        loading = true
         clearErrors()
 
         auth
             .createUserWithEmailAndPassword(email.current, password.current)
             .catch(err => {
+                loading = false
                 switch (err.code) {
                     case 'auth/email-already-in-use':
                         setErrors({ emailError: "Usuario registrado" })
@@ -92,12 +93,14 @@ export const App = () => {
     }
 
     const handleLogout = () => {
+        loading = false
         auth.signOut()
     }
     const authListener = () => {
         auth.onAuthStateChanged(user => {
             if (user) {
                 clearInput()
+                setShowMap(true)
                 setUser(user)
             } else {
                 setUser("noUser")
@@ -107,12 +110,8 @@ export const App = () => {
 
 
     /*
-    
     sobreposicion
-    
-    */
-
-
+     */
 
     const resetPassword = () => {
         this.clearErrors()
@@ -125,19 +124,13 @@ export const App = () => {
     }, [])
     let view
 
-    let main = <MainPage useruid={user != "noUser" ? user.uid : false} handleLogout={handleLogout} />
-
     switch (user) {
         case "noUserYet":
             view = <Loading />
             break;
-        case "noUser":
-            view = <Router>
-
-                <Route path="/" exact>
-                    {main}
-                </Route>
-                <Route path="/login">
+        default:
+            view =
+                <>
                     <Login
                         email={email}
                         password={password}
@@ -147,13 +140,18 @@ export const App = () => {
                         setHasAccount={setHasAccount}
                         errors={errors}
                         handleLoginWithGoogle={handleLoginWithGoogle}
+                        show={!showMap}
+                        hide={() => { setShowMap(true) }}
+                        loading={loading}
                     />
-                </Route>
-            </Router>
+                    <MainPage useruid={user != "noUser" ? user.uid : false}
+                        handleLogout={handleLogout}
+                        show={showMap}
+                        showLogin={() => { setShowMap(false) }}
+                    />
+                </>
 
             break;
-        default:
-            view = main
     }
 
     return (<div className="App">

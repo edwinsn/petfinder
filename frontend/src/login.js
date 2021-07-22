@@ -4,7 +4,8 @@ import googleIcon from './assets/images/googleIcon.svg'
 import userIcon from './assets/images/userIcon.svg'
 import passwordIcon from './assets/images/passwordIcon.svg'
 import goBackIcon from './assets/images/goBackIcon.svg'
-import {Link} from 'react-router-dom'
+import { LoadingCircles } from './Loading'
+
 
 export const Login = (props) => {
 
@@ -15,12 +16,17 @@ export const Login = (props) => {
         hasAccount,
         setHasAccount,
         errors,
-        handleLoginWithGoogle } = props
+        handleLoginWithGoogle,
+        show,
+        hide,
+        loading } = props
 
-    return (
+
+
+    return show ? (
         <section className="login">
 
-            <Link to="/"><img alt="salir" src={goBackIcon} className="goback" /></Link>
+            <img alt="salir" src={goBackIcon} onClick={hide} className="goback" />
             <div>
                 <img className="appIcon" src={appIcon} alt="icono de la app" />
                 <p>Encuentra y reporta animales<br /> callejeros</p>
@@ -54,12 +60,21 @@ export const Login = (props) => {
                 <p className="errorMsg">{errors.passwordError}</p>
 
                 {hasAccount ?
-                    (<div>
-                        <button className="signInBtn" onClick={handleLogin} >Ingresar</button>
+                    (<div >
+                        <div onClick={handleLogin} className="BtnContainer">
+                            {loading ? <LoadingCircles color={"white"} /> :
+                                <button className="signInBtn"  >Ingresar</button>
+                            }
+                        </div>
                         <p>Sin cuenta? <span onClick={() => { setHasAccount(false) }}>Registrate</span></p>
                     </div>) :
                     (<div>
-                        <button className="signUpBtn" onClick={handleSingUp}>Registrarse</button>
+                        <div>
+                            <div className="BtnContainer signUpBtn">{
+                                loading ? <LoadingCircles color={"white"} /> :
+                                    <button onClick={handleSingUp}className="signUpBtn" >Registrarse</button>}
+                            </div>
+                        </div>
                         <p>Tienes cuenta? <span onClick={() => { setHasAccount(true) }}>Ingresar</span></p>
                     </div>)
                 }
@@ -72,4 +87,6 @@ export const Login = (props) => {
             </div>
         </section>
     )
+        :
+        null
 }

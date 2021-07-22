@@ -1,5 +1,6 @@
 .loginBtn {
     height: 75%;
+    cursor: pointer;
 }
 
 .loginBtnContainer {

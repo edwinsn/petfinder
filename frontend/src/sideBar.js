@@ -9,7 +9,6 @@ import logoutIcon from './assets/images/logoutIcon.svg'
 import feedBackIcon from './assets/images/feedBackIcon.svg'
 import { AboutWindow } from './AboutWindow'
 import { FeedBack } from "./feedBack"
-import axios from "axios"
 import download from 'downloadjs'
 import { useSelector, useDispatch } from 'react-redux'
 import { activate, deactivate } from './features/editingSlice'
@@ -79,7 +78,10 @@ export const SideBar = (props) => {
                         <p>Sugerencias</p>
                     </div>
 
-                    <div onClick={props.handleLogout}>
+                    <div onClick={() => {
+                        props.handleLogout()
+                        dispatch(deactivate())
+                    }}>
                         <img src={logoutIcon} />
                         <p>Salir</p>
                     </div>
