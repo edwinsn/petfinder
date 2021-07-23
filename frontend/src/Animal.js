@@ -34,7 +34,7 @@ export let Animal = (props) => {
 
     let map = useMap()
 
-    //console.log("Animal rerendered")
+    console.log("Animal rerendered")
     let { defaultMarkerData, editing, setEditing, panes } = props
 
     defaultMarkerData = defaultMarkerData ? defaultMarkerData : {}
@@ -79,7 +79,7 @@ export let Animal = (props) => {
 
         window.onkeydown = (ev) => {
             if (ev.key === "Escape") {
-                cancelMarker(setOptions)
+                cancelMarker(setOptions, markerData, activeMarker, map, setEditing, panes, props.open)
                 if (store.getState().editing.value) {
                     dispatch(deactivate())
                 }
@@ -89,8 +89,7 @@ export let Animal = (props) => {
         store.subscribe(() => {
             if (!store.getState().editing.value && !editing) {
                 //console.log("closing")
-                //error recordar asignar markerdata.coords
-                cancelMarker(setOptions, markerData, editing, map, setEditing, panes, props.open)
+                cancelMarker(setOptions, markerData, options.active, map, setEditing, panes, props.open)
             }
         })
 
@@ -109,6 +108,7 @@ export let Animal = (props) => {
                 onClick={() => {
                     if (activeMarker) { map.removeLayer(activeMarker) }
                     markerData.type = animalType;
+                    activeMarker = true
                     setOptions({ active: true, miniature: undefined })
                 }
                 }>
@@ -220,7 +220,7 @@ export let Animal = (props) => {
                                 alt="cancelar"
                                 className="cancelMarker circular"
                                 onClick={() => {
-                                    cancelMarker(setOptions, markerData, editing, map, setEditing, panes, props.open)
+                                    cancelMarker(setOptions, markerData, options.active, map, setEditing, panes, props.open)
                                 }
                                 } />
                         </div>
@@ -419,10 +419,13 @@ function addMarkToMap(markerData, map, setEditing, panes, open) {
     map.dragging.enable()
 }
 
-function cancelMarker(setOptions, markerData, editing, map, setEditing, panes, open) {
-    setOptions({ active: false, miniature: undefined })
+function cancelMarker(setOptions, markerData, options, map, setEditing, panes, open) {
+    if (options) {
+        setOptions({ active: false, miniature: undefined })
+        activeMarker = false
+    }
     map.dragging.enable()
-    console.log("canceling")
+   
 
     if (setEditing && markerData.defaultMarkerData) {
         let aux = { ...markerData }

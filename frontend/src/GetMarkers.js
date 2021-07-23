@@ -32,6 +32,7 @@ export let GetMarkers = (props) => {
     prevUserid = props.userid
     //console.log("updating marks")
     markersLoadedCoords = [{ coordinates: "0" }]
+
     getp(map, props, setEditing, updateNotifications)
     for (let i = 0; i < markersLoaded.length; i++) {
       markersLoaded[i].removeFrom(map)
@@ -42,7 +43,7 @@ export let GetMarkers = (props) => {
   useEffect(() => {
 
     map.locate({ setView: true, maxZoom: 16 })
-    getp(map, props, setEditing, updateNotifications)
+    //getp(map, props, setEditing, updateNotifications)
 
     map.on('locationfound', (e) => {
 

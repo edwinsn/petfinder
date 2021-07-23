@@ -157,7 +157,7 @@
     min-width: 6cm;
     width: 85%;
     overflow-y: scroll;
-    /*border: var(--emergentBorder)*/
+    border: var(--emergentBorder)
 }
 
 .moreOptionsContainer {
@@ -172,7 +172,15 @@
     max-width: 13cm;
     animation: blinker 1.2s linear infinite;
     cursor: pointer;
-    /*border: 1px solid var(--appColor);*/
+}
+
+.moreOptionsContainer::-webkit-scrollbar {
+    display: none;
+}
+
+.moreOptionsContainer {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
 .moreOptionsContainer>span {
@@ -182,8 +190,13 @@
     height: 100%;
 }
 
+.moreOptionsContainer:hover>span {
+    display: none;
+}
+
 .moreOptionsContainer span img {
     height: 25%;
+    min-height: 0.2cm;
 }
 
 .options {

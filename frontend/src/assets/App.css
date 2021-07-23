@@ -84,8 +84,9 @@ html, body, #map {
 .aboutWindowContainer .closeIcon, .feedBack .closeIcon {
   position: absolute;
   top: 1vh;
-  right: 0;
+  right: 1vh;
   height: var(--mediumHeight);
+  min-height: 1cm;
 }
 
 .closeIcon {
