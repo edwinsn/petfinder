@@ -1,8 +1,9 @@
 .googleBtnDiv {
-    width: 100%;
+    width: 70%;
     display: flex;
     justify-content: center;
     position: relative;
+    min-height: var(--minHeightInput);
 }
 
 .googleBtnDiv>button {
@@ -11,6 +12,7 @@
     justify-content: center;
     color: #3b6ebb;
     cursor: pointer;
+    box-shadow: 1px 2px 1px 1px rgba(66, 29, 29, 0.314);
 }
 
 .googleBtnDiv>button>img {
@@ -96,14 +98,15 @@
 }
 
 .loginContainer>div>input {
-    padding-left: 4.5vh;
+    padding-left: 5vh;
+    min-height: var(--minHeightInput);
 }
 
 .loginContainer>div>img {
     position: absolute;
     z-index: 2;
     height: 3.5vh;
-    margin-top: 1.2vh;
+    margin-top: 1.5vh;
     padding-left: 1.2vh;
 }
 
@@ -121,7 +124,7 @@
 }
 
 .login .BtnContainer {
-    box-shadow: 1px 2px 1px 1px rgba(75, 74, 74, 0.314);
+    box-shadow: 1px 2px 1px 1px rgba(66, 29, 29, 0.314);
     height: 6vh;
     width: 100%;
     border-radius: 4px;
@@ -129,6 +132,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    min-height: 1.2cm;
 }
 
 .signUpBtn {

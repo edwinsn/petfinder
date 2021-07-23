@@ -4,6 +4,7 @@
     display: flex;
     cursor: pointer;
     height: 100%;
+    min-height: 0.8cm;
     box-sizing: border-box;
 }
 

@@ -30,7 +30,7 @@ export const SideBar = (props) => {
         <div className="sidebarContainer">
             {showAboutW && <AboutWindow close={() => { setShowAboutW(false) }} />}
             {showFeedBack && <FeedBack close={() => { setShowFeedBack(false) }} />}
-            <FaIcons.FaBars style={{ height: "80%", width: "40%", minHeight: "30px", color: "rgb(44, 44, 44)", cursor: "pointer" }} onClick={() => { setShow(!show) }} />
+            <FaIcons.FaBars style={{ height: "80%", width: "40%", minWidth:"30px",color: "rgb(44, 44, 44)", cursor: "pointer" }} onClick={() => { setShow(!show) }} />
 
             {show && <div className="closeSection" onClick={() => { setShow(false) }}></div>}
             <div className={show ? "sidebar active" : "sidebar"}>

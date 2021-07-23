@@ -103,7 +103,7 @@ export let Animal = (props) => {
             <img
                 src={animalType == "dog" ? dogIcon : catIcon}
                 key={animalType}
-                className={[animalType + "Option"]}
+                className={[animalType + "Option circular"]}
                 draggable={false}
 
                 onClick={() => {
@@ -119,6 +119,7 @@ export let Animal = (props) => {
 
     return (
         <div className="Animal">
+
             <Habitad
                 habitadVisible={options.active || editing}
                 markerData={markerData}
@@ -138,7 +139,9 @@ export let Animal = (props) => {
                     </>
                 </div>}
             {(options.active || editing) &&
-                <div className="optionsContainer">
+                <div className="optionsContainer"
+
+                >
 
                     <UploadPhoto
                         show={uploadPhotoWindow && options.active}
@@ -160,22 +163,27 @@ export let Animal = (props) => {
                                     props.editing, setEditing, markerData, panes)
                             }
                         }}
-
                         onMouseEnter={() => { map.dragging.disable() }}
                         onMouseLeave={() => { map.dragging.enable() }}
+                        onTouchStart={() => { map.dragging.disable() }}
+                        onTouchEnd={() => { map.dragging.enable() }}
                     >
                         <div className="moreOptionsContainer">
 
                             <div className="moreOptions">
                                 <div>
                                     <div>Descripción</div>
-                                    <img src={petsIcon} alt="descripción" className="petsIcon" />
-                                    <textarea type="text" defaultValue={markerData.description}></textarea>
+                                    <div>
+                                        <img src={petsIcon} alt="descripción" className="petsIcon icon" />
+                                        <textarea type="text" defaultValue={markerData.description}></textarea>
+                                    </div>
                                 </div>
                                 <div className="contactContainer">
                                     <div>Contacto</div>
-                                    <img className="userIcon" src={userIcon}></img>
-                                    <input type="text" defaultValue={markerData.contact}></input>
+                                    <div>
+                                        <img className="userIcon icon" src={userIcon}></img>
+                                        <input type="text" defaultValue={markerData.contact}></input>
+                                    </div>
                                 </div>
                                 <div>
                                     <div>¿Cuantas veces le has visto?</div>
@@ -187,7 +195,7 @@ export let Animal = (props) => {
                                         className="cameraIcon"
                                         alt="add a picture">
 
-                                        <img src={options.miniature ? options.miniature : cameraIcon} at="añade una imagen del animal" />
+                                        <img src={options.miniature ? options.miniature : cameraIcon} alt="añade una imagen del animal" />
                                         <input type="file" onChange={(ev) => {
                                             let actualImg = ev.target.files[0]
                                             markerData.file = actualImg
@@ -206,11 +214,11 @@ export let Animal = (props) => {
 
                         <div className="mainOptions">
 
-                            <input type="submit" value="" className="sendPoint"></input>
+                            <input type="submit" value="" className="sendPoint circular"></input>
 
                             <img src={closeIcon}
                                 alt="cancelar"
-                                className="cancelMarker"
+                                className="cancelMarker circular"
                                 onClick={() => {
                                     cancelMarker(setOptions, markerData, editing, map, setEditing, panes, props.open)
                                 }

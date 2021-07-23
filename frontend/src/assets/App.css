@@ -3,12 +3,11 @@
   height: 640px;
 }
 
-.background{
+.background {
   width: 100vw;
   height: 100vh;
   position: absolute;
   z-index: 1;
-
 }
 
 body {
@@ -48,9 +47,10 @@ html, body, #map {
   --emergentMaxHeight: 15cm;
   --emergentColor: white;
   --emergentBorder: 2px solid hsla(38, 6%, 75%, 0.8);
-  --gray:#DDDDDD;
+  --gray: #DDDDDD;
   --topMargin: 9px;
-  --transition-time:600ms ;
+  --transition-time: 600ms;
+  --minHeightInput: 1.2cm;
 }
 
 .emergentWindow {
@@ -90,6 +90,17 @@ html, body, #map {
 
 .closeIcon {
   cursor: pointer;
+}
+
+.circular {
+  border-radius: 50%;
+  width: var(--circularBtnHeight);
+  height: var(--circularBtnHeight);
+  min-width: 60px;
+  min-height: 60px;
+  cursor: pointer;
+  border: none;
+  background-color: white;
 }
 
 .title {

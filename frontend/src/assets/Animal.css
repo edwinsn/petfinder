@@ -6,14 +6,21 @@
     align-items: flex-end;
 }
 
+.Animal .icon {
+    min-height: 0.5cm;
+    max-width: 28px;
+    height: 60%;
+    max-height: 0.7cm;
+    top: 20%;
+    left: 1vh;
+    position: absolute;
+}
+
 .animalOptions img {
     display: block;
     background-color: rgb(250, 111, 204);
-    border-radius: 50%;
-    width: var(--circularBtnHeight);
-    height: var(--circularBtnHeight);
-    margin: auto;
     cursor: pointer;
+    margin: auto;
 }
 
 .animalOptions {
@@ -21,24 +28,22 @@
 }
 
 .animalOptions, .moreOptionsContainer {
-    transition-property: height, width, border;
-    transition-duration: 0.5s;
+    transition: height 0.5s, width 0.5s, border 0.5s;
     overflow: hidden
 }
 
 .cameraIcon {
-    /*display: flex 
-    align-items: center;*/
-    height: 6vh;
+    height: var(--largeHeight);
 }
 
 .cameraIconContainer {
     display: flex;
     align-items: center;
     justify-content: center;
-    border:2px solid var(--appColor);
+    border: 2px solid var(--appColor);
     color: var(--appColor);
     font-size: 1.2em;
+    min-height: 1cm;
 }
 
 .cameraIcon>input {
@@ -50,25 +55,38 @@
     margin-right: 10px;
 }
 
-.contactContainer {
-    position: relative;
+.moreOptions input, textarea {
+    padding-left: 38px;
+    width: 100%;
+    min-height: var(--minHeightInput);
 }
 
-.contactContainer>input {
-    padding-left: 4vh;
+.moreOptions textarea {
+    padding-top: 15px;
+}
+
+.moreOptions>div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.moreOptions>div>div {
+    position: relative;
+    width: 100%;
 }
 
 .menu:hover .animalOptions {
-    height: 19.5vh;
+    height: 22vh;
+    /*min-height: 122px;*/
 }
 
 .menu {
-    z-index: 6;
     position: absolute;
     right: 2%;
 }
 
-.menu img{
+.menu img {
     box-shadow: 2px 2px rgba(56, 56, 56, 0.233);
 }
 
@@ -76,19 +94,13 @@
     display: flex;
     justify-content: space-between;
     width: 23vh;
+    min-width: 3.5cm;
 }
 
+/*dejar en posicion absolute los imput y centrar los icono s en su lugar*/
+
 .mainOptions>img, .mainOptions>input {
-    display: block;
-    background-color: white;
-    border-radius: 50%;
-    height: var(--circularBtnHeight);
-    width: var(--circularBtnHeight);
-    min-width: 60px;
-    min-height: 60px;
     background-size: cover;
-    cursor: pointer;
-    border: none;
 }
 
 .moreOptions {
@@ -106,9 +118,7 @@
     position: relative;
 }
 
-.moreOptions>*>input, .moreOptions>*>textarea, .form {
-    width: 100%;
-    height: 5vh;
+.moreOptions>*>textarea, .form {
     resize: vertical;
     max-height: 3cm;
 }
@@ -117,27 +127,42 @@
     margin-bottom: 3%;
 }
 
-.moreOptions>div>textarea {
-    padding-left: 5vh;
-    padding-top: 1.5vh;
-    min-height: 5vh;
-    height: 9vh;
+.moreOptionsContainer:hover>.moreOptions {
+    height: 100%;
 }
 
-.moreOptionsContainer:hover>.moreOptions, .moreOptionsContainer:hover {
-    height: 70vh;
+.moreOptionsContainer:hover {
+    height: 75vh;
     background-color: white;
     animation: none;
+}
+
+.moreOptionsContainer:hover>.moreOptions {
+    min-height: 10.5cm;
+}
+
+@media (max-height: 500px) {
+    .moreOptionsContainer {
+        max-height: 6cm !important;
+    }
+}
+
+@media (max-height: 330px) {
+    .moreOptionsContainer {
+        max-height: 5.5cm !important;
+    }
 }
 
 .moreOptionsContainer:hover {
     min-width: 6cm;
     width: 85%;
-    border: var(--emergentBorder)
+    overflow-y: scroll;
+    /*border: var(--emergentBorder)*/
 }
 
 .moreOptionsContainer {
     height: 4vh;
+    max-height: none;
     margin-bottom: 1%;
     box-sizing: border-box;
     background-color: white;
@@ -147,7 +172,7 @@
     max-width: 13cm;
     animation: blinker 1.2s linear infinite;
     cursor: pointer;
-    border:1px solid var(--appColor);
+    /*border: 1px solid var(--appColor);*/
 }
 
 .moreOptionsContainer>span {
@@ -157,14 +182,13 @@
     height: 100%;
 }
 
-.moreOptionsContainer span img{
+.moreOptionsContainer span img {
     height: 25%;
 }
 
 .options {
     width: 100%;
     display: flex;
-    justify-content: center;
     align-items: center;
     flex-direction: column;
 }
@@ -172,7 +196,6 @@
 .optionsContainer {
     width: 100%;
     z-index: 7;
-    text-align: center;
 }
 
 @keyframes blinker {
@@ -182,14 +205,11 @@
 }
 
 .petsIcon {
-    --smallHeight:2.7vh;
-    height: var(--smallHeight);
-    position: absolute;
-    top: 6.2vh;
-    left: 0.2vh;
+    height: 45% !important;
+    top: 27% !important;
 }
 
-.sendPoint{
+.sendPoint {
     background-image: url(./images/SendButton.svg);
 }
 
@@ -201,11 +221,4 @@
     min-height: 65px;
     min-width: 65px;
     cursor: pointer;
-}
-
-.userIcon {
-    height: var(--smallHeight);
-    position: absolute;
-    bottom: 0.75vh;
-    left: 0.5vh;
 }
