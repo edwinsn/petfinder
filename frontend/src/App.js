@@ -9,6 +9,12 @@ let loading
 
 export const App = () => {
 
+
+    useEffect(() => {
+        let vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+    }, [])
+
     const [user, setUser] = useState("noUserYet")
     const password = useRef("")
     const email = useRef("")
@@ -26,10 +32,14 @@ export const App = () => {
     }
 
     const handleLoginWithGoogle = () => {
-        auth.signInWithRedirect(provider);
+
+        auth.signInWithPopup(provider)
+            .catch((err) => {
+                alert("err: " + err)
+            });
     }
 
-    const handleLogin = (endLoading) => {
+    const handleLogin = () => {
         loading = true
         clearErrors()
         auth

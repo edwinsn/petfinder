@@ -19,6 +19,8 @@ body {
 html, body, #map {
   height: 100%;
   width: 100vw;
+  bottom: 0;
+  overflow: hidden;
 }
 
 .about {
@@ -53,6 +55,12 @@ html, body, #map {
   --minHeightInput: 1.2cm;
 }
 
+@media (max-height: 500px) {
+  :root {
+    --emergentWindowHeight: 75%;
+  }
+}
+
 .emergentWindow {
   width: var(--emergentWindowWithd);
   height: var(--emergentWindowHeight);
@@ -66,6 +74,12 @@ html, body, #map {
   overflow-y: scroll;
   padding: 8vh 2vh 2vh 2vh;
   z-index: 2;
+}
+
+@media (max-height:600px) {
+  .emergentWindow{
+    height: 75%;
+  }
 }
 
 .emergentContainer {

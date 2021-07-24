@@ -30,7 +30,7 @@ export const SideBar = (props) => {
         <div className="sidebarContainer">
             {showAboutW && <AboutWindow close={() => { setShowAboutW(false) }} />}
             {showFeedBack && <FeedBack close={() => { setShowFeedBack(false) }} />}
-            <FaIcons.FaBars style={{ height: "80%", width: "40%", minWidth:"30px",color: "rgb(44, 44, 44)", cursor: "pointer" }} onClick={() => { setShow(!show) }} />
+            <FaIcons.FaBars style={{ height: "80%", width: "40%", minWidth: "30px", color: "rgb(44, 44, 44)", cursor: "pointer" }} onClick={() => { setShow(!show) }} />
 
             {show && <div className="closeSection" onClick={() => { setShow(false) }}></div>}
             <div className={show ? "sidebar active" : "sidebar"}>
@@ -93,7 +93,7 @@ export const SideBar = (props) => {
 let getDb = async (dispatch) => {
     //send only the lat, lng, fre, and type data
     try {
-        let res = await fetch(process.env.REACT_APP_POINTS_URI + "/database")
+        let res = await fetch(process.env.REACT_APP_POINTS_URI + "database")
         const blob = await res.blob();
         download(blob, 'database.cvs');
     } catch (err) {

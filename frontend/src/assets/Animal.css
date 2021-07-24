@@ -77,8 +77,13 @@
 }
 
 .menu:hover .animalOptions {
-    height: 22vh;
-    /*min-height: 122px;*/
+    height: 145px;
+}
+
+@media (max-height:500px) {
+    .menu:hover .animalOptions{
+        height: 130px;
+    }
 }
 
 .menu {
@@ -111,10 +116,11 @@
     align-items: center;
     overflow: hidden;
     font-size: 1.2em;
+    
 }
 
 .moreOptions>* {
-    width: 80%;
+    width: 83%;
     position: relative;
 }
 
@@ -155,14 +161,15 @@
 
 .moreOptionsContainer:hover {
     min-width: 6cm;
-    width: 85%;
+    width: 83%;
     overflow-y: scroll;
     border: var(--emergentBorder)
 }
 
 .moreOptionsContainer {
-    height: 4vh;
+    height: 5vh;
     max-height: none;
+    min-height: 0.6cm;
     margin-bottom: 1%;
     box-sizing: border-box;
     background-color: white;

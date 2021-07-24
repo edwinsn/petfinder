@@ -34,7 +34,7 @@ export let Animal = (props) => {
 
     let map = useMap()
 
-    console.log("Animal rerendered")
+    //console.log("Animal rerendered")
     let { defaultMarkerData, editing, setEditing, panes } = props
 
     defaultMarkerData = defaultMarkerData ? defaultMarkerData : {}
@@ -425,7 +425,6 @@ function cancelMarker(setOptions, markerData, options, map, setEditing, panes, o
         activeMarker = false
     }
     map.dragging.enable()
-   
 
     if (setEditing && markerData.defaultMarkerData) {
         let aux = { ...markerData }

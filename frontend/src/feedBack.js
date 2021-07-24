@@ -69,7 +69,7 @@ let sendFeedBack = async (ev, isSlow, isConfuse, setLoading, updateNotifications
     let moreSuggestions = ev.target[0].value
     setLoading(true)
     try {
-        let { status } = await axios.post(process.env.REACT_APP_POINTS_URI + "/feedBack", {
+        let { status } = await axios.post(process.env.REACT_APP_POINTS_URI + "feedBack", {
             isSlow,
             isConfuse,
             moreSuggestions
