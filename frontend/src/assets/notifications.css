@@ -1,5 +1,5 @@
 .orange{
-    color: #ffab2ee1;
+    color: #0ac561;
 }
 
 .notifications {
@@ -34,7 +34,7 @@
 }
 
 .uploading {
-    color: #3B72E1;
+    color: #2255b9;
     background-color: rgb(240, 240, 252) !important;
     border: 2px solid #3B72E1;
 }

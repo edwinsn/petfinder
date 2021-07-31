@@ -99,20 +99,22 @@ export let Animal = (props) => {
     let typesOfAnimals = ["dog", "cat"];
     const animalList = typesOfAnimals.map(
         (animalType) => (
-            <img
-                src={animalType == "dog" ? dogIcon : catIcon}
+            <div
                 key={animalType}
-                className={[animalType + "Option circular"]}
-                draggable={false}
+                className={[animalType + "Option circular"]}>
+                <img
+                    src={animalType == "dog" ? dogIcon : catIcon}
+                    draggable={false}
 
-                onClick={() => {
-                    if (activeMarker) { map.removeLayer(activeMarker) }
-                    markerData.type = animalType;
-                    activeMarker = true
-                    setOptions({ active: true, miniature: undefined })
-                }
-                }>
-            </img>
+                    onClick={() => {
+                        if (activeMarker) { map.removeLayer(activeMarker) }
+                        markerData.type = animalType;
+                        activeMarker = true
+                        setOptions({ active: true, miniature: undefined })
+                    }
+                    }>
+                </img>
+            </div>
         )
     );
 
@@ -352,7 +354,7 @@ async function addPermanentMark(markerData, panelDisplay,
                 markerData._id = res.data._id
                 lastMarkAdded.removeFrom(map)
                 lastCircleAdded.removeFrom(map)
-                console.log("345")
+                //console.log("345")
                 addMarkToMap(markerData, map, setEditing, panes, panelDisplay)
 
             } else {
@@ -381,7 +383,7 @@ function addMarkToMap(markerData, map, setEditing, panes, open) {
 
     let icon = L.icon({
         iconUrl: markerData.type === "dog" ? dogIcon : catIcon,
-        iconSize: [35, 35]
+        iconSize: markerData.type === "dog" ? [38, 38] : [35, 35]
     });
     let marker = L.marker(markerData.coords, {
         icon: icon
@@ -389,7 +391,7 @@ function addMarkToMap(markerData, map, setEditing, panes, open) {
 
     marker.addTo(map)
 
-    const circle = L.circle(markerData.coords, { radius: markerData.range, color: store.getState().editing.value ? "#ffab2e79" : "#3388FF" })
+    const circle = L.circle(markerData.coords, { radius: markerData.range, color: store.getState().editing.value ? "#3BF793" : "#3388FF" })
     circle.addTo(map);
 
     panes.push({ pane: circle, editable: true })

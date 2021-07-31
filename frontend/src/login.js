@@ -1,5 +1,5 @@
 import './assets/login.css'
-import appIcon from './assets/images/appIcon.png'
+import appIcon from './assets/images/appIcon.svg'
 import googleIcon from './assets/images/googleIcon.svg'
 import userIcon from './assets/images/userIcon.svg'
 import passwordIcon from './assets/images/passwordIcon.svg'
@@ -25,12 +25,12 @@ export const Login = (props) => {
 
     return show ? (
         <section className="loginContainer">
+            <img alt="salir" src={goBackIcon} onClick={hide} className="goback" />
             <div className="login">
 
-                <img alt="salir" src={goBackIcon} onClick={hide} className="goback" />
                 <div>
                     <img className="appIcon" src={appIcon} alt="icono de la app" />
-                    <p>Encuentra y reporta animales<br /> callejeros</p>
+                    <p className="slogan">Encuentra, reporta y ayuda</p>
                 </div>
                 <div className="inputsContainer">
                     <div>
@@ -53,7 +53,7 @@ export const Login = (props) => {
                         <img src={passwordIcon} />
                         <input type="password"
                             required
-                            autocomplete="off"
+                            autoComplete="off"
                             placeholder="contraseña"
                             onChange={(ev) => {
                                 password.current = ev.target.value

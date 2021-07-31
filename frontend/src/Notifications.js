@@ -19,7 +19,7 @@ export const Notifications = () => {
     return (
         <div className="notifications">
             {
-                notifications.editInstructions && <div className="uploading editMarkers "> Da click en la marcas <span className="orange">naranjas</span> para editarlas </div>
+                notifications.editInstructions && <div className="uploading editMarkers "> Da click en la marcas <span className="orange">verdes</span> para editarlas </div>
             }
             {
                 notifications.noEditable && <div className="error">No puedes editar marcas que no hayas reportado</div>

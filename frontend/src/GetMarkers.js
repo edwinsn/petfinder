@@ -69,7 +69,7 @@ export let GetMarkers = (props) => {
         if (panes[i].editable) {
           //          console.log(panes[i].pane.setStyle)
           panes[i].pane.setStyle({
-            color: store.getState().editing.value ? '#ffab2e79' : "#3388FF"
+            color: store.getState().editing.value ? '#3BF793' : "#3388FF"
           });
         }
       }
@@ -119,7 +119,7 @@ let getp = (map, props, setEditing, updateNotifications) => {
       //console.log("ok")
       let dogIconM = new L.icon({
         iconUrl: dogIcon,
-        iconSize: [35, 35]
+        iconSize: [38, 38]
       })
 
       let catIconM = new L.icon({
@@ -138,7 +138,7 @@ let getp = (map, props, setEditing, updateNotifications) => {
 
         let circle
         let editable = marker.userid === props.userid && editing
-        let color = editable ? '#ffab2e79' : "#3388FF"
+        let color = editable ? '#3BF793' : "#3388FF"
         if (marker.range) {
           circle = L.circle({ lat: marker.lat, lng: marker.lng }, {
             radius: marker.range,

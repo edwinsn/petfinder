@@ -1,3 +1,44 @@
+@media (min-width:800px) {
+    :root {
+        --panel-height: 73vh;
+        --panel-width: 70%;
+        --panel-margin-top: 10vh;
+        --app-icon-height: 16vh;
+        --app-icon-height: calc(var(--vh, 1vh) * 16);
+    }
+    .login {
+        border: 2px solid white !important;
+        border-radius: 20px;
+        background-color: rgba(255, 255, 255, 0.19);
+    }
+    .appIcon {
+        position: absolute;
+        top: -8vh;
+        left: 44.5%;
+    }
+}
+
+@media (max-width:800px) {
+    :root {
+        --panel-height: 100vh;
+        --panel-height: calc(var(--vh, 1vh) * 100);
+        --panel-width: 100%;
+        --app-icon-height: 20vh;
+        --app-icon-height: calc(var(--vh, 1vh) * 20);
+        --panel-margin-top: 0;
+    }
+    .login {
+        margin-bottom: 10vh;
+    }
+}
+
+.appIcon {
+    height: var(--app-icon-height);
+    width: var(--app-icon-height);
+    border-radius: 50%;
+    background-color: white;
+}
+
 .googleBtnDiv {
     width: 70%;
     display: flex;
@@ -13,17 +54,10 @@
     color: #3b6ebb;
     cursor: pointer;
     min-height: var(--minHeightInput);
-    box-shadow: 1px 2px 1px 1px rgba(66, 29, 29, 0.314);
 }
 
 .googleBtnDiv>button>img {
     margin-right: 7px;
-}
-
-.appIcon {
-    height: calc(var(--vh, 1vh) * 14);
-    box-shadow: 1px 2px 1px 1px rgba(75, 74, 74, 0.314);
-    border-radius: 50%;
 }
 
 .goBack {
@@ -33,29 +67,35 @@
     top: calc(var(--vh, 1vh) * 4);
     left: calc(var(--vh, 1vh) * 4);
     cursor: pointer;
+    z-index: 3;
+    width: 8vh;
 }
 
 .login {
+    height: var(--panel-height);
     padding: 10px;
     padding: calc(var(--vh, 1vh) * 7) 0 calc(var(--vh, 1vh) * 6) 0;
-    height: 100vh;
-    height: calc(var(--vh, 1vh) * 100);
-    background: radial-gradient(80.42% 80.42% at 88.5% 12.34%, #4780D4 0%, #417DD6 48.96%, #46699D 98.28%);
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: center;
     box-sizing: border-box;
+    margin-top: var(--panel-margin-top);
     position: relative;
+    width: var(--panel-width);
 }
 
+.login>* {
+    margin-bottom: 15px;
+}
 
 .login>div {
     text-align: center;
 }
 
 .login>div>p {
-    color: white;
+    color: var(--text-color);
+    font-weight: bold;
     text-align: center;
     line-height: 23px;
 }
@@ -63,6 +103,11 @@
 .loginContainer {
     height: 100vh;
     overflow-y: scroll;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(80.42% 80.42% at 88.5% 12.34%, #4780D4 0%, #417DD6 48.96%, #46699D 98.28%);
+    background: #437ED5;
 }
 
 .inputsContainer {
@@ -74,6 +119,7 @@
 
 .inputsContainer>* {
     margin: 5px;
+    color: rgb(36, 36, 36);
 }
 
 .inputsContainer span {
@@ -96,13 +142,15 @@
 }
 
 .inputsContainer>div>input, .login button {
+    border: none;
     height: 45px;
     height: calc(var(--vh, 1vh) * 6);
     width: 100%;
     max-width: 8cm;
-    border-radius: 4px;
+    border-radius: var(--big-border-radius);
     margin: 0;
     padding: 0;
+    color: rgb(48, 47, 47);
 }
 
 .inputsContainer>div {
@@ -139,14 +187,14 @@
 }
 
 .login .BtnContainer {
-    box-shadow: 1px 2px 1px 1px rgba(66, 29, 29, 0.314);
+    font-weight: bold;
     width: 100%;
-    border-radius: 4px;
-    background-color: #378AFD;
+    background-color: #2EC6FE;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: var(--minHeightInput);
+    border-radius: var(--big-border-radius);
 }
 
 .signUpBtn {
