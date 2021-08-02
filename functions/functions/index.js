@@ -11,4 +11,4 @@ app.listen(4000, () => {
 })
 
 
-exports.app = functions.https.onRequest(app)
+//exports.app = functions.https.onRequest(app)
