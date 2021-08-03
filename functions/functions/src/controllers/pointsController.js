@@ -1,7 +1,7 @@
 const {pointModel, backupPointModel} = require("../Models/point");
 
 const pointsControllers = {};
-// eslint-disable-next-line
+
 pointsControllers.getPoints = async function (req, res)  {
   const {lowerlat, upperlat, lowerlng, upperlng, markersLoaded, userid} = req.query;
 

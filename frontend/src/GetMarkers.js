@@ -8,10 +8,12 @@ import { useEffect, useState } from 'react';
 import store from './store'
 import { useDispatch } from 'react-redux'
 import { showNotifications } from "./features/notificationsSlice"
+import refugeIcon from './assets/images/refugeIcon.svg'
 
 //of-on icon 
 let markersLoadedCoords = [{ coordinates: "0" }]
 let markersLoaded = []
+let refugesLoaded = ["0"]
 let panes = []
 let prevUserid = false
 
@@ -105,6 +107,9 @@ let getp = (map, props, setEditing, updateNotifications) => {
   let upperlng = _northEast.lng + 0.1 * diff
 
   let coordsLoaded = Object.keys(markersLoadedCoords)
+
+  getRefuges(map.getCenter(), map.distance(_northEast, _southWest) / 2, map)
+
   axios.get(process.env.REACT_APP_POINTS_URI, {
     params: {
       lowerlat,
@@ -217,6 +222,63 @@ let getp = (map, props, setEditing, updateNotifications) => {
     console.log("Network error")
   })
 
+}
+
+let getRefuges = async ({ lat, lng }, radius, map) => {
+
+  let refugeI = new L.icon({
+    iconUrl: refugeIcon,
+    iconSize: [38, 38]
+  })
+
+  try {
+    let { data } = await axios.get(process.env.REACT_APP_POINTS_URI + "refuges", {
+      params: {
+        lat,
+        lng,
+        radius,
+        refugesLoaded
+      }
+    })
+    data.forEach(refuge => {
+
+      refugesLoaded.push(refuge.lat + "" + refuge.lng)
+      let newmarker = L.marker({ lat: refuge.lat, lng: refuge.lng },
+        {
+          icon: refugeI,
+          iconSize: [38, 38]
+        });
+      newmarker.bindPopup(
+        `<b>${refuge.name}</b><br/><br />
+        <div class="lds-ring">
+          <div style={{ borderColor: color }}></div><div></div><div></div><div></div>
+        </div>`)
+
+        .on('popupopen', function (popup) {
+          axios.get(process.env.REACT_APP_POINTS_URI + "refugeDatails", {
+            params: { _id: refuge._id }
+          })
+            .then((res) => {
+              popup.popup.setContent(
+                `<b class="red">${refuge.name}</b><br/>
+                ${res.data.formatted_address ?
+                  `<b>Direccion:</b><br />${res.data.formatted_address}<br />` : ""
+                }
+                ${res.data.formatted_phone_number ?
+                  `<b>Telefono:</b><br />${res.data.formatted_phone_number}<br />` : ""
+                }
+                ${res.data.website ?
+                  `<b>Sitio web:</b><br />${res.data.website}` : ""
+                }`
+              )
+            })
+        })
+      newmarker.addTo(map)
+    });
+  }
+  catch (err) {
+    console.log(err)
+  }
 }
 
 export let editFrecuences = (frecuence, coords, newMark = false) => {
