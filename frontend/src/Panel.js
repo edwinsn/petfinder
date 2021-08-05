@@ -26,16 +26,23 @@ export class Panel extends Component {
       lat: 0,
       lng: 0,
       loading: false,
-      imgUrl: false
+      imgUrl: false,
+      isImgOpen: false
     }
     this.updatedFrecuence = this.updatedFrecuence.bind(this)
     this.open = this.open.bind(this)
     this.isDeprecated = false
+
+
   }
 
   render() {
 
     //console.log("Panel rendered")
+
+    let openImg = () => {
+      if (!this.state.isImgOpen) this.setState({ isImgOpen: true })
+    }
 
     let probabilityBars = []
     for (let i = 0; i < 10; i++) {
@@ -53,10 +60,10 @@ export class Panel extends Component {
             className="close"
             onClick={
               () => {
+                this.state?.unpaintCircle?.()
                 this.setState({
                   show: false
                 })
-
               }
             } />
           {this.state.excessOfRevitions &&
@@ -72,7 +79,7 @@ export class Panel extends Component {
 
               <div>
                 <div className="verticalCentered">
-                  <img src={petsIcon} className="petsImg"/>
+                  <img src={petsIcon} className="petsImg" />
                   <span>Descripcion</span>
                 </div>
                 <p>
@@ -129,8 +136,27 @@ export class Panel extends Component {
               </div>
 
             </div>
-            <div className="animalImgcontainer">
-              <img className="animalImg" key={Math.random()} src={this.state.imgUrl ? this.state.imgUrl : undefined} />
+            <div className={this.state.isImgOpen ? "fullScreen" : "animalImgcontainer"} >
+
+              {this.state.isImgOpen &&
+                <div className="background"
+                  onClick={() => { this.setState({ isImgOpen: false }) }}
+                ></div>}
+
+              <div className={this.state.isImgOpen ? "deployimg" : ""}>
+
+                {this.state.isImgOpen &&
+                  <img className={window.innerHeight > window.innerWidth ? "close left" : "close"} src={closeIcon}
+                    onClick={() => { this.setState({ isImgOpen: false }) }}
+                  />}
+                <img className={this.state.isImgOpen ?
+                  (window.innerHeight > window.innerWidth ? "mobilbigimg" : "animalImg") :
+                  "animalImg"}
+                  onClick={openImg}
+                  src={this.state.imgUrl ? this.state.imgUrl : undefined} />
+
+              </div>
+
             </div>
           </div>
 
@@ -178,7 +204,8 @@ export class Panel extends Component {
       lng,
       imgUrl: data.imgurl ? data.imgurl : (data.type === "dog" ? dogIcon : catIcon),
       contact: data.contact,
-      description: data.description
+      description: data.description,
+      unpaintCircle: data.unpaintCircle
     })
   }
 }

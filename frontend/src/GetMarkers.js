@@ -16,6 +16,7 @@ let markersLoaded = []
 let refugesLoaded = ["0"]
 let panes = []
 let prevUserid = false
+let previousCircle
 
 export let GetMarkers = (props) => {
 
@@ -138,7 +139,7 @@ let getp = (map, props, setEditing, updateNotifications) => {
       res.data.forEach((marker) => {
 
         let newmarker = L.marker({ lat: marker.lat, lng: marker.lng },
-          { icon: marker.type === "dog" ? dogIconM : catIconM });
+          { icon: marker.type === "dog" ? dogIconM : catIconM,zIndexOffset:2 });
         newmarker.addTo(map)
 
         let circle
@@ -162,12 +163,25 @@ let getp = (map, props, setEditing, updateNotifications) => {
         newmarker.on("click", () => {
 
           if (!store.getState().editing.value) {
+            previousCircle?.setStyle({
+              color: '#3388FF'
+            })
+            circle.setStyle({
+              color: '#2914CC',
+              fillColor: '#3388FF'
+            })
+            previousCircle = circle
             props.open(marker.lat, marker.lng,
               {
                 frecuence: markersLoadedCoords[marker.lat + "" + marker.lng].frecuence,
                 imgurl: marker.imgurl ? marker.imgurl : marker.type == "dog" ? dogIcon : catIcon,
                 description: marker.description,
-                contact: marker.contact
+                contact: marker.contact,
+                unpaintCircle: () => {
+                  previousCircle?.setStyle({
+                    color: '#3388FF'
+                  })
+                }
               })
           }
           else if (marker.userid != props.userid) {

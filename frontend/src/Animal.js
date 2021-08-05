@@ -245,8 +245,9 @@ async function sendPoint(setOptions, panelDisplay, map,
 
     let newdescription = ev.target[0].value
     let newcontact = ev.target[1].value
-
-    markerData.description = newdescription ? newdescription : markerData.description
+    // error
+    console.log(newdescription)
+    markerData.description = newdescription
     markerData.contact = newcontact ? newcontact : markerData.contact
 
     if (markerData.range > 400) {
@@ -386,7 +387,7 @@ function addMarkToMap(markerData, map, setEditing, panes, open) {
         iconSize: markerData.type === "dog" ? [38, 38] : [35, 35]
     });
     let marker = L.marker(markerData.coords, {
-        icon: icon
+        icon: icon,zIndexOffset:3
     });
 
     marker.addTo(map)

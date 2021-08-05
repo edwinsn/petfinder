@@ -5,6 +5,7 @@ p label {
 .animalImg {
     object-fit: cover;
     height: 100% !important;
+    z-index: 3;
 }
 
 .animalImgcontainer {
@@ -14,6 +15,39 @@ p label {
     text-align: center;
 }
 
+.deployimg .close {
+    position: absolute;
+    right: 10px;
+    z-index: 3;
+    top: 2vh;
+}
+
+.fullScreen {
+    height: 100vh;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+}
+
+.fullScreen .left{
+    left: 0;
+    top:0;
+}
+
+.infoContainer .background {
+    z-index: 1;
+    background-color: rgba(255, 255, 255, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+}
+
 .close {
     position: relative;
     float: right;
@@ -21,6 +55,25 @@ p label {
     height: 8vh;
     min-height: var(--minCloseIconHeigh);
     cursor: pointer;
+}
+
+.deployimg {
+    z-index: 409;
+    background-color: white;
+    overflow-x: scroll;
+    border: 2px solid hsla(38, 6%, 75%, 0.8);
+    border-radius: 5px;
+    box-sizing: border-box;
+    height: 85%;
+    width: 90%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.deployimg>img {
+    z-index: 1;
 }
 
 .hidden {
@@ -84,6 +137,12 @@ p label {
     margin-top: 4vh;
     margin-left: 3vh;
     position: absolute;
+}
+
+.mobilbigimg {
+    height: 85vw;
+    max-height: 15cm;
+    transform: rotate(-90deg);
 }
 
 .panel label img {
