@@ -79,6 +79,7 @@ export let Animal = (props) => {
 
         window.onkeydown = (ev) => {
             if (ev.key === "Escape") {
+                console.log("escape")
                 cancelMarker(setOptions, markerData, activeMarker, map, setEditing, panes, props.open)
                 if (store.getState().editing.value) {
                     dispatch(deactivate())
@@ -88,8 +89,8 @@ export let Animal = (props) => {
 
         store.subscribe(() => {
             if (!store.getState().editing.value && !editing) {
-                //console.log("closing")
-                cancelMarker(setOptions, markerData, options.active, map, setEditing, panes, props.open)
+              
+                cancelMarker(setOptions, markerData, options.active, map, setEditing, panes, props.open, !store.getState().notifications.withoutConnection)
             }
         })
 
@@ -162,9 +163,10 @@ export let Animal = (props) => {
 
                                 sendPoint(setOptions, props.panelDisplay, map,
                                     updateNotifications, ev, props.userid,
-                                    props.editing, setEditing, markerData, panes)
+                                    props.editing, setEditing, markerData, panes, options, props.open);
                             }
                         }}
+
                         onMouseEnter={() => { map.dragging.disable() }}
                         onMouseLeave={() => { map.dragging.enable() }}
                         onTouchStart={() => { map.dragging.disable() }}
@@ -237,7 +239,8 @@ export let Animal = (props) => {
 
 async function sendPoint(setOptions, panelDisplay, map,
     updateNotifications, ev, userid,
-    editing, setEditing, markerData, panes) {
+    editing, setEditing, markerData, panes, options, open) {
+
 
     if (setEditing) setEditing({ active: false })
 
@@ -246,7 +249,7 @@ async function sendPoint(setOptions, panelDisplay, map,
     let newdescription = ev.target[0].value
     let newcontact = ev.target[1].value
     // error
-    console.log(newdescription)
+    //console.log(newdescription)
     markerData.description = newdescription
     markerData.contact = newcontact ? newcontact : markerData.contact
 
@@ -324,16 +327,19 @@ async function sendPoint(setOptions, panelDisplay, map,
         } catch (err) {
 
             //mostrar error de conexion o de repeticion de dato (dato guardado :))
-            console.log(err)
+            updateNotifications(false, false, false, false, true)
+            cancelMarker(setOptions, markerData, options, map, setEditing, panes, open, true)
+
+            //console.log(err)
         }
     }
+
 }
 
 async function addPermanentMark(markerData, panelDisplay,
     userid, editing, setEditing, map, panes) {
 
     //console.log(panes)
-
     addMarkToMap(markerData, map, setEditing, panes, panelDisplay)
 
     if (!markerData.localimgurl) {
@@ -355,7 +361,6 @@ async function addPermanentMark(markerData, panelDisplay,
                 markerData._id = res.data._id
                 lastMarkAdded.removeFrom(map)
                 lastCircleAdded.removeFrom(map)
-                //console.log("345")
                 addMarkToMap(markerData, map, setEditing, panes, panelDisplay)
 
             } else {
@@ -378,7 +383,7 @@ async function addPermanentMark(markerData, panelDisplay,
 
 function addMarkToMap(markerData, map, setEditing, panes, open) {
 
-    //console.log("adding mark")
+    console.log("adding mark")
 
     if (setEditing) { setEditing({ active: false }) }
 
@@ -387,7 +392,7 @@ function addMarkToMap(markerData, map, setEditing, panes, open) {
         iconSize: markerData.type === "dog" ? [38, 38] : [35, 35]
     });
     let marker = L.marker(markerData.coords, {
-        icon: icon,zIndexOffset:3
+        icon: icon, zIndexOffset: 3
     });
 
     marker.addTo(map)
@@ -422,14 +427,15 @@ function addMarkToMap(markerData, map, setEditing, panes, open) {
     map.dragging.enable()
 }
 
-function cancelMarker(setOptions, markerData, options, map, setEditing, panes, open) {
+function cancelMarker(setOptions, markerData, options, map, setEditing, panes, open, error = false) {
     if (options) {
         setOptions({ active: false, miniature: undefined })
         activeMarker = false
     }
     map.dragging.enable()
 
-    if (setEditing && markerData.defaultMarkerData) {
+    if (setEditing && markerData.defaultMarkerData && !error) {
+        console.log("here again", error)
         let aux = { ...markerData }
         aux.defaultMarkerData = undefined
         markerData = markerData.defaultMarkerData

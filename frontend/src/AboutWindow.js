@@ -1,6 +1,5 @@
 import './assets/AboutWindow.css'
 import closeIcon from './assets/images/closeIcon.svg'
-import animalsIcon from './assets/images/animalsIcon.png'
 
 
 export const AboutWindow = (props) => {

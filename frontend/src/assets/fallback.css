@@ -1,0 +1,12 @@
+.fallback{
+    align-items: center;
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    width: 100vw;
+}
+
+.fallback img{
+    min-width: 1cm;
+    width: 15vh;
+}

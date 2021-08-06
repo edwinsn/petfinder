@@ -4,11 +4,11 @@ import { Login } from "./login";
 import { MainPage } from './MainPage'
 import './assets/App.css'
 import { Loading } from './Loading'
+import { FallBack } from './FallBack'
 
 let loading
 
 export const App = () => {
-
 
     useEffect(() => {
         let vh = window.innerHeight * 0.01;
@@ -133,6 +133,7 @@ export const App = () => {
         authListener()
     }, [])
     let view
+
 
     switch (user) {
         case "noUserYet":
