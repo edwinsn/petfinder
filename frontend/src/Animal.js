@@ -89,7 +89,7 @@ export let Animal = (props) => {
 
         store.subscribe(() => {
             if (!store.getState().editing.value && !editing) {
-              
+
                 cancelMarker(setOptions, markerData, options.active, map, setEditing, panes, props.open, !store.getState().notifications.withoutConnection)
             }
         })
@@ -298,8 +298,9 @@ async function sendPoint(setOptions, panelDisplay, map,
                             .child(fileName)
                             .getDownloadURL()
 
-                        lastMarkAdded.removeFrom(map)
-                        lastCircleAdded.removeFrom(map)
+                        //console.log(lastCircleAdded)
+                        lastMarkAdded?.removeFrom?.(map)
+                        lastCircleAdded?.removeFrom?.(map)
                         markerData = { ...markerData, imgurl, localimgurl: undefined }
                         addPermanentMark(markerData, panelDisplay,
                             userid, editing, setEditing, map, panes)
@@ -435,7 +436,7 @@ function cancelMarker(setOptions, markerData, options, map, setEditing, panes, o
     map.dragging.enable()
 
     if (setEditing && markerData.defaultMarkerData && !error) {
-        console.log("here again", error)
+        //console.log("here again", error)
         let aux = { ...markerData }
         aux.defaultMarkerData = undefined
         markerData = markerData.defaultMarkerData

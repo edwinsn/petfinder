@@ -29,7 +29,7 @@ export class MainPage extends Component {
     return (
       <div style={{ display: this.props.show ? undefined : "none" }}>
         <div>
-          <MapContainer className="mapp" id="map" style={{ "zIndex": 0 }} center={{ lat: 5.533, lng: -73.367 }} zoom={16} zoomControl={false}>
+          <MapContainer className="mapp" id="map" style={{ "zIndex": 0 }} center={{ lat: 5.4940, lng: -73.4854 }} zoom={16} zoomControl={false}>
             <TileLayer
               attribution="&copy; <a href='https://osm.org/copyright'>OpenStreetMap</a> contributors"
               url={"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"}>

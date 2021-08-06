@@ -120,6 +120,12 @@ p label {
     margin-top: 2vh;
 }
 
+.panelContainer .lds-ring{
+    position: absolute;
+    top:48%;
+    left: 50%;
+}
+
 .infoContainer>img {
     max-width: 12cm;
     height: 40%;
@@ -205,6 +211,10 @@ p label {
     min-height: 22px;
     box-sizing: border-box;
     border-left: 1px solid #c2c2c3;
+}
+
+.relative{
+    position:relative;
 }
 
 .verticalCentered {

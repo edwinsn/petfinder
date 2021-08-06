@@ -10,6 +10,7 @@ import plus from './assets/images/plus .svg'
 import minus from './assets/images/minus.svg'
 import dogIcon from './assets/images/dogIcon.svg'
 import catIcon from './assets/images/catIcon.svg'
+import { LoadingCircles } from './Loading'
 
 let actualCoords
 let actualFrecuence
@@ -27,7 +28,8 @@ export class Panel extends Component {
       lng: 0,
       loading: false,
       imgUrl: false,
-      isImgOpen: false
+      isImgOpen: false,
+      imgLoading: true
     }
     this.updatedFrecuence = this.updatedFrecuence.bind(this)
     this.open = this.open.bind(this)
@@ -50,6 +52,7 @@ export class Panel extends Component {
         <div key={i} style={{ background: i < this.state.prob ? "#3B72E1" : "#E3E3E3" }}></div>
       )
     }
+
     return (
       <div className="panelContainer">
 
@@ -143,7 +146,7 @@ export class Panel extends Component {
                   onClick={() => { this.setState({ isImgOpen: false }) }}
                 ></div>}
 
-              <div className={this.state.isImgOpen ? "deployimg" : ""}>
+              <div className={this.state.isImgOpen ? "deployimg" : "relative"}>
 
                 {this.state.isImgOpen &&
                   <img className={window.innerHeight > window.innerWidth ? "close left" : "close"} src={closeIcon}
@@ -153,8 +156,11 @@ export class Panel extends Component {
                   (window.innerHeight > window.innerWidth ? "mobilbigimg" : "animalImg") :
                   "animalImg"}
                   onClick={openImg}
-                  src={this.state.imgUrl ? this.state.imgUrl : undefined} />
-
+                  src={this.state.imgUrl ? this.state.imgUrl : undefined}
+                  key={Math.random()}
+                  onLoad={() => { this.setState({ imgLoading: false }) }}
+                />
+                {this.state.imgLoading && <LoadingCircles />}
               </div>
 
             </div>
@@ -205,7 +211,8 @@ export class Panel extends Component {
       imgUrl: data.imgurl ? data.imgurl : (data.type === "dog" ? dogIcon : catIcon),
       contact: data.contact,
       description: data.description,
-      unpaintCircle: data.unpaintCircle
+      unpaintCircle: data.unpaintCircle,
+      imgLoading: true
     })
   }
 }
