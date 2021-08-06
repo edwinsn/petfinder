@@ -29,7 +29,8 @@ export class Panel extends Component {
       loading: false,
       imgUrl: false,
       isImgOpen: false,
-      imgLoading: true
+      imgLoading: true,
+      show: false
     }
     this.updatedFrecuence = this.updatedFrecuence.bind(this)
     this.open = this.open.bind(this)
@@ -43,6 +44,7 @@ export class Panel extends Component {
     //console.log("Panel rendered")
 
     let openImg = () => {
+      console.log("...")
       if (!this.state.isImgOpen) this.setState({ isImgOpen: true })
     }
 
@@ -83,7 +85,7 @@ export class Panel extends Component {
               <div>
                 <div className="verticalCentered">
                   <img src={petsIcon} className="petsImg" />
-                  <span>Descripcion</span>
+                  <span>Descripcion{this.state.isImgOpen ? "dd" : "ff"}</span>
                 </div>
                 <p>
                   {this.state.description ? this.state.description : "No hay descripción"}
@@ -139,14 +141,14 @@ export class Panel extends Component {
               </div>
 
             </div>
-            <div className={this.state.isImgOpen ? "fullScreen" : "animalImgcontainer"} >
+            <div className={this.state.isImgOpen ? "fullScreen" : "animalImgcontainer"}>
 
               {this.state.isImgOpen &&
                 <div className="background"
                   onClick={() => { this.setState({ isImgOpen: false }) }}
                 ></div>}
 
-              <div className={this.state.isImgOpen ? "deployimg" : "relative"}>
+              <div className={(this.state.isImgOpen ? "deployimg " : "relative") + (window.innerHeight > window.innerWidth ? " top" : " center")}>
 
                 {this.state.isImgOpen &&
                   <img className={window.innerHeight > window.innerWidth ? "close left" : "close"} src={closeIcon}
@@ -157,8 +159,10 @@ export class Panel extends Component {
                   "animalImg"}
                   onClick={openImg}
                   src={this.state.imgUrl ? this.state.imgUrl : undefined}
-                  key={Math.random()}
-                  onLoad={() => { this.setState({ imgLoading: false }) }}
+                  key={this.state.imgKey}
+                  onLoad={(pre) => {
+                    this.setState({ ...pre, imgLoading: false })
+                  }}
                 />
                 {this.state.imgLoading && <LoadingCircles />}
               </div>
@@ -212,7 +216,8 @@ export class Panel extends Component {
       contact: data.contact,
       description: data.description,
       unpaintCircle: data.unpaintCircle,
-      imgLoading: true
+      imgLoading: true,
+      imgKey:Math.random()
     })
   }
 }

@@ -6,6 +6,7 @@ p label {
     object-fit: cover;
     height: 100% !important;
     z-index: 3;
+    cursor: pointer;
 }
 
 .animalImgcontainer {
@@ -13,6 +14,12 @@ p label {
     height: 45%;
     background-color: #F2EFE9;
     text-align: center;
+    z-index: 10;
+}
+
+
+.center{
+    align-self: center;
 }
 
 .deployimg .close {
@@ -29,13 +36,12 @@ p label {
     left: 0;
     display: flex;
     justify-content: center;
-    align-items: center;
     position: fixed;
 }
 
-.fullScreen .left{
+.fullScreen .left {
     left: 0;
-    top:0;
+    top: 0;
 }
 
 .infoContainer .background {
@@ -58,18 +64,18 @@ p label {
 }
 
 .deployimg {
+    align-items: center;
     z-index: 409;
     background-color: white;
     overflow-x: scroll;
     border: 2px solid hsla(38, 6%, 75%, 0.8);
     border-radius: 5px;
     box-sizing: border-box;
-    height: 85%;
+    height: 90%;
     width: 90%;
     position: relative;
     display: flex;
     justify-content: center;
-    align-items: center;
 }
 
 .deployimg>img {
@@ -120,9 +126,9 @@ p label {
     margin-top: 2vh;
 }
 
-.panelContainer .lds-ring{
+.panelContainer .lds-ring {
     position: absolute;
-    top:48%;
+    top: 48%;
     left: 50%;
 }
 
@@ -161,7 +167,7 @@ p label {
     z-index: 402;
     background-color: white;
     height: 100%;
-    max-width: 11cm;
+    max-width: 12cm;
     width: 0;
     position: absolute;
     margin-top: -100vh;
@@ -169,14 +175,6 @@ p label {
     transition: width var(--fastTransition);
     overflow-x: hidden;
     border-right: var(--emergentBorder);
-}
-
-.panelContainer {
-    width: 0;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    transition: width var(--fastTransition);
 }
 
 .active {
@@ -213,8 +211,13 @@ p label {
     border-left: 1px solid #c2c2c3;
 }
 
-.relative{
-    position:relative;
+.relative {
+    position: relative;
+}
+
+.top {
+    align-self: flex-start;
+    margin-top: 10px;
 }
 
 .verticalCentered {
