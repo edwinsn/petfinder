@@ -135,11 +135,15 @@ let getp = (map, props, setEditing, updateNotifications) => {
 
       let editing = store.getState().editing.value
 
-      //      console.log(res.data)
+      //console.log(res.data)
+      res.data.forEach(marker => {
+        markersLoadedCoords[marker.lat + "" + marker.lng] = { frecuence: marker.frecuence }
+      })
+
       res.data.forEach((marker) => {
 
         let newmarker = L.marker({ lat: marker.lat, lng: marker.lng },
-          { icon: marker.type === "dog" ? dogIconM : catIconM,zIndexOffset:2 });
+          { icon: marker.type === "dog" ? dogIconM : catIconM, zIndexOffset: 2 });
         newmarker.addTo(map)
 
         let circle
@@ -223,7 +227,6 @@ let getp = (map, props, setEditing, updateNotifications) => {
             //console.log(editing)
           }
         })
-        markersLoadedCoords[marker.lat + "" + marker.lng] = { frecuence: marker.frecuence }
       }
       );
     } else {
