@@ -136,97 +136,98 @@ let getp = (map, props, setEditing, updateNotifications) => {
       let editing = store.getState().editing.value
 
       //console.log(res.data)
-      res.data.forEach(marker => {
-        markersLoadedCoords[marker.lat + "" + marker.lng] = { frecuence: marker.frecuence }
-      })
 
       res.data.forEach((marker) => {
 
-        let newmarker = L.marker({ lat: marker.lat, lng: marker.lng },
-          { icon: marker.type === "dog" ? dogIconM : catIconM, zIndexOffset: 2 });
-        newmarker.addTo(map)
+        if (!Object.keys(markersLoadedCoords).includes(marker.lat + "" + marker.lng)) {
 
-        let circle
-        let editable = marker.userid === props.userid && editing
-        let color = editable ? '#3BF793' : "#3388FF"
-        if (marker.range) {
-          circle = L.circle({ lat: marker.lat, lng: marker.lng }, {
-            radius: marker.range,
-            color
-          })
-          circle.addTo(map);
-        }
-        else {
-          circle = L.circle({ lat: marker.lat, lng: marker.lng }, { radius: 100, color })
-          circle.addTo(map);
-        }
-        panes.push({ pane: circle, editable: marker.userid == props.userid })
-        markersLoaded.push(newmarker)
-        //console.log(panes)
+          let newmarker = L.marker({ lat: marker.lat, lng: marker.lng },
+            { icon: marker.type === "dog" ? dogIconM : catIconM, zIndexOffset: 2 });
+          newmarker.addTo(map)
+          markersLoadedCoords[marker.lat + "" + marker.lng] = { frecuence: marker.frecuence }
 
-        newmarker.on("click", () => {
-
-          if (!store.getState().editing.value) {
-            previousCircle?.setStyle({
-              color: '#3388FF'
+          let circle
+          let editable = marker.userid === props.userid && editing
+          let color = editable ? '#3BF793' : "#3388FF"
+          if (marker.range) {
+            circle = L.circle({ lat: marker.lat, lng: marker.lng }, {
+              radius: marker.range,
+              color
             })
-            circle.setStyle({
-              color: '#2914CC',
-              fillColor: '#3388FF'
-            })
-            previousCircle = circle
-            props.open(marker.lat, marker.lng,
-              {
-                frecuence: markersLoadedCoords[marker.lat + "" + marker.lng].frecuence,
-                imgurl: marker.imgurl ? marker.imgurl : marker.type == "dog" ? dogIcon : catIcon,
-                description: marker.description,
-                contact: marker.contact,
-                unpaintCircle: () => {
-                  previousCircle?.setStyle({
-                    color: '#3388FF'
-                  })
-                }
-              })
-          }
-          else if (marker.userid != props.userid) {
-            updateNotifications(true)
-            setTimeout(() => {
-              updateNotifications(false)
-            }, 2500)
+            circle.addTo(map);
           }
           else {
-            //console.log(marker)
-            circle.removeFrom(map)
-            newmarker.removeFrom(map)
-            setEditing({
-              active: true,
+            circle = L.circle({ lat: marker.lat, lng: marker.lng }, { radius: 100, color })
+            circle.addTo(map);
+          }
+          panes.push({ pane: circle, editable: marker.userid == props.userid })
+          markersLoaded.push(newmarker)
+          //console.log(panes)
 
-              markerData: {
-                type: marker.type,
-                defaultMarkerData: {
+          newmarker.on("click", () => {
+
+            if (!store.getState().editing.value) {
+              previousCircle?.setStyle({
+                color: '#3388FF'
+              })
+              circle.setStyle({
+                color: '#2914CC',
+                fillColor: '#3388FF'
+              })
+              previousCircle = circle
+              props.open(marker.lat, marker.lng,
+                {
+                  frecuence: markersLoadedCoords[marker.lat + "" + marker.lng].frecuence,
+                  imgurl: marker.imgurl ? marker.imgurl : marker.type == "dog" ? dogIcon : catIcon,
+                  description: marker.description,
+                  contact: marker.contact,
+                  unpaintCircle: () => {
+                    previousCircle?.setStyle({
+                      color: '#3388FF'
+                    })
+                  }
+                })
+            }
+            else if (marker.userid != props.userid) {
+              updateNotifications(true)
+              setTimeout(() => {
+                updateNotifications(false)
+              }, 2500)
+            }
+            else {
+              //console.log(marker)
+              circle.removeFrom(map)
+              newmarker.removeFrom(map)
+              setEditing({
+                active: true,
+
+                markerData: {
                   type: marker.type,
+                  defaultMarkerData: {
+                    type: marker.type,
+                    coords: { lat: marker.lat, lng: marker.lng },
+                    range: marker.range,
+                    frecuence: marker.frecuence,
+                    imgurl: marker.imgurl,
+                    description: marker.description,
+                    contact: marker.contact,
+                    range: marker.range ? marker.range : 100,
+                    _id: marker._id
+
+                  },
                   coords: { lat: marker.lat, lng: marker.lng },
-                  range: marker.range,
                   frecuence: marker.frecuence,
                   imgurl: marker.imgurl,
                   description: marker.description,
                   contact: marker.contact,
                   range: marker.range ? marker.range : 100,
                   _id: marker._id
-
-                },
-                coords: { lat: marker.lat, lng: marker.lng },
-                frecuence: marker.frecuence,
-                imgurl: marker.imgurl,
-                description: marker.description,
-                contact: marker.contact,
-                range: marker.range ? marker.range : 100,
-                _id: marker._id
-              }
-            })
-            //console.log(editing)
-          }
-        })
+                }
+              })
+              //console.log(editing)
+            }
+          })
+        }
       }
       );
     } else {
