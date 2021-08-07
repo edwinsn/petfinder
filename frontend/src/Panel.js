@@ -85,7 +85,7 @@ export class Panel extends Component {
               <div>
                 <div className="verticalCentered">
                   <img src={petsIcon} className="petsImg" />
-                  <span>Descripcion{this.state.isImgOpen ? "dd" : "ff"}</span>
+                  <span>Descripcion</span>
                 </div>
                 <p>
                   {this.state.description ? this.state.description : "No hay descripción"}

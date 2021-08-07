@@ -36,7 +36,6 @@ export let GetMarkers = (props) => {
     //console.log("updating marks")
     markersLoadedCoords = [{ coordinates: "0" }]
 
-    getp(map, props, setEditing, updateNotifications)
     for (let i = 0; i < markersLoaded.length; i++) {
       markersLoaded[i].removeFrom(map)
       panes[i].pane.removeFrom(map)
@@ -45,11 +44,12 @@ export let GetMarkers = (props) => {
 
   useEffect(() => {
 
+    getp(map, props, setEditing, updateNotifications)
+
     map.locate({ setView: true, maxZoom: 16 })
     //getp(map, props, setEditing, updateNotifications)
 
     map.on('locationfound', (e) => {
-
       getp(map, props, setEditing, updateNotifications)
     })
 
@@ -97,7 +97,7 @@ export let GetMarkers = (props) => {
 }
 
 let getp = (map, props, setEditing, updateNotifications) => {
-  //console.log("...")
+  console.log("...")
   let { _northEast, _southWest } = map.getBounds()
 
   let lowerlat = 1.1 * _southWest.lat - Math.abs(0.1 * _northEast.lat)
