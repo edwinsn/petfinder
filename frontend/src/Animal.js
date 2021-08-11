@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useMap } from 'react-leaflet'
-import L, { marker } from 'leaflet'
+import L from 'leaflet'
 import { Form } from './Form'
 import { editFrecuences } from "./GetMarkers";
 import { UploadPhoto } from './UploadPhoto'
@@ -15,6 +15,8 @@ import cameraIcon from './assets/images/cameraIcon.svg'
 import userIcon from './assets/images/userIcon.svg'
 import petsIcon from './assets/images/petsIcon.svg'
 import pointsIcon from './assets/images/points.svg'
+import trashIcon from './assets/images/trashIcon.svg'
+import sendIcon from './assets/images/sendIcon.svg'
 import { useDispatch } from 'react-redux'
 import { showNotifications } from "./features/notificationsSlice"
 import { deactivate } from './features/editingSlice';
@@ -40,6 +42,7 @@ export let Animal = (props) => {
     defaultMarkerData = defaultMarkerData ? defaultMarkerData : {}
 
     markerData = markerData._id === defaultMarkerData._id ? markerData : { ...defaultMarkerData }
+    markerData.coords = markerData.coords || map.getCenter()
     markerData.range = markerData.range ? markerData.range : 178
     markerData.frecuence = markerData.frecuence ? markerData.frecuence : 3
 
@@ -217,9 +220,10 @@ export let Animal = (props) => {
                         </div>
 
                         <div className="mainOptions">
-
-                            <input type="submit" value="" className="sendPoint circular"></input>
-
+                            <label className="circular sendIcon">
+                                <input type="submit" value=""></input>
+                                <img src={sendIcon} alt="enviar" />
+                            </label>
                             <img src={closeIcon}
                                 alt="cancelar"
                                 className="cancelMarker circular"
@@ -227,6 +231,23 @@ export let Animal = (props) => {
                                     cancelMarker(setOptions, markerData, options.active, map, setEditing, panes, props.open)
                                 }
                                 } />
+                            {editing &&
+                                <img src={trashIcon}
+                                    alt="Eliminar"
+                                    className="circular"
+                                    onClick={async () => {
+                                        try {
+                                            props.setEditing(false)
+                                            cancelMarker(setOptions, markerData, true, map, false, panes, props.open)
+                                            await axios.delete(process.env.REACT_APP_POINTS_URI, { data: { _id: markerData._id, userid: props.userid } })
+                                        } catch (e) {
+                                            updateNotifications(false, false, false, false, true)
+                                            setTimeout((markerData) => { updateNotifications() }, 2000)
+                                        }
+                                    }
+                                    }
+                                />
+                            }
                         </div>
 
                     </form>

@@ -97,7 +97,7 @@ export let GetMarkers = (props) => {
 }
 
 let getp = (map, props, setEditing, updateNotifications) => {
-  console.log("...")
+  //console.log("...")
   let { _northEast, _southWest } = map.getBounds()
 
   let lowerlat = 1.1 * _southWest.lat - Math.abs(0.1 * _northEast.lat)

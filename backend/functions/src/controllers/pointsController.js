@@ -129,18 +129,36 @@ pointsControllers.updatePoint = async (req, res) => {
     else res.json({ message: "can decrease more the certainty of the data" });
   }
 };
-deletePoint = async (id, lat, lng, type, initialFrecuence) => {
-  // move to a back up and deprecated database
 
-  const deprecatedPoint = await pointModel.findByIdAndDelete(id);
+pointsControllers.deletePoint = async (req, res) => {
 
-  const newPoint = new backupPointModel({
-    lat,
-    lng,
-    type,
-    intitialFrecuence,
-  });
-  await newPoint.save();
+  const { userid, _id } = req.body
+
+  try {
+
+    const point = await pointModel.findById(_id)
+
+    if (userid === point.userid) {
+      const deprecatedPoint = await pointModel.findByIdAndDelete(_id);
+      const newPoint = new backupPointModel({
+        lat: deprecatedPoint.lat,
+        lng: deprecatedPoint.lng,
+        frecuence: deprecatedPoint.frecuence,
+        initialFrecuence: deprecatedPoint.initialFrecuence,
+        type: deprecatedPoint.type,
+        range: deprecatedPoint.range,
+        userid: deprecatedPoint.userid
+      });
+      await newPoint.save();
+      res.json({ message: "Point deleted!" })
+    } else {
+      //prove this with a particular userid
+      res.status(403).send({ message: "invalid requeest" })
+    }
+  } catch (e) {
+    res.status(403).send({ message: "Invalid requeest" })
+    console.log(e)
+  }
 };
 
 module.exports = pointsControllers;

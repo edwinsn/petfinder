@@ -1,7 +1,7 @@
 :root {
   --big-border-radius: 10px;
   --largeHeight: 7vh;
-  --mediumHeight: 5vh;
+  --mediumHeight: 3vh;
   --smallHeight: 3.5vh;
   --circularBtnHeight: 10vh;
   --appColor: #3B72E1;
@@ -107,6 +107,9 @@ html, body, #map {
 
 .closeIcon {
   cursor: pointer;
+  padding: 8px;
+  max-width: 6.5vh;
+  box-sizing: border-box;
 }
 
 .circular {
@@ -118,6 +121,11 @@ html, body, #map {
   cursor: pointer;
   border: none;
   background-color: white;
+}
+
+
+.circular>input{
+  display: none;
 }
 
 .title {

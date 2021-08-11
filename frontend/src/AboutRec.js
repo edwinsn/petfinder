@@ -18,11 +18,11 @@ export function About() {
 
         {visible &&
             <div className="info">
-                <p>Encuentra y reporta animales <span><img src={animalsIcon}></img></span> en la calle</p>
+                <p>Encuentra y reporta y atuda animales <span><img src={animalsIcon}></img></span> en la calle</p>
                 <ul >
                     <li>Agrega un registro dando click en <span className="plus bolder">+</span></li>
                     <li>Arrastra la marca que agregaste </li>
-                    <li>Puedes ajustar el <span className="green bolder">área</span> y subir una <span className="blue">foto</span></li>
+                    <li>Puedes ajustar el <span className="green bolder">área</span> , subir una <span className="blue">foto</span></li>
                 </ul>
             </div>}
 
@@ -34,7 +34,9 @@ export function About() {
                     <ul >
                         <li>Agrega un registro dando click en <span className="plus bolder">+</span></li>
                         <li>Arrastra la marca que agregaste </li>
-                        <li>Puedes ajustar el <span className="green bolder">área</span> y subir una <span className="blue">foto</span></li>
+                        <li>Ajusta el <span className="green bolder">área</span> de residencia</li>
+                        <li>Puedes incluir una <span className="blue">foto </span>y otros datos </li>
+
                     </ul>
                 </div></>
         }

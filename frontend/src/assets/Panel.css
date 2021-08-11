@@ -22,7 +22,7 @@ p label {
     align-self: center;
 }
 
-.deployimg .close {
+.deployimg .closeIcon {
     position: absolute;
     right: 10px;
     z-index: 3;
@@ -54,7 +54,7 @@ p label {
     width: 100vw;
 }
 
-.close {
+.closeIcon {
     position: relative;
     float: right;
     margin-top: 1vh;

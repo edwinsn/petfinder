@@ -62,7 +62,7 @@ export class Panel extends Component {
           <img
             src={closeIcon}
             alt="close"
-            className="close"
+            className="closeIcon"
             onClick={
               () => {
                 this.state?.unpaintCircle?.()

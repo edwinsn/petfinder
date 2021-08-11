@@ -12,7 +12,7 @@ export const AboutWindow = (props) => {
                     Acerca de
                 </p>
                 <p>
-                    <span>Mio cid</span> es un app diseñada para que puedas encontrar
+                    <span>Animalcoords</span> es un app diseñada para que puedas encontrar
                     y reportar animales de la calle.
                 </p>
                 <p className="info">
