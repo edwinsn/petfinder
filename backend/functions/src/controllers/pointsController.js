@@ -10,6 +10,10 @@ pointsControllers.getPoints = async function (req, res) {
     lng: { $gt: lowerlng, $lt: upperlng },
   });
 
+  if (!(typeof userid === 'string')) {
+    res.status(403).send({ message: "invalid request" })
+  }
+
   points = points.map((e) => {
     const { lat, lng, type, frecuence, range, imgurl, description, contact, _id } = e;
     if (e.userid === userid) {
@@ -147,10 +151,12 @@ pointsControllers.deletePoint = async (req, res) => {
         initialFrecuence: deprecatedPoint.initialFrecuence,
         type: deprecatedPoint.type,
         range: deprecatedPoint.range,
-        userid: deprecatedPoint.userid
+        description: deprecatedPoint.description,
+        userid: deprecatedPoint.userid,
+        imgurl: deprecatedPoint.imgurl
       });
-      await newPoint.save();
-      res.json({ message: "Point deleted!" })
+      let backup = await newPoint.save();
+      res.json({ message: "Point deleted!", _id: backup._id })
     } else {
       //prove this with a particular userid
       res.status(403).send({ message: "invalid requeest" })
@@ -160,5 +166,30 @@ pointsControllers.deletePoint = async (req, res) => {
     console.log(e)
   }
 };
+
+pointsControllers.getBackup = async (req, res) => {
+
+  try {
+    let { userid } = req.query
+
+    if (!(typeof userid === 'string')) {
+      res.status(403).send({ message: "invalid request" })
+    }
+    const points = await backupPointModel.find({ userid, recovered: { $ne: true } });
+    res.json(points)
+  } catch (e) {
+    console.log(e)
+    res.status(403).send({ message: "Err: no userid" })
+  }
+}
+
+pointsControllers.putBackup = async (req, res) => {
+
+  let { _id } = req.body
+
+  await backupPointModel.findByIdAndUpdate(_id, { recovered: true });
+  res.json({ message: "Recovered!" })
+
+}
 
 module.exports = pointsControllers;

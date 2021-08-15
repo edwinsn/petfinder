@@ -16,12 +16,13 @@ let markersLoaded = []
 let refugesLoaded = ["0"]
 let panes = []
 let prevUserid = false
+let prevBacup = false
 let previousCircle
+let prevEditing = false
 
 export let GetMarkers = (props) => {
 
   //console.log("Get markers render")
-
 
   let map = useMap();
   let [editing, setEditing] = useState({ active: false, type: "dog", coords: { lat: false, lng: false } })
@@ -35,7 +36,7 @@ export let GetMarkers = (props) => {
     prevUserid = props.userid
     //console.log("updating marks")
     markersLoadedCoords = [{ coordinates: "0" }]
-
+    getp(map, props, setEditing, updateNotifications)
     for (let i = 0; i < markersLoaded.length; i++) {
       markersLoaded[i].removeFrom(map)
       panes[i].pane.removeFrom(map)
@@ -44,7 +45,7 @@ export let GetMarkers = (props) => {
 
   useEffect(() => {
 
-    getp(map, props, setEditing, updateNotifications)
+    //getp(map, props, setEditing, updateNotifications)
 
     map.locate({ setView: true, maxZoom: 16 })
     //getp(map, props, setEditing, updateNotifications)
@@ -63,23 +64,47 @@ export let GetMarkers = (props) => {
       }
     }
     )
-    store.subscribe(() => {
-      //console.log(store.getState().editing.value)
-      //console.log(panes)
-      //console.log("...")
-      for (let i = 0; i < panes.length; i++) {
+    store.subscribe(async () => {
 
-        if (panes[i].editable) {
-          //          console.log(panes[i].pane.setStyle)
-          panes[i].pane.setStyle({
-            color: store.getState().editing.value ? '#3BF793' : "#3388FF"
-          });
+      if (store.getState().backup.value._id && prevBacup !== store.getState().backup.value._id) {
+        try {
+          console.log("restoring")
+          let marker = Object.assign({}, store.getState().backup.value)
+          axios.put(process.env.REACT_APP_POINTS_URI + "backup", { _id: store.getState().backup.value._id })
+          let { data } = await axios.post(process.env.REACT_APP_POINTS_URI, store.getState().backup.value)
+          prevBacup = store.getState().backup.value._id
+          marker._id = data._id
+          let dogIconM = new L.icon({
+            iconUrl: dogIcon,
+            iconSize: [38, 38]
+          })
+
+          let catIconM = new L.icon({
+            iconUrl: catIcon,
+            iconSize: [35, 35]
+          })
+          addMark(marker, dogIconM, catIconM, map,
+            props.userid, props.open, store.getState().editing.value, updateNotifications, setEditing)
+        } catch (err) {
+          console.log(err)
+        }
+      }
+
+      if (store.getState().editing.value != prevEditing) {
+        console.log("change editing")
+        prevEditing = store.getState().editing.value
+        for (let i = 0; i < panes.length; i++) {
+
+          if (panes[i].editable) {
+            panes[i].pane.setStyle({
+              color: store.getState().editing.value ? '#3BF793' : "#3388FF"
+            });
+          }
         }
       }
 
     })
   }, [])
-
 
   //hacer las peticiones solo en zoomout
   let actualZoom = map.getZoom()
@@ -97,7 +122,7 @@ export let GetMarkers = (props) => {
 }
 
 let getp = (map, props, setEditing, updateNotifications) => {
-  //console.log("...")
+  //console.log("..-")
   let { _northEast, _southWest } = map.getBounds()
 
   let lowerlat = 1.1 * _southWest.lat - Math.abs(0.1 * _northEast.lat)
@@ -122,7 +147,7 @@ let getp = (map, props, setEditing, updateNotifications) => {
     }
   }).then((res) => {
     if (res.status === 200) {
-      //console.log("ok")
+
       let dogIconM = new L.icon({
         iconUrl: dogIcon,
         iconSize: [38, 38]
@@ -135,98 +160,12 @@ let getp = (map, props, setEditing, updateNotifications) => {
 
       let editing = store.getState().editing.value
 
-      //console.log(res.data)
-
       res.data.forEach((marker) => {
 
         if (!Object.keys(markersLoadedCoords).includes(marker.lat + "" + marker.lng)) {
 
-          let newmarker = L.marker({ lat: marker.lat, lng: marker.lng },
-            { icon: marker.type === "dog" ? dogIconM : catIconM, zIndexOffset: 2 });
-          newmarker.addTo(map)
-          markersLoadedCoords[marker.lat + "" + marker.lng] = { frecuence: marker.frecuence }
-
-          let circle
-          let editable = marker.userid === props.userid && editing
-          let color = editable ? '#3BF793' : "#3388FF"
-          if (marker.range) {
-            circle = L.circle({ lat: marker.lat, lng: marker.lng }, {
-              radius: marker.range,
-              color
-            })
-            circle.addTo(map);
-          }
-          else {
-            circle = L.circle({ lat: marker.lat, lng: marker.lng }, { radius: 100, color })
-            circle.addTo(map);
-          }
-          panes.push({ pane: circle, editable: marker.userid == props.userid })
-          markersLoaded.push(newmarker)
-          //console.log(panes)
-
-          newmarker.on("click", () => {
-
-            if (!store.getState().editing.value) {
-              previousCircle?.setStyle({
-                color: '#3388FF'
-              })
-              circle.setStyle({
-                color: '#2914CC',
-                fillColor: '#3388FF'
-              })
-              previousCircle = circle
-              props.open(marker.lat, marker.lng,
-                {
-                  frecuence: markersLoadedCoords[marker.lat + "" + marker.lng].frecuence,
-                  imgurl: marker.imgurl ? marker.imgurl : marker.type == "dog" ? dogIcon : catIcon,
-                  description: marker.description,
-                  contact: marker.contact,
-                  unpaintCircle: () => {
-                    previousCircle?.setStyle({
-                      color: '#3388FF'
-                    })
-                  }
-                })
-            }
-            else if (marker.userid != props.userid) {
-              updateNotifications(true)
-              setTimeout(() => {
-                updateNotifications(false)
-              }, 2500)
-            }
-            else {
-              //console.log(marker)
-              circle.removeFrom(map)
-              newmarker.removeFrom(map)
-              setEditing({
-                active: true,
-
-                markerData: {
-                  type: marker.type,
-                  defaultMarkerData: {
-                    type: marker.type,
-                    coords: { lat: marker.lat, lng: marker.lng },
-                    range: marker.range,
-                    frecuence: marker.frecuence,
-                    imgurl: marker.imgurl,
-                    description: marker.description,
-                    contact: marker.contact,
-                    range: marker.range ? marker.range : 100,
-                    _id: marker._id
-
-                  },
-                  coords: { lat: marker.lat, lng: marker.lng },
-                  frecuence: marker.frecuence,
-                  imgurl: marker.imgurl,
-                  description: marker.description,
-                  contact: marker.contact,
-                  range: marker.range ? marker.range : 100,
-                  _id: marker._id
-                }
-              })
-              //console.log(editing)
-            }
-          })
+          addMark(marker, dogIconM, catIconM, map,
+            props.userid, props.open, editing, updateNotifications, setEditing)
         }
       }
       );
@@ -311,4 +250,98 @@ export let editFrecuences = (frecuence, coords, newMark = false) => {
 }
 export let getFrecuence = (coords) => {
   return markersLoadedCoords[coords].frecuence
+}
+
+let addMark = (marker, dogIconM, catIconM, map,
+  userid, open, editing, updateNotifications, setEditing) => {
+  console.log("Before adding")
+  if (!Object.keys(markersLoadedCoords).includes(marker.lat + "" + marker.lng)) {
+
+    console.log("adding")
+    let newmarker = L.marker({ lat: marker.lat, lng: marker.lng },
+      { icon: marker.type === "dog" ? dogIconM : catIconM, zIndexOffset: 2 });
+    newmarker.addTo(map)
+    markersLoadedCoords[marker.lat + "" + marker.lng] = { frecuence: marker.frecuence }
+
+    let circle
+    let editable = marker.userid === userid && editing
+    let color = editable ? '#3BF793' : "#3388FF"
+    if (marker.range) {
+      circle = L.circle({ lat: marker.lat, lng: marker.lng }, {
+        radius: marker.range,
+        color
+      })
+      circle.addTo(map);
+    }
+    else {
+      circle = L.circle({ lat: marker.lat, lng: marker.lng }, { radius: 100, color })
+      circle.addTo(map);
+    }
+    panes.push({ pane: circle, editable: marker.userid == userid })
+    markersLoaded.push(newmarker)
+    //console.log(panes)
+
+    newmarker.on("click", () => {
+
+      if (!store.getState().editing.value) {
+        previousCircle?.setStyle({
+          color: '#3388FF'
+        })
+        circle.setStyle({
+          color: '#2914CC',
+          fillColor: '#3388FF'
+        })
+        previousCircle = circle
+        open(marker.lat, marker.lng,
+          {
+            frecuence: markersLoadedCoords[marker.lat + "" + marker.lng].frecuence,
+            imgurl: marker.imgurl ? marker.imgurl : marker.type == "dog" ? dogIcon : catIcon,
+            description: marker.description,
+            contact: marker.contact,
+            unpaintCircle: () => {
+              previousCircle?.setStyle({
+                color: '#3388FF'
+              })
+            }
+          })
+      }
+      else if (marker.userid != userid) {
+        updateNotifications(true)
+        setTimeout(() => {
+          updateNotifications(false)
+        }, 2500)
+      }
+      else {
+        //console.log(marker)
+        circle.removeFrom(map)
+        newmarker.removeFrom(map)
+        setEditing({
+          active: true,
+
+          markerData: {
+            type: marker.type,
+            defaultMarkerData: {
+              type: marker.type,
+              coords: { lat: marker.lat, lng: marker.lng },
+              range: marker.range,
+              frecuence: marker.frecuence,
+              imgurl: marker.imgurl,
+              description: marker.description,
+              contact: marker.contact,
+              range: marker.range ? marker.range : 100,
+              _id: marker._id
+            },
+            coords: { lat: marker.lat, lng: marker.lng },
+            frecuence: marker.frecuence,
+            imgurl: marker.imgurl,
+            description: marker.description,
+            contact: marker.contact,
+            range: marker.range ? marker.range : 100,
+            _id: marker._id
+          }
+        })
+        //console.log(editing)
+      }
+    })
+  }
 }

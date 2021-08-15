@@ -1,0 +1,70 @@
+.aditionalInfo {
+    align-items: center;
+    width: 95%;
+    display: flex;
+    flex-direction: column;
+}
+
+.aditionalInfo img {
+    height: 20vh;
+    background-color: rgb(219, 219, 219);
+    width: 100%;
+}
+
+.point-bu {
+    align-items: center;
+    display: flex;
+    background-color: hsl(0, 0%, 97%);
+    transition: height var(--transition-time);
+    max-height: 10cm;
+    padding: 7px;
+    border-radius: 5px;
+    margin-bottom: 3px;
+}
+
+.point-bu>div {
+    display: flex;
+    overflow: hidden;
+    max-height: 80%;
+}
+
+.point-bu>div>img {
+    align-self: center;
+}
+
+.deployIcon {
+    animation-fill-mode: forwards;
+    animation-duration: 400ms;
+    width: 2.8vh;
+    margin-left: 5px;
+}
+
+.nodeployed {
+    justify-content: space-evenly;
+    height: 7vh;
+}
+
+.nodeployed {
+    white-space: nowrap;
+}
+
+.pointDeployed {
+    height: 40vh;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.pointDeployed>div:nth-child(1) {
+    width: 100%;
+}
+
+.resbtn {
+    background-color: transparent;
+    border: 3px solid green;
+    color: green;
+    border-radius: var(--border-radius);
+}
+
+.point-bu .probabilitybars>* {
+    height: 1vh;
+}

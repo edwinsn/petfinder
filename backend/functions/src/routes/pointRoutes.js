@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const { getPoints, postPoint, updatePoint,
-  getDataBase, deletePoint } = require("../controllers/pointsController");
+  getDataBase, deletePoint, getBackup, putBackup } = require("../controllers/pointsController");
 const { postFeedBack } = require("../controllers/suggestionsControllers");
 const { getRefuges, getRefugeDetails } = require("../controllers/refugesControllers.js")
 
@@ -12,6 +12,9 @@ router.route("/").get(getPoints)
   .post(postPoint)
   .put(updatePoint)
   .delete(deletePoint);
+
+router.route("/backup").get(getBackup)
+  .put(putBackup);
 
 router.route("/database").get(getDataBase);
 

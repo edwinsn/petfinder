@@ -1,12 +1,11 @@
-import './assets/AboutWindow.css'
 import closeIcon from './assets/images/closeIcon.svg'
 
 
 export const AboutWindow = (props) => {
     return (
-        <section className="aboutWindowContainer emergentContainer">
-            <div onClick={props.close} className="background"></div>
-            <div className="aboutWindow emergentWindow">
+        <section className="emergentContainer">
+            <div onClick={props.close} className=""></div>
+            <div className="emergentWindow hide-scroll">
                 <img src={closeIcon} className="closeIcon" onClick={props.close} />
                 <p className="title">
                     Acerca de
@@ -15,9 +14,9 @@ export const AboutWindow = (props) => {
                     <span>Animalcoords</span> es un app diseñada para que puedas encontrar
                     y reportar animales de la calle.
                 </p>
-                <p className="info">
+                <p>
                     <ul >
-                        <li>Agrega un registro dando click en <span className="plus bolder">+</span></li>
+                        <li>Agrega un registro dando click en <span className="blue bolder">+</span></li>
                         <li>Arrastra la marca que agregaste </li>
                         <li>Puedes ajustar el <span className="green bolder">área</span> y subir una <span className="blue">foto</span></li>
                         <li>Puedes añadir tu información de contacto</li>

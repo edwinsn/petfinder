@@ -1,12 +1,13 @@
-.fallback{
-    align-items: center;
-    display: flex;
-    height: 100vh;
-    justify-content: center;
-    width: 100vw;
+.fullScreen img {
+  min-width: 1cm;
+  width: 15vh;
 }
 
-.fallback img{
-    min-width: 1cm;
-    width: 15vh;
+#fall-back {
+  flex-wrap: wrap;
+  text-align: center;
+}
+
+#fall-back>* {
+  min-width: 3cm;
 }

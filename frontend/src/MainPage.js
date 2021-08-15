@@ -43,7 +43,7 @@ export class MainPage extends Component {
         <Panel ref={this.child} />
         <Notifications />
         {this.props.useruid ?
-          <SideBar handleLogout={this.props.handleLogout} />
+          <SideBar handleLogout={this.props.handleLogout} userid={this.props.useruid} />
           :
           <div className="loginBtnContainer" onClick={this.props.showLogin}>
             <img className="loginBtn" src={userIcon} />

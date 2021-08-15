@@ -35,10 +35,19 @@
   z-index: 1;
 }
 
+.bolder {
+  font-weight: bolder;
+}
+
+.blue {
+  color: blue;
+}
+
 body {
   padding: 0;
   margin: 0;
   position: relative;
+  color: rgb(31, 31, 31);
 }
 
 html, body, #map {
@@ -48,9 +57,15 @@ html, body, #map {
   overflow: hidden;
 }
 
-.about {
+#about {
   margin-top: 45px;
   margin-left: 10px;
+}
+
+.align-center {
+  display: flex;
+  align-items: center;
+  align-content: center;
 }
 
 .animal {
@@ -74,7 +89,7 @@ html, body, #map {
   position: relative;
   margin-top: var(--topMargin);
   overflow-y: scroll;
-  padding: 8vh 2vh 2vh 2vh;
+  padding: 8vh 2vh 2vh 3vh;
   z-index: 2;
 }
 
@@ -93,16 +108,25 @@ html, body, #map {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  z-index: 3;
   background-color: hsla(0, 0%, 100%, 0.5);
 }
 
-.aboutWindowContainer .closeIcon, .feedBack .closeIcon {
+.emergentWindow .closeIcon {
   position: absolute;
   top: 1vh;
   right: 1vh;
   height: var(--mediumHeight);
   min-height: 1cm;
+}
+
+.fullScreen {
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  position: fixed;
 }
 
 .closeIcon {
@@ -123,13 +147,42 @@ html, body, #map {
   background-color: white;
 }
 
-
-.circular>input{
+.circular>input {
   display: none;
+}
+
+.hide {
+  display: none;
+}
+
+.hide-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.green {
+  color: green;
+}
+
+.padding-in {
+  padding: 3vh;
+  box-sizing: border-box;
+}
+
+.rounded {
+  border-radius: var(--border-radius);
 }
 
 .title {
   font-size: 1.5em;
   margin-top: 0;
   margin-bottom: 5vh;
+}
+
+.white {
+  color: white;
 }

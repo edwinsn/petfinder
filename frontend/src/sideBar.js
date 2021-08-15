@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import './assets/sideBar.css'
 import * as FaIcons from 'react-icons/fa'
 import closeIcon from './assets/images/closeIcon.svg'
@@ -7,24 +7,59 @@ import infoIcon from './assets/images/infoIcon.svg'
 import dbIcon from './assets/images/dbIcon.svg'
 import logoutIcon from './assets/images/logoutIcon.svg'
 import feedBackIcon from './assets/images/feedBackIcon.svg'
+import btrashIcon from './assets/images/bluetrashicon.svg'
+import deployIcon from './assets/images/deployIcon.svg'
 import { AboutWindow } from './AboutWindow'
 import { FeedBack } from "./feedBack"
 import download from 'downloadjs'
 import { useSelector, useDispatch } from 'react-redux'
 import { activate, deactivate } from './features/editingSlice'
 import { hideNotifications, showNotifications } from "./features/notificationsSlice"
+import { PointBu } from "./pointBU"
 import Switch from "react-switch";
+import axios from 'axios'
+import store from './store'
+
+let prevPointDeleted = false
 
 export const SideBar = (props) => {
 
     const [show, setShow] = useState(false)
     const [showAboutW, setShowAboutW] = useState(false)
     const [showFeedBack, setShowFeedBack] = useState(false)
+    const [paperBin, setPaperBin] = useState(false)
+    const [backup, setBackup] = useState()
     const editing = useSelector(state => {
         //console.log("..")
         return state.editing.value
     })
     const dispatch = useDispatch()
+
+
+    let getBackup = async () => {
+        try {
+            let { data } = await axios.get(process.env.REACT_APP_POINTS_URI + "backup", {
+                params: {
+                    userid: props.userid
+                }
+            })
+            let points = data.map((mark) => <PointBu mark={mark} key={Math.random()} />)
+            setBackup(points)
+
+        } catch (e) { console.log(e) }
+    }
+
+    store.subscribe(async () => {
+        if (store.getState().backup.value.pointDeleted && store.getState().backup.value.pointDeleted._id !== prevPointDeleted) {
+            console.log("getting backup")
+            setBackup(prev => [...prev, <PointBu mark={store.getState().backup.value.pointDeleted} key={Math.random()} />])
+            prevPointDeleted = store.getState().backup.value.pointDeleted._id
+        }
+    })
+
+    useEffect(async () => {
+        getBackup()
+    }, [])
 
     return (
         <div className="sidebarContainer">
@@ -59,9 +94,23 @@ export const SideBar = (props) => {
                             onColor="#73f27e"
                             checked={editing} />
                     </div>}
+                    <div className="paperbin"
+                        onClick={() => { setPaperBin(!paperBin) }}
+                    >
+                        <img src={btrashIcon} />
+                        <p>Papelera</p>
+                        <img src={deployIcon} className={paperBin ? "turn" : "return"} />
+                    </div>
+
+                    <div className={paperBin ? "backupInfo" : "backupInfo inactive"}
+                        style={paperBin ? { height: "30vh" } : undefined}
+                    >
+                        {backup}
+                    </div>
+
                     <div onClick={() => { getDb(dispatch) }}>
                         <img src={dbIcon} />
-                        <p>Descargar Base de Datos</p>
+                        <p>Base de Datos</p>
                     </div>
                     <div onClick={() => {
                         setShow(false)

@@ -1,19 +1,16 @@
 import closeIcon from './assets/images/closeIcon.svg'
 import './assets/feedBack.css'
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import axios from 'axios'
 import { LoadingCircles } from './Loading'
-import { setOptions } from 'leaflet'
 import { useDispatch } from 'react-redux'
 import { showNotifications } from "./features/notificationsSlice"
 
 
 export const FeedBack = (props) => {
 
-
     const [options, setOptions] = useState({ isSlow: false, isConfuse: false })
     const [loading, setLoading] = useState(false)
-
 
     let dispatch = useDispatch()
     const updateNotifications = (feedBack, withoutConnection) => {
@@ -27,14 +24,15 @@ export const FeedBack = (props) => {
 
 
     return (
-        <form onSubmit={(ev) => { sendFeedBack(ev, options.isSlow, options.isConfuse, setLoading, updateNotifications, resetOptions) }} className="emergentContainer feedBackContainer">
+        <form onSubmit={(ev) => { sendFeedBack(ev, options.isSlow, options.isConfuse, setLoading, updateNotifications, resetOptions) }}
+            className="emergentContainer feedBackContainer">
             <div onClick={props.close} className="background"></div>
 
-            <div className="emergentWindow feedBack">
+            <div className="emergentWindow" id="feedBack">
                 <img src={closeIcon} className="closeIcon" onClick={props.close} />
                 <p className="title">Ayudanos a mejorar!</p>
                 <p>Envianos tus Sugerencias</p>
-                <div className="suggestionsBtns">
+                <div id="suggestionsBtns">
 
                     <div className={options.isSlow ? "activeSuggestion" : ""}
                         onClick={() => {
@@ -51,10 +49,10 @@ export const FeedBack = (props) => {
                         }}>Es la interfaz confusa?</div>
                 </div>
 
-                <div className="moresuggestions">
-                    <textarea placeholder="Sugerencias"></textarea>
+                <div>
+                    <textarea placeholder="Sugerencias" className="rounded"></textarea>
                 </div>
-                <div className="sendDiv">
+                <div className="align-center rounded" id="sendDiv">
                     {loading ? <LoadingCircles /> : <input type="submit" value="Enviar" />}
                 </div>
 

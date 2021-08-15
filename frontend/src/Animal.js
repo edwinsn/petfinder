@@ -22,6 +22,7 @@ import { showNotifications } from "./features/notificationsSlice"
 import { deactivate } from './features/editingSlice';
 import store from './store'
 import { storage } from './fire'
+import { addBackup } from './features/recoverSlice';
 
 
 let activeMarker = false
@@ -92,7 +93,7 @@ export let Animal = (props) => {
 
         store.subscribe(() => {
             if (!store.getState().editing.value && !editing) {
-
+                console.log("cancelling")
                 cancelMarker(setOptions, markerData, options.active, map, setEditing, panes, props.open, !store.getState().notifications.withoutConnection)
             }
         })
@@ -175,7 +176,7 @@ export let Animal = (props) => {
                         onTouchStart={() => { map.dragging.disable() }}
                         onTouchEnd={() => { map.dragging.enable() }}
                     >
-                        <div className="moreOptionsContainer">
+                        <div className="moreOptionsContainer hide-scroll">
 
                             <div className="moreOptions">
                                 <div>
@@ -239,7 +240,9 @@ export let Animal = (props) => {
                                         try {
                                             props.setEditing(false)
                                             cancelMarker(setOptions, markerData, true, map, false, panes, props.open)
-                                            await axios.delete(process.env.REACT_APP_POINTS_URI, { data: { _id: markerData._id, userid: props.userid } })
+                                            let { data } = await axios.delete(process.env.REACT_APP_POINTS_URI, { data: { _id: markerData._id, userid: props.userid } })
+                                            markerData._id = data._id
+                                            dispatch(addBackup(markerData))
                                         } catch (e) {
                                             updateNotifications(false, false, false, false, true)
                                             setTimeout((markerData) => { updateNotifications() }, 2000)
@@ -379,7 +382,7 @@ async function addPermanentMark(markerData, panelDisplay,
             if (!editing) {
                 console.log("postin")
                 res = await axios.post(process.env.REACT_APP_POINTS_URI, data)//, config)
-                console.log(res.data)
+                //console.log(res.data)
                 markerData._id = res.data._id
                 lastMarkAdded.removeFrom(map)
                 lastCircleAdded.removeFrom(map)

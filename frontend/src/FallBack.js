@@ -4,8 +4,7 @@ import errorIcon from './assets/images/error.svg'
 export function FallBack() {
 
     return (
-        <section className="fallback">
-
+        <section className="align-center fullScreen padding-in" id="fall-back">
             <div>
                 <p>Un error inesperado ha ocurrido, recarga el sitio para seguir usandolo.</p>
                 <p>El error ya ha sido reportado y los solucionaremos pronto.</p>

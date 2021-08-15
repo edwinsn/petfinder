@@ -201,15 +201,6 @@
     cursor: pointer;
 }
 
-.moreOptionsContainer::-webkit-scrollbar {
-    display: none;
-}
-
-.moreOptionsContainer {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-}
-
 .moreOptionsContainer>span {
     display: flex;
     align-items: center;

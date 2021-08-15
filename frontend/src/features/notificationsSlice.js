@@ -15,11 +15,15 @@ export const notificationsSlice = createSlice({
     },
     reducers: {
         showNotifications: (state, action) => {
+            console.log("18")
             state.value = { ...state.value, ...action.payload }
         },
-        hideNotifications: state => { state.value = {} }
+        hideNotifications: state => {
+            console.log("22")
+            state.value = {}
+        }
     }
 })
-// Action creators are generated for each case reducer function
+
 export const { showNotifications, hideNotifications } = notificationsSlice.actions
 export default notificationsSlice.reducer

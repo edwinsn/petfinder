@@ -17,8 +17,7 @@ p label {
     z-index: 10;
 }
 
-
-.center{
+.center {
     align-self: center;
 }
 
@@ -29,15 +28,7 @@ p label {
     top: 2vh;
 }
 
-.fullScreen {
-    height: 100vh;
-    width: 100vw;
-    top: 0;
-    left: 0;
-    display: flex;
-    justify-content: center;
-    position: fixed;
-}
+
 
 .fullScreen .left {
     left: 0;
@@ -177,12 +168,12 @@ p label {
     border-right: var(--emergentBorder);
 }
 
-.active {
+.panelContainer .active {
     transition: width var(--slowTransition);
     width: 100vw;
 }
 
-.inactive p {
+.panelContainer .inactive p {
     min-width: 9.5cm;
 }
 
