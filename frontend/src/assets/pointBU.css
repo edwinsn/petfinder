@@ -22,6 +22,10 @@
     margin-bottom: 3px;
 }
 
+.point-bu>div:nth-child(1) {
+    flex-grow: 1;
+}
+
 .point-bu>div {
     display: flex;
     overflow: hidden;

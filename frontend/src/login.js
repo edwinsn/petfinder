@@ -24,15 +24,15 @@ export const Login = (props) => {
 
 
     return show ? (
-        <section className="loginContainer">
+        <section className="loginContainer justify-center align-center">
             <img alt="salir" src={goBackIcon} onClick={hide} className="goback" />
-            <div className="login">
+            <div id="login" className="relative justify-center align-center">
 
                 <div>
                     <img className="appIcon" src={appIcon} alt="icono de la app" />
                     <p className="slogan">Encuentra, reporta y ayuda</p>
                 </div>
-                <div className="inputsContainer">
+                <div className="inputsContainer align-center">
                     <div>
                         <img src={userIcon} />
                         <input
@@ -82,8 +82,8 @@ export const Login = (props) => {
                         </div>)
                     }
                 </div >
-                <div className="googleBtnDiv" onClick={handleLoginWithGoogle}>
-                    <button >
+                <div className="googleBtnDiv justify-center relative" onClick={handleLoginWithGoogle}>
+                    <button className="justify-center align-center">
                         <img src={googleIcon} />
                         Continuar con Google
                     </button>

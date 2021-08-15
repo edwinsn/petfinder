@@ -12,7 +12,6 @@ let recalculateCoords
 
 export let Habitad = React.memo(function (props) {
 
-
     useEffect(() => {
 
         x = windowCenter.x
@@ -20,7 +19,7 @@ export let Habitad = React.memo(function (props) {
 
         let previousZoom = map.getZoom()
         recalculateCoords = () => {
-            //console.log("re...")
+            console.log("recalculating...")
             let coords = map.containerPointToLatLng({ x, y })
             let zoomRatio = 2 ** (previousZoom - map.getZoom())
 
@@ -36,15 +35,14 @@ export let Habitad = React.memo(function (props) {
         }
 
 
-        map.on('moveend', recalculateCoords)
-        map.on('zoom', recalculateCoords)
+        map.on('moveend', () => { recalculateCoords() })
 
     }, [])
 
     let map = useMap()
     //recalculateCoords()
     let { habitadVisible, setMarkerCoords, markerData } = props
-    //console.log(habitadVisible)
+
     let windowCenter = map.latLngToContainerPoint(map.getCenter())
 
     let deltax, deltay = 0
@@ -150,10 +148,10 @@ export let Habitad = React.memo(function (props) {
                 }}
             >
                 <div className="borderballcontainer">
-                    <div className="borderball top"></div>
-                    <div className="borderball bottom"></div>
-                    <div className="borderball left"></div>
-                    <div className="borderball right"></div>
+                    <div id="top" className="borderball"></div>
+                    <div id="bottom" className="borderball"></div>
+                    <div id="left" className="borderball"></div>
+                    <div id="right" className="borderball"></div>
 
                     <img className="marker" draggable={false} src={props.markerData.type == "dog" ? dogIcon : catIcon}></img>
                 </div>

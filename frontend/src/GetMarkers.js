@@ -84,7 +84,7 @@ export let GetMarkers = (props) => {
             iconSize: [35, 35]
           })
           addMark(marker, dogIconM, catIconM, map,
-            props.userid, props.open, store.getState().editing.value, updateNotifications, setEditing)
+            props.userid, props.open, store.getState().editing.value, updateNotifications, setEditing, true)
         } catch (err) {
           console.log(err)
         }
@@ -253,11 +253,11 @@ export let getFrecuence = (coords) => {
 }
 
 let addMark = (marker, dogIconM, catIconM, map,
-  userid, open, editing, updateNotifications, setEditing) => {
-  console.log("Before adding")
-  if (!Object.keys(markersLoadedCoords).includes(marker.lat + "" + marker.lng)) {
+  userid, open, editing, updateNotifications, setEditing, force = false) => {
+  console.log("Adding")
 
-    console.log("adding")
+  if (!Object.keys(markersLoadedCoords).includes(marker.lat + "" + marker.lng) || force) {
+
     let newmarker = L.marker({ lat: marker.lat, lng: marker.lng },
       { icon: marker.type === "dog" ? dogIconM : catIconM, zIndexOffset: 2 });
     newmarker.addTo(map)
@@ -329,7 +329,8 @@ let addMark = (marker, dogIconM, catIconM, map,
               description: marker.description,
               contact: marker.contact,
               range: marker.range ? marker.range : 100,
-              _id: marker._id
+              _id: marker._id,
+              userid: marker.userid
             },
             coords: { lat: marker.lat, lng: marker.lng },
             frecuence: marker.frecuence,
@@ -337,7 +338,8 @@ let addMark = (marker, dogIconM, catIconM, map,
             description: marker.description,
             contact: marker.contact,
             range: marker.range ? marker.range : 100,
-            _id: marker._id
+            _id: marker._id,
+            userid: marker.userid
           }
         })
         //console.log(editing)

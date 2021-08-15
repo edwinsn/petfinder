@@ -151,6 +151,11 @@ html, body, #map {
   display: none;
 }
 
+.column{
+  display: flex;
+  flex-direction: column;
+}
+
 .hide {
   display: none;
 }
@@ -171,6 +176,15 @@ html, body, #map {
 .padding-in {
   padding: 3vh;
   box-sizing: border-box;
+}
+
+.relative{
+  position: relative;
+}
+
+.justify-center{
+  display: flex;
+  justify-content: center;
 }
 
 .rounded {

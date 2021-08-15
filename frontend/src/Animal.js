@@ -37,7 +37,7 @@ export let Animal = (props) => {
 
     let map = useMap()
 
-    //console.log("Animal rerendered")
+    console.log("Animal rerendered")
     let { defaultMarkerData, editing, setEditing, panes } = props
 
     defaultMarkerData = defaultMarkerData ? defaultMarkerData : {}
@@ -114,6 +114,7 @@ export let Animal = (props) => {
                     onClick={() => {
                         if (activeMarker) { map.removeLayer(activeMarker) }
                         markerData.type = animalType;
+                        markerData.coords = map.getCenter()
                         activeMarker = true
                         setOptions({ active: true, miniature: undefined })
                     }
@@ -241,11 +242,15 @@ export let Animal = (props) => {
                                             props.setEditing(false)
                                             cancelMarker(setOptions, markerData, true, map, false, panes, props.open)
                                             let { data } = await axios.delete(process.env.REACT_APP_POINTS_URI, { data: { _id: markerData._id, userid: props.userid } })
-                                            markerData._id = data._id
-                                            dispatch(addBackup(markerData))
+                                            let marker = defaultMarkerData
+                                            marker._id = data._id
+                                            marker.lat = defaultMarkerData.coords.lat
+                                            marker.lng = defaultMarkerData.coords.lng
+                                            marker.coords = undefined
+                                            dispatch(addBackup(Object.assign({}, marker)))
                                         } catch (e) {
                                             updateNotifications(false, false, false, false, true)
-                                            setTimeout((markerData) => { updateNotifications() }, 2000)
+                                            setTimeout(() => { updateNotifications() }, 2000)
                                         }
                                     }
                                     }

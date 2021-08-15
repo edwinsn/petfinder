@@ -44,7 +44,6 @@ export class Panel extends Component {
     //console.log("Panel rendered")
 
     let openImg = () => {
-      console.log("...")
       if (!this.state.isImgOpen) this.setState({ isImgOpen: true })
     }
 
@@ -62,6 +61,7 @@ export class Panel extends Component {
           <img
             src={closeIcon}
             alt="close"
+            id="closePanel"
             className="closeIcon"
             onClick={
               () => {
@@ -78,12 +78,12 @@ export class Panel extends Component {
           {this.state.updatedFrecuence &&
             <p className="frecuenceUpdated">Dato actualizado!</p>
           }
-          <div className="infoContainer">
+          <div className="infoContainer justify-center">
 
-            <div>
+            <div className="column">
 
               <div>
-                <div className="verticalCentered">
+                <div className="verticalCentered align-center">
                   <img src={petsIcon} className="petsImg" />
                   <span>Descripción</span>
                 </div>
@@ -93,18 +93,18 @@ export class Panel extends Component {
               </div>
 
               <div>
-                <div className="verticalCentered">
+                <div className="verticalCentered align-center">
                   <img src={frecuenceIcon} />
                   <span>Avistamientos</span>
                 </div>
-                <div className="probabilityContainer">
+                <div className="probabilityContainer align-center">
                   <div className="probabilitybars">
                     {probabilityBars}
                   </div>
 
                   <label htmlFor="decrementProb">
                     <input type="radio" name="dep"
-                      className="hidden"
+                      className="hide"
                       key={previousOptio1key}
                       id="decrementProb"
                       onChange={(ev) => {
@@ -115,7 +115,7 @@ export class Panel extends Component {
 
                   <label htmlFor="incrementProb">
                     <input type="radio"
-                      className="hidden"
+                      className="hide"
                       id="incrementProb"
                       name="dep"
                       key={previousOptio2key}
@@ -130,7 +130,7 @@ export class Panel extends Component {
               </div>
 
               <div>
-                <div className="verticalCentered">
+                <div className="verticalCentered align-center">
                   <img src={UserIcon} />
                   <span>Contacto</span>
                 </div>
@@ -144,14 +144,16 @@ export class Panel extends Component {
             <div className={this.state.isImgOpen ? "fullScreen" : "animalImgcontainer"}>
 
               {this.state.isImgOpen &&
-                <div className="background"
+                <div className="background emergentContainer"
                   onClick={() => { this.setState({ isImgOpen: false }) }}
                 ></div>}
 
-              <div className={(this.state.isImgOpen ? "deployimg " : "relative") + (window.innerHeight > window.innerWidth ? " top" : " center")}>
+              <div className={(this.state.isImgOpen ? "deployimg rounded relative align-center justify-center" : "relative") + (window.innerHeight > window.innerWidth ? " top" : " center")}>
 
                 {this.state.isImgOpen &&
-                  <img className={window.innerHeight > window.innerWidth ? "close left" : "close"} src={closeIcon}
+                  <img className={window.innerHeight > window.innerWidth ? "left closeIcon" : "right closeIcon"}
+                    id={"closeimg"}
+                    src={closeIcon}
                     onClick={() => { this.setState({ isImgOpen: false }) }}
                   />}
                 <img className={this.state.isImgOpen ?
@@ -217,7 +219,7 @@ export class Panel extends Component {
       description: data.description,
       unpaintCircle: data.unpaintCircle,
       imgLoading: true,
-      imgKey:Math.random()
+      imgKey: Math.random()
     })
   }
 }

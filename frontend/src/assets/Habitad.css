@@ -1,5 +1,4 @@
-
-.markerContainer{
+.markerContainer {
     height: 100%;
     width: 100vw;
     position: fixed;
@@ -16,29 +15,31 @@
     position: absolute;
 }
 
-.borderballcontainer{
+.borderballcontainer {
     min-width: 100%;
     min-height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
 }
 
-.top{
-    top: -7px;
-}
-.bottom{
-    bottom: -7px;
+#top {
+    top: -8px ;
 }
 
-.left{
-    left: -7px;
+#bottom {
+    bottom: -8px;
 }
 
-.right{
-    right: -7px;
+#left {
+    left: -8px;
 }
 
-.marker{
+#right {
+    right: -8px;
+}
+
+.marker {
     height: 37px;
 }

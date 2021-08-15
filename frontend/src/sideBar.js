@@ -62,13 +62,13 @@ export const SideBar = (props) => {
     }, [])
 
     return (
-        <div className="sidebarContainer">
+        <div id="sidebarContainer" className="justify-center align-center">
             {showAboutW && <AboutWindow close={() => { setShowAboutW(false) }} />}
             {showFeedBack && <FeedBack close={() => { setShowFeedBack(false) }} />}
             <FaIcons.FaBars style={{ height: "80%", width: "40%", minWidth: "30px", color: "rgb(44, 44, 44)", cursor: "pointer" }} onClick={() => { setShow(!show) }} />
 
-            {show && <div className="closeSection" onClick={() => { setShow(false) }}></div>}
-            <div className={show ? "sidebar active" : "sidebar"}>
+            {show && <div className="closeSection fullScreen" onClick={() => { setShow(false) }}></div>}
+            <div id="sidebar" className={show ? " active" : ""}>
                 <img src={closeIcon} className="closeIcon" onClick={() => { setShow(false) }} />
                 <div className="items">
                     {<div
@@ -99,10 +99,10 @@ export const SideBar = (props) => {
                     >
                         <img src={btrashIcon} />
                         <p>Papelera</p>
-                        <img src={deployIcon} className={paperBin ? "turn" : "return"} />
+                        <img src={deployIcon} className={paperBin ? "relative turn" : "relative return"} />
                     </div>
 
-                    <div className={paperBin ? "backupInfo" : "backupInfo inactive"}
+                    <div className={paperBin ? "backupInfo column" : "backupInfo column inactive"}
                         style={paperBin ? { height: "30vh" } : undefined}
                     >
                         {backup}
@@ -149,5 +149,4 @@ let getDb = async (dispatch) => {
         dispatch(showNotifications({ withoutConnection: true }))
         setTimeout(() => { dispatch(showNotifications({ withoutConnection: false })) }, 2000)
     }
-
 }
