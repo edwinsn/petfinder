@@ -248,12 +248,12 @@ export let Animal = (props) => {
                                             marker.lng = defaultMarkerData.coords.lng
                                             marker.coords = undefined
                                             marker.defaultMarkerData = undefined
-                                            console.log(marker)
+                                            //console.log(marker)
                                             dispatch(addBackup(Object.assign({}, marker)))
                                         } catch (e) {
                                             updateNotifications(false, false, false, false, true)
                                             setTimeout(() => { updateNotifications() }, 2000)
-                                            console.log("254")
+                                            console.log("256")
                                             console.log(e)
                                         }
                                     }
@@ -400,7 +400,8 @@ async function addPermanentMark(markerData, panelDisplay,
             } else {
                 console.log("updating")
                 markerData.defaultMarkerData = undefined
-                markerData.defaultMarkerData = markerData
+                markerData.defaultMarkerData = Object.assign({} ,markerData)
+                //console.log(markerData)
                 res = await axios.put(process.env.REACT_APP_POINTS_URI, { ...data, relocating: true })//, config)
             }
             console.log(res.status === 200 ? "Dato registrado" : "Error en el envio del punto")

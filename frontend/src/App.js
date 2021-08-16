@@ -21,6 +21,7 @@ export const App = () => {
     const [errors, setErrors] = useState({})
     const [hasAccount, setHasAccount] = useState(true)
     const [showMap, setShowMap] = useState(true)
+    const [newPassword, setNewPassword] = useState(false)
 
     const clearInput = () => {
         password.current = ''
@@ -61,6 +62,7 @@ export const App = () => {
                             emailError: "Demasiados intentos, regresa en unos minutos o restablece tu contraseña",
                             resetPassword: true
                         })
+                        setNewPassword(true)
                         break;
                     default:
                         setErrors({ emailError: err.message })
@@ -70,6 +72,7 @@ export const App = () => {
                             passwordError: "Contraseña incorrecta",
                             resetPassword: true
                         })
+                        setNewPassword(true)
                         break;
                 }
             })
@@ -118,15 +121,15 @@ export const App = () => {
         })
     }
 
-
     /*
     sobreposicion
      */
 
     const resetPassword = () => {
-        this.clearErrors()
-        fire.auth().sendPasswordResetEmail(this.state.email)
+        setErrors({})
+        fire.auth().sendPasswordResetEmail(email.current)
             .then((res => console.log(res)))
+            .catch((err)=>{ console.log(err) })
     }
 
     useEffect(() => {
@@ -154,6 +157,9 @@ export const App = () => {
                         show={!showMap}
                         hide={() => { setShowMap(true) }}
                         loading={loading}
+                        resetPassword={resetPassword}
+                        newPassword={newPassword}
+                        clearErrors={()=>{setErrors({})}}
                     />
                     <MainPage useruid={user != "noUser" ? user.uid : false}
                         handleLogout={handleLogout}

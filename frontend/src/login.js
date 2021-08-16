@@ -5,6 +5,7 @@ import userIcon from './assets/images/userIcon.svg'
 import passwordIcon from './assets/images/passwordIcon.svg'
 import goBackIcon from './assets/images/goBackIcon.svg'
 import { LoadingCircles } from './Loading'
+import { useState } from 'react'
 
 
 export const Login = (props) => {
@@ -19,8 +20,14 @@ export const Login = (props) => {
         handleLoginWithGoogle,
         show,
         hide,
-        loading } = props
+        loading,
+        newPassword,
+        resetPassword,
+        clearErrors } = props
 
+
+    let [showResetPasswordMessage, toggleShowResetPasswordMessage] = useState(false)
+    const [checkMail, setCheckMail] = useState(false)
 
 
     return show ? (
@@ -48,7 +55,7 @@ export const Login = (props) => {
                             }
                         />
                     </div>
-                    <p className="errorMsg">{errors.emailError}</p>
+                    <div className="errorMsg small">{errors.emailError}</div>
                     <div>
                         <img src={passwordIcon} />
                         <input type="password"
@@ -60,16 +67,27 @@ export const Login = (props) => {
                             }}
                         />
                     </div>
-                    <p className="errorMsg">{errors.passwordError}</p>
+                    <p className="errorMsg small">{errors.passwordError}</p>
 
                     {hasAccount ?
-                        (<div >
+                        (<div className="relative">
                             <div onClick={handleLogin} className="BtnContainer">
                                 {loading ? <LoadingCircles color={"white"} /> :
                                     <button className="signInBtn"  >Ingresar</button>
                                 }
                             </div>
-                            <p>Sin cuenta? <span onClick={() => { setHasAccount(false) }}>Registrate</span></p>
+                            <p>Sin cuenta? <span onClick={() => { setHasAccount(false); clearErrors() }}>Registrate</span></p>
+                            {(newPassword && !checkMail) && <div className="small"
+                                ><span onClick={() => {
+
+                                    if (!showResetPasswordMessage) {
+                                        resetPassword()
+                                        toggleShowResetPasswordMessage(true)
+                                        setCheckMail(true)
+                                    }
+
+                                }} >Restablecer Contraseña</span></div>}
+                            {checkMail && <div className="white small bolder">Revisa tu correo para restablecer la contraseña</div>}
                         </div>) :
                         (<div>
                             <div>
@@ -78,7 +96,7 @@ export const Login = (props) => {
                                         <button onClick={handleSingUp} className="signUpBtn" >Registrarse</button>}
                                 </div>
                             </div>
-                            <p>Tienes cuenta? <span onClick={() => { setHasAccount(true) }}>Ingresar</span></p>
+                            <p>Tienes cuenta? <span onClick={() => { setHasAccount(true) ; clearErrors()}}>Ingresar</span></p>
                         </div>)
                     }
                 </div >
