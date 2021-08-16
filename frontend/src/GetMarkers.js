@@ -15,7 +15,7 @@ let markersLoadedCoords = [{ coordinates: "0" }]
 let markersLoaded = []
 let refugesLoaded = ["0"]
 let panes = []
-let prevUserid = false
+let prevUserid = undefined
 let prevBacup = false
 let previousCircle
 let prevEditing = false
@@ -254,8 +254,9 @@ export let getFrecuence = (coords) => {
 
 let addMark = (marker, dogIconM, catIconM, map,
   userid, open, editing, updateNotifications, setEditing, force = false) => {
-  console.log("Adding")
+  //console.log("Adding")
 
+  if (force) map.setView({ lat: marker.lat, lng: marker.lng })
   if (!Object.keys(markersLoadedCoords).includes(marker.lat + "" + marker.lng) || force) {
 
     let newmarker = L.marker({ lat: marker.lat, lng: marker.lng },
@@ -277,6 +278,7 @@ let addMark = (marker, dogIconM, catIconM, map,
       circle = L.circle({ lat: marker.lat, lng: marker.lng }, { radius: 100, color })
       circle.addTo(map);
     }
+
     panes.push({ pane: circle, editable: marker.userid == userid })
     markersLoaded.push(newmarker)
     //console.log(panes)
@@ -315,31 +317,23 @@ let addMark = (marker, dogIconM, catIconM, map,
         //console.log(marker)
         circle.removeFrom(map)
         newmarker.removeFrom(map)
+        let data = {
+          type: marker.type,
+          coords: { lat: marker.lat, lng: marker.lng },
+          frecuence: marker.frecuence,
+          imgurl: marker.imgurl,
+          description: marker.description,
+          contact: marker.contact,
+          range: marker.range ? marker.range : 100,
+          _id: marker._id,
+          userid: marker.userid
+        }
         setEditing({
           active: true,
 
           markerData: {
-            type: marker.type,
-            defaultMarkerData: {
-              type: marker.type,
-              coords: { lat: marker.lat, lng: marker.lng },
-              range: marker.range,
-              frecuence: marker.frecuence,
-              imgurl: marker.imgurl,
-              description: marker.description,
-              contact: marker.contact,
-              range: marker.range ? marker.range : 100,
-              _id: marker._id,
-              userid: marker.userid
-            },
-            coords: { lat: marker.lat, lng: marker.lng },
-            frecuence: marker.frecuence,
-            imgurl: marker.imgurl,
-            description: marker.description,
-            contact: marker.contact,
-            range: marker.range ? marker.range : 100,
-            _id: marker._id,
-            userid: marker.userid
+            ...data,
+            defaultMarkerData: data,
           }
         })
         //console.log(editing)

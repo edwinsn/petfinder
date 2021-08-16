@@ -4,8 +4,8 @@ import closeIcon from './assets/images/closeIcon.svg'
 export const AboutWindow = (props) => {
     return (
         <section className="emergentContainer">
-            <div onClick={props.close} className=""></div>
-            <div className="emergentWindow hide-scroll">
+            <div onClick={props.close} className="background"></div>
+            <div className="emergentWindow hide-scroll" >
                 <img src={closeIcon} className="closeIcon" onClick={props.close} />
                 <p className="title">
                     Acerca de

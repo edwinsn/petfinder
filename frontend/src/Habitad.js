@@ -19,7 +19,7 @@ export let Habitad = React.memo(function (props) {
 
         let previousZoom = map.getZoom()
         recalculateCoords = () => {
-            console.log("recalculating...")
+            //console.log("recalculating...")
             let coords = map.containerPointToLatLng({ x, y })
             let zoomRatio = 2 ** (previousZoom - map.getZoom())
 

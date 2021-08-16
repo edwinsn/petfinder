@@ -88,7 +88,7 @@
 }
 
 .menu:hover .animalOptions {
-    height: 145px;
+    height: calc(var(--circularBtnHeight)*2.1);
 }
 
 @media (max-height:500px) {

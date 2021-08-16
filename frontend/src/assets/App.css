@@ -33,6 +33,9 @@
   height: 100vh;
   position: absolute;
   z-index: 1;
+  background-color: hsla(0, 0%, 100%, 0.5);
+  top: 0vh;
+  box-sizing: border-box;
 }
 
 .bolder {
@@ -78,6 +81,24 @@ html, body, #map {
   }
 }
 
+@media (max-height: 800px) {
+  :root {
+    --emergentContainerHeight: calc(var(--vh, 1vh) * 100);
+  }
+}
+
+@media (min-height: 800px) {
+  :root {
+    --emergentContainerHeight: 100vh;
+  }
+}
+
+@media (max-height:600px) {
+  .emergentWindow {
+    height: 83%;
+  }
+}
+
 .emergentWindow {
   width: var(--emergentWindowWithd);
   height: var(--emergentWindowHeight);
@@ -93,22 +114,15 @@ html, body, #map {
   z-index: 2;
 }
 
-@media (max-height:600px) {
-  .emergentWindow {
-    height: 75%;
-  }
-}
-
 .emergentContainer {
   position: absolute;
   width: 100vw;
-  height: 100vh;
+  height: var(--emergentContainerHeight);
   right: 0;
   top: 0;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  background-color: hsla(0, 0%, 100%, 0.5);
+  align-items: center;
 }
 
 .emergentWindow .closeIcon {
@@ -133,6 +147,7 @@ html, body, #map {
   cursor: pointer;
   padding: 8px;
   max-width: 6.5vh;
+  max-height: 1.2cm;
   box-sizing: border-box;
 }
 
@@ -151,7 +166,7 @@ html, body, #map {
   display: none;
 }
 
-.column{
+.column {
   display: flex;
   flex-direction: column;
 }
@@ -178,11 +193,11 @@ html, body, #map {
   box-sizing: border-box;
 }
 
-.relative{
+.relative {
   position: relative;
 }
 
-.justify-center{
+.justify-center {
   display: flex;
   justify-content: center;
 }

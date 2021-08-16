@@ -19,6 +19,7 @@ import { PointBu } from "./pointBU"
 import Switch from "react-switch";
 import axios from 'axios'
 import store from './store'
+import { point } from "leaflet"
 
 let prevPointDeleted = false
 
@@ -44,9 +45,13 @@ export const SideBar = (props) => {
                 }
             })
             let points = data.map((mark) => <PointBu mark={mark} key={Math.random()} />)
-            setBackup(points)
+            if (!points.length) setBackup(<p>Papelera vacia</p>)
+            else setBackup(points)
 
-        } catch (e) { console.log(e) }
+
+        } catch (e) {
+            setBackup(<p>Papelera vacia</p>)
+        }
     }
 
     store.subscribe(async () => {

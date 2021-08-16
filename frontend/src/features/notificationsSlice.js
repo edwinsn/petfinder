@@ -15,11 +15,11 @@ export const notificationsSlice = createSlice({
     },
     reducers: {
         showNotifications: (state, action) => {
-            console.log("18")
+            //console.log("18")
             state.value = { ...state.value, ...action.payload }
         },
         hideNotifications: state => {
-            console.log("22")
+            //console.log("22")
             state.value = {}
         }
     }

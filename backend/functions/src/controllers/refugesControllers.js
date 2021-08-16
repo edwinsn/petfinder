@@ -14,7 +14,7 @@ refugesControllers.getRefuges = async (req, res) => {
 
         const { data } = await axios.get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}
         &radius=${radius}   
-        &keyword=refugio%animal
+        &keyword=refugio%para%animales
         &key=${functions?.config()?.env?.PLACESKEY || process.env.PLACESKEY}`)
 
         let refuges = data.results.map(e => {

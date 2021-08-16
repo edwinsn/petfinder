@@ -37,7 +37,7 @@ export let Animal = (props) => {
 
     let map = useMap()
 
-    console.log("Animal rerendered")
+    //console.log("Animal rerendered")
     let { defaultMarkerData, editing, setEditing, panes } = props
 
     defaultMarkerData = defaultMarkerData ? defaultMarkerData : {}
@@ -247,10 +247,14 @@ export let Animal = (props) => {
                                             marker.lat = defaultMarkerData.coords.lat
                                             marker.lng = defaultMarkerData.coords.lng
                                             marker.coords = undefined
+                                            marker.defaultMarkerData = undefined
+                                            console.log(marker)
                                             dispatch(addBackup(Object.assign({}, marker)))
                                         } catch (e) {
                                             updateNotifications(false, false, false, false, true)
                                             setTimeout(() => { updateNotifications() }, 2000)
+                                            console.log("254")
+                                            console.log(e)
                                         }
                                     }
                                     }
@@ -395,6 +399,8 @@ async function addPermanentMark(markerData, panelDisplay,
 
             } else {
                 console.log("updating")
+                markerData.defaultMarkerData = undefined
+                markerData.defaultMarkerData = markerData
                 res = await axios.put(process.env.REACT_APP_POINTS_URI, { ...data, relocating: true })//, config)
             }
             console.log(res.status === 200 ? "Dato registrado" : "Error en el envio del punto")
@@ -413,7 +419,7 @@ async function addPermanentMark(markerData, panelDisplay,
 
 function addMarkToMap(markerData, map, setEditing, panes, open) {
 
-    console.log("adding mark")
+    //console.log("adding mark")
 
     if (setEditing) { setEditing({ active: false }) }
 
@@ -458,6 +464,7 @@ function addMarkToMap(markerData, map, setEditing, panes, open) {
 }
 
 function cancelMarker(setOptions, markerData, options, map, setEditing, panes, open, error = false) {
+
     if (options) {
         setOptions({ active: false, miniature: undefined })
         activeMarker = false

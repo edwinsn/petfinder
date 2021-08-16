@@ -153,7 +153,8 @@ pointsControllers.deletePoint = async (req, res) => {
         range: deprecatedPoint.range,
         description: deprecatedPoint.description,
         userid: deprecatedPoint.userid,
-        imgurl: deprecatedPoint.imgurl
+        imgurl: deprecatedPoint.imgurl,
+        contact: deprecatedPoint.contact
       });
       let backup = await newPoint.save();
       res.json({ message: "Point deleted!", _id: backup._id })

@@ -27,7 +27,7 @@
     display: flex;
     align-items: center;
     cursor: pointer;
-    padding-left: 7vh;
+    padding-left: 14%;
     width: 100%;
     position: relative;
     transition: color var(--transition-time), background-color var(--transition-time), height var(--transition-time);
@@ -47,6 +47,7 @@
 .items img {
     height: var(--smallHeight);
     min-height: var(--minIconHeight);
+    max-height: 0.8cm;
     margin-right: 2vh;
     transition: filter var(--transition-time);
 }
