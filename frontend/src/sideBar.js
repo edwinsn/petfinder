@@ -57,7 +57,7 @@ export const SideBar = (props) => {
     store.subscribe(async () => {
         if (store.getState().backup.value.pointDeleted && store.getState().backup.value.pointDeleted._id !== prevPointDeleted) {
             console.log("getting backup")
-            console.log(store.getState().backup.value.pointDeleted)
+            //console.log(store.getState().backup.value.pointDeleted)
             setBackup(prev => [...prev, <PointBu mark={store.getState().backup.value.pointDeleted} key={Math.random()} />])
             prevPointDeleted = store.getState().backup.value.pointDeleted._id
         }
@@ -73,9 +73,9 @@ export const SideBar = (props) => {
             {showFeedBack && <FeedBack close={() => { setShowFeedBack(false) }} />}
             <FaIcons.FaBars style={{ height: "80%", width: "40%", minWidth: "30px", color: "rgb(44, 44, 44)", cursor: "pointer" }} onClick={() => { setShow(!show) }} />
 
-            {show && <div className="closeSection fullScreen" onClick={() => { setShow(false) }}></div>}
+            {show && <div className="closeSection fullScreen" onClick={() => { setShow(false) ; setPaperBin(false)}}></div>}
             <div id="sidebar" className={show ? " active" : ""}>
-                <img src={closeIcon} className="closeIcon" onClick={() => { setShow(false) }} />
+                <img src={closeIcon} className="closeIcon" onClick={() => { setShow(false) ; setPaperBin(false)}} />
                 <div className="items">
                     {<div
                         onClick={!editing ?

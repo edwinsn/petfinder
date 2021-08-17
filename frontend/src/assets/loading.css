@@ -5,7 +5,12 @@
   align-items: center;
 }
 
-/**/
+@media (max-width:400px) {
+  .loadinBackground>div{
+    position: relative;
+    bottom: 25px;
+  }
+}
 
 .lds-facebook {
   display: inline-block;
