@@ -63,11 +63,29 @@ export let Habitad = React.memo(function (props) {
     };
 
     //console.log("rendering habitad")
+    let defaultCoords
 
-    let defaultCoords = props.markerData.coords ? map.latLngToContainerPoint(markerData.coords) : {
-        x: windowCenter.x,
-        y: windowCenter.y
+    try {
+        defaultCoords = props.markerData.coords ? map.latLngToContainerPoint(markerData.coords) : {
+            x: windowCenter.x,
+            y: windowCenter.y
+        }
+    } catch (err) {
+        console.log(err?.code)
+        defaultCoords = {
+            x: windowCenter.x,
+            y: windowCenter.y
+        }
+        setMarkerCoords(
+            (pre) => {
+                return {
+                    coords: map.getCenter(),
+                    range: pre.range
+                }
+            }
+        )
     }
+
 
 
     let defaultRangeInPixels = markerData ? meterstoPixels(markerData.range, map) : 0
