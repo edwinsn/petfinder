@@ -1,21 +1,22 @@
 .uploadPhotos {
     align-items: stretch;
-    justify-content: center;
+    justify-content: center !important;
     flex-direction: column;
     background-color: seashell;
     border-radius: 20px;
     display: flex;
     width: 85%;
     max-width: 13cm;
+    max-height: 20cm;
     height: 78%;
-    padding:0% 7% 5% 7%;
     box-sizing: border-box;
     z-index:9;
     color: #ffab2e79;
     position: relative;
     top:5%;
-    
 }
+
+
 
 .uploadPhotos>input[type=submit] {
     border: 0;
@@ -29,18 +30,17 @@
     width: 10vh;
     background-size: contain;
     background-color: white;
-    
+
 }
 
 .uploadPhotos> img {
     position: absolute;
-    right: 0;
-    top: 0;
+    right: 2vh;
+    top: 2vh;
 }
 
 .uploadPhotos>label {
     height: 55%;
-    border: 1px solid black;
     box-shadow: 10px 10px gray;
     background-size: cover;
     display: flex;
@@ -48,11 +48,14 @@
     overflow: scroll;
     margin-top: 6%;
     margin-bottom:2%;
-    border:1px solid blue;
+    width: 80%;
+    left: 10%;
+    position: relative;
 }
 
 .uploadPhotos>label>img {
     width: 100%;
+   
 }
 
 .uploadPhotos>progress {

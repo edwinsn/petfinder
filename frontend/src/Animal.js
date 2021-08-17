@@ -53,6 +53,7 @@ export let Animal = (props) => {
     const [uploadPhotoWindow, togleUploadPhotoWindow] = useState(undefined)
 
     let setMiniature = (miniature) => {
+        console.log("setting miniture")
         setOptions((pre) => {
             return { active: pre.active, miniature }
         })
@@ -209,6 +210,7 @@ export let Animal = (props) => {
                                             let actualImg = ev.target.files[0]
                                             markerData.file = actualImg
                                             togleUploadPhotoWindow(actualImg)
+                                            setOptions(pre => { return { active: true, miniature: pre.miniature } })
                                         }
                                         }
                                             accept="image/*"></input>
@@ -285,6 +287,7 @@ async function sendPoint(setOptions, panelDisplay, map,
     //console.log(newdescription)
     markerData.description = newdescription
     markerData.contact = newcontact ? newcontact : markerData.contact
+    markerData.userid = userid
 
     if (markerData.range > 400) {
         setTimeout(() => {
@@ -308,6 +311,7 @@ async function sendPoint(setOptions, panelDisplay, map,
 
                 const uploadTask = storage.ref(`images/${fileName}`).put(markerData.file);
 
+
                 uploadTask.on(
                     "state_changed",
                     (snapshot) => {
@@ -321,9 +325,12 @@ async function sendPoint(setOptions, panelDisplay, map,
 
                     },
                     err => {
-                        updateNotifications()
-                        lastMarkAdded.removeFrom(map)
-                        lastCircleAdded.removeFrom(map)
+
+                        if (!(err.code === "storage/unauthorized")) {
+                            updateNotifications()
+                            lastMarkAdded.removeFrom(map)
+                            lastCircleAdded.removeFrom(map)
+                        }
                     },
                     async () => {
                         let imgurl = await storage
@@ -340,6 +347,7 @@ async function sendPoint(setOptions, panelDisplay, map,
 
                     }
                 )
+
                 localimgurl = URL.createObjectURL(markerData.file)
                 markerData = { ...markerData, localimgurl }
                 addPermanentMark(
@@ -400,7 +408,7 @@ async function addPermanentMark(markerData, panelDisplay,
             } else {
                 console.log("updating")
                 markerData.defaultMarkerData = undefined
-                markerData.defaultMarkerData = Object.assign({} ,markerData)
+                markerData.defaultMarkerData = Object.assign({}, markerData)
                 //console.log(markerData)
                 res = await axios.put(process.env.REACT_APP_POINTS_URI, { ...data, relocating: true })//, config)
             }

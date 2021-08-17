@@ -6,7 +6,7 @@
 }
 
 .aditionalInfo img {
-    height: 20vh;
+    min-height: 20vh ;
     background-color: rgb(219, 219, 219);
     width: 100%;
 }
@@ -66,6 +66,7 @@
     background-color: transparent;
     border: 3px solid green;
     color: green;
+    cursor: pointer;
     border-radius: var(--border-radius);
 }
 

@@ -8,7 +8,7 @@ import { triggerBackup } from './features/recoverSlice'
 
 export let PointBu = (props) => {
 
-    let { type, frecuence, img, description } = props.mark
+    let { type, frecuence, imgurl, description } = props.mark
 
     const [deployed, setDeployed] = useState(false)
     const [recovered, setRecovered] = useState(false)
@@ -38,7 +38,7 @@ export let PointBu = (props) => {
                     <div className="probabilitybars">
                         {probabilityBars}
                     </div>
-                    {(img || true) && <img src={type === "dog" ? dogIcon : catIcon} />}
+                    {imgurl && <img src={imgurl} />}
                 </div>}
             <button
                 onClick={() => {

@@ -4,7 +4,6 @@ import { Login } from "./login";
 import { MainPage } from './MainPage'
 import './assets/App.css'
 import { Loading } from './Loading'
-import { FallBack } from './FallBack'
 
 let loading
 
@@ -171,7 +170,7 @@ export const App = () => {
             break;
     }
 
-    return (<div className="App">
+    return (<div className="app">
         {view}
     </div>)
 }

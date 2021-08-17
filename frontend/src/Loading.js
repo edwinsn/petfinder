@@ -11,7 +11,7 @@ export function LoadingCircles({ color }) {
 
 export const Loading = ({ color }) => {
     return (
-        <div className="loadinBackground background">
+        <div className="loadinBackground fullscreen">
             <LoadingCircles color={color} />
         </div>
     )

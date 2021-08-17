@@ -57,6 +57,7 @@ export const SideBar = (props) => {
     store.subscribe(async () => {
         if (store.getState().backup.value.pointDeleted && store.getState().backup.value.pointDeleted._id !== prevPointDeleted) {
             console.log("getting backup")
+            console.log(store.getState().backup.value.pointDeleted)
             setBackup(prev => [...prev, <PointBu mark={store.getState().backup.value.pointDeleted} key={Math.random()} />])
             prevPointDeleted = store.getState().backup.value.pointDeleted._id
         }
