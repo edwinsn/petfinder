@@ -37,7 +37,7 @@ export let Animal = (props) => {
 
     let map = useMap()
 
-    //console.log("Animal rerendered")
+
     let { defaultMarkerData, editing, setEditing, panes } = props
 
     defaultMarkerData = defaultMarkerData ? defaultMarkerData : {}
@@ -178,21 +178,23 @@ export let Animal = (props) => {
                         onTouchStart={() => { map.dragging.disable() }}
                         onTouchEnd={() => { map.dragging.enable() }}
                     >
-                        <div className="moreOptionsContainer hide-scroll">
+                        <div id="moreOptionsContainer" className="hide-scroll">
 
                             <div className="moreOptions">
                                 <div>
-                                    <div>Descripción</div>
+                                    <label for="description">Descripción</label>
                                     <div>
                                         <img src={petsIcon} alt="descripción" className="petsIcon icon" />
-                                        <textarea type="text" defaultValue={markerData.description}></textarea>
+                                        <textarea
+                                        id="description" 
+                                        type="text" defaultValue={markerData.description}></textarea>
                                     </div>
                                 </div>
                                 <div className="contactContainer">
-                                    <div>Contacto</div>
+                                    <label for="contact">Contacto</label>
                                     <div>
                                         <img className="userIcon icon" src={userIcon}></img>
-                                        <input type="text" defaultValue={markerData.contact}></input>
+                                        <input id="contact" type="text" defaultValue={markerData.contact}></input>
                                     </div>
                                 </div>
                                 <div>

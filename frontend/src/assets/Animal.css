@@ -1,9 +1,10 @@
 .Animal {
-    z-index: 401;
+    z-index: 410;
     position: absolute;
     display: flex;
     width: 100%;
     align-items: flex-end;
+    bottom: 2%;
 }
 
 .Animal .icon {
@@ -20,7 +21,6 @@
     display: block;
     background-color: #437ED5;
     cursor: pointer;
-    margin: auto;
     padding: 6px;
     box-sizing: border-box;
 }
@@ -34,7 +34,7 @@
     height: 0;
 }
 
-.animalOptions, .moreOptionsContainer {
+.animalOptions, #moreOptionsContainer {
     transition: height 0.5s, width 0.5s, border 0.5s;
     overflow: hidden
 }
@@ -52,10 +52,13 @@
     font-size: 1.2em;
     min-height: 1cm;
     max-height: 2cm;
+    min-width: 100%;
 }
 
 .cameraIcon {
     max-height: 100%;
+    position: relative;
+ 
 }
 
 .cameraIcon>input {
@@ -74,8 +77,11 @@
 
 .moreOptions input, textarea {
     padding-left: 38px;
-    width: 100%;
     min-height: var(--minHeightInput);
+}
+
+.moreOptions textarea{
+    max-width: 90%;
 }
 
 .moreOptions textarea {
@@ -86,6 +92,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100%;
 }
 
 .moreOptions>div>div {
@@ -118,8 +125,6 @@
     min-width: 3.5cm;
 }
 
-/*dejar en posicion absolute los imput y centrar los icono s en su lugar*/
-
 .mainOptions>img, .mainOptions>input {
     background-size: cover;
 }
@@ -137,17 +142,20 @@
 
 .moreOptions {
     height: 0;
-    display: flex;
+    display: none;
     flex-direction: column;
     justify-content: space-evenly;
     align-items: center;
     overflow: hidden;
     font-size: 1.2em;
+    padding: 7%;
+    box-sizing: border-box;
 }
 
-.moreOptions>* {
-    width: 83%;
-    position: relative;
+.moreOptions>div>div {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .moreOptions>*>textarea, .form {
@@ -159,34 +167,35 @@
     margin-bottom: 3%;
 }
 
-.moreOptionsContainer:hover>.moreOptions {
+#moreOptionsContainer:hover>.moreOptions {
     height: 100%;
+    display: flex;
 }
 
-.moreOptionsContainer:hover {
+#moreOptionsContainer:hover {
     height: 75vh;
     background-color: white;
     animation: none;
 }
 
-.moreOptionsContainer:hover>.moreOptions {
+#moreOptionsContainer:hover>.moreOptions {
     min-height: 10.5cm;
 }
 
 @media (max-height: 500px) {
-    .moreOptionsContainer {
+    #moreOptionsContainer {
         max-height: 6cm !important;
     }
 }
 
 @media (max-height: 330px) {
-    .moreOptionsContainer {
+    #moreOptionsContainer {
         max-height: 5.5cm !important;
     }
 }
 
 @media(max-width:1500px) {
-    .moreOptionsContainer {
+    #moreOptionsContainer {
         width: 2cm;
     }
 }
@@ -197,14 +206,14 @@
     }
 }
 
-.moreOptionsContainer:hover {
+#moreOptionsContainer:hover {
     min-width: 6cm;
     width: 83%;
     overflow-y: scroll;
     border: var(--emergentBorder)
 }
 
-.moreOptionsContainer {
+#moreOptionsContainer {
     height: 5vh;
     max-height: none;
     min-height: 0.6cm;
@@ -219,7 +228,7 @@
     cursor: pointer;
 }
 
-.moreOptionsContainer>span {
+#moreOptionsContainer>span {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -227,11 +236,11 @@
     max-width: 100%;
 }
 
-.moreOptionsContainer:hover>span {
+#moreOptionsContainer:hover>span {
     display: none;
 }
 
-.moreOptionsContainer span img {
+#moreOptionsContainer span img {
     height: 25%;
     min-height: 0.2cm;
 }

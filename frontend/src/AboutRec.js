@@ -13,7 +13,7 @@ export function About() {
     }, [])
 
     return (
-        <div id={"about"} className="rounded" style={{ backgroundColor: visible ? "white" : undefined }}>
+        <div id={"about"} className="rounded centered" style={{ backgroundColor: visible ? "white" : undefined }}>
 
             {!visible && <div id="infoIcon" className="bolder white">i</div>}
             <div className={visible ? "" : "hide"} id="info">
