@@ -113,7 +113,9 @@ export class Panel extends Component {
                     <img src={minus} />
                   </label>
 
-                  <label htmlFor="incrementProb">
+                  <label htmlFor="incrementProb"
+                  className="centered"
+                  >
                     <input type="radio"
                       className="hide"
                       id="incrementProb"
@@ -148,7 +150,7 @@ export class Panel extends Component {
                   onClick={() => { this.setState({ isImgOpen: false }) }}
                 ></div>}
 
-              <div className={(this.state.isImgOpen ? "deployimg rounded relative align-center justify-center" : "relative") + (window.innerHeight > window.innerWidth ? " top" : " center")}>
+              <div className={(this.state.isImgOpen ? "deployimg rounded relative align-center justify-center" : "relative nodeployed") + (window.innerHeight > window.innerWidth ? " top" : " center")}>
 
                 {this.state.isImgOpen &&
                   <img className={window.innerHeight > window.innerWidth ? "left closeIcon" : "right closeIcon"}
