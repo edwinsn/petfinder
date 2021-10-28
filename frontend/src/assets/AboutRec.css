@@ -3,35 +3,3 @@
     position: relative;
     top: 0.8em;
 }
-
-#about {
-    font-style: italic;
-    padding: 0 12px;
-    font-family: 'Roboto';
-    background-color: #3B72E1;
-    min-width: 0.25cm;
-    z-index: 408;
-    position: absolute;
-    cursor: pointer;
-    min-height: 34px;
-}
-
-#about:hover {
-    background-color: white;
-}
-
-#about:hover .hide {
-    display: block;
-}
-
-#about:hover #infoIcon {
-    display: none;
-}
-
-#info ul {
-    padding-left: 12px;
-}
-
-#infoIcon {
-    font-size: 19px;
-}

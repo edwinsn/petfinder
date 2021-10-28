@@ -187,9 +187,6 @@ html, body, #map {
   flex-direction: column;
 }
 
-.hide {
-  display: none;
-}
 
 .hide-scroll::-webkit-scrollbar {
   display: none;
