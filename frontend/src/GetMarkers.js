@@ -9,6 +9,7 @@ import store from './store'
 import { useDispatch } from 'react-redux'
 import { showNotifications } from "./features/notificationsSlice"
 import refugeIcon from './assets/images/refugeIcon.svg'
+import { open } from './features/panelSlice'
 
 //of-on icon 
 let markersLoadedCoords = [{ coordinates: "0" }]
@@ -253,7 +254,7 @@ export let getFrecuence = (coords) => {
 }
 
 let addMark = (marker, dogIconM, catIconM, map,
-  userid, open, editing, updateNotifications, setEditing, force = false) => {
+  userid, openPanel, editing, updateNotifications, setEditing, force = false) => {
   //console.log("Adding")
 
   if (force) map.setView({ lat: marker.lat, lng: marker.lng })
@@ -294,18 +295,16 @@ let addMark = (marker, dogIconM, catIconM, map,
           fillColor: '#3388FF'
         })
         previousCircle = circle
-        open(marker.lat, marker.lng,
+        store.dispatch(open(
           {
-            frecuence: markersLoadedCoords[marker.lat + "" + marker.lng].frecuence,
-            imgurl: marker.imgurl ? marker.imgurl : marker.type == "dog" ? dogIcon : catIcon,
-            description: marker.description,
-            contact: marker.contact,
-            unpaintCircle: () => {
-              previousCircle?.setStyle({
-                color: '#3388FF'
-              })
+            markerData: {
+              coords: { lat: marker.lat, lng: marker.lng },
+              frecuence: markersLoadedCoords[marker.lat + "" + marker.lng].frecuence,
+              imgurl: marker.imgurl ? marker.imgurl : marker.type == "dog" ? dogIcon : catIcon,
+              description: marker.description,
+              contact: marker.contact,
             }
-          })
+          }))
       }
       else if (marker.userid != userid) {
         updateNotifications(true)

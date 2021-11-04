@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import './assets/AboutRec.css'
 import animalsIcon from './assets/images/animalsIcon.png'
 import styled from 'styled-components'
 
