@@ -1,5 +1,4 @@
-import { Component } from 'react'
-import './assets/Panel.css'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import axios from 'axios'
 import closeIcon from './assets/images/closeIcon.svg'
 import { editFrecuences } from './GetMarkers'
@@ -8,220 +7,219 @@ import frecuenceIcon from './assets/images/frecuenceIcon.svg'
 import petsIcon from './assets/images/petsIcon.svg'
 import plus from './assets/images/plus .svg'
 import minus from './assets/images/minus.svg'
-import dogIcon from './assets/images/dogIcon.svg'
-import catIcon from './assets/images/catIcon.svg'
 import { LoadingCircles } from './Loading'
+import { useSelector, useDispatch } from 'react-redux'
+import { close } from './features/panelSlice'
+import './assets/Panel.css'
 
 let actualCoords
-let actualFrecuence
-let previousOptio1key
-let previousOptio2key
 
-export class Panel extends Component {
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      display: "none",
-      prob: "10",
-      lat: 0,
-      lng: 0,
-      loading: false,
-      imgUrl: false,
-      isImgOpen: false,
-      imgLoading: true,
-      show: false
+//llamar a unpaint circle en getmarkers o el propietario de unpaint circle
+//mejorar la imposibilidad de aumentar la probabilidad mas de una vez
+
+export let Panel = function () {
+
+  //console.log("Panel rendered")
+
+  const { opened, markerData } = useSelector(state => {
+    //console.log("..")
+    return state.panel.value
+  })
+
+  const { imgurl, coords, contact, description, imgKey, frecuence } = markerData
+  const { lat, lng } = coords || { lat: undefined, lng: undefined }
+  actualCoords = lat + "" + lng
+
+  const dispatch = useDispatch()
+
+  const [state, setState] = useState({
+    loading: false,
+    isImgOpen: false,
+    imgLoading: true,
+    prob: 2 * frecuence
+  })
+
+  useEffect(() => {
+    setState(prev => { return { ...prev, imgLoading: true } })
+  }, [imgurl])
+
+  useEffect(() => {
+    setState(prev => { return { ...prev, prob: 2 * frecuence } })
+  }, [frecuence])
+
+  let openImg = useCallback(() => {
+    if (!state.isImgOpen) {
+      setState(prev => { return { ...prev, isImgOpen: true } })
     }
-    this.updatedFrecuence = this.updatedFrecuence.bind(this)
-    this.open = this.open.bind(this)
-    this.isDeprecated = false
+  }, state.isImgOpen)
 
-
-  }
-
-  render() {
-
-    //console.log("Panel rendered")
-
-    let openImg = () => {
-      if (!this.state.isImgOpen) this.setState({ isImgOpen: true })
-    }
-
-    let probabilityBars = []
+  let probabilityBars = useMemo(() => {
+    let bars = []
     for (let i = 0; i < 10; i++) {
-      probabilityBars.push(
-        <div key={i} style={{ background: i < this.state.prob ? "#3B72E1" : "#E3E3E3" }}></div>
+      bars.push(
+        <div key={i} style={{ background: i < state.prob ? "#3B72E1" : "#E3E3E3" }}></div>
       )
     }
+    return bars
+  }, [state.prob])
 
-    return (
-      <div className="panelContainer">
+  const { previousOptio1key, previousOptio2key } = useMemo(() => {
+    return { previousOptio1key: Math.random(), previousOptio2key: Math.random() }
+  })
 
-        <div className={this.state.show ? "panel active" : "panel inactive"} >
-          <img
-            src={closeIcon}
-            alt="close"
-            id="closePanel"
-            className="closeIcon"
-            onClick={
-              () => {
-                this.state?.unpaintCircle?.()
-                this.setState({
-                  show: false
-                })
-              }
-            } />
-          {this.state.excessOfRevitions &&
-            <p className="excess">
-              No puedes incrementar o disminuir la probabilidad más de una vez
-            </p>}
-          {this.state.updatedFrecuence &&
-            <p className="frecuenceUpdated">Dato actualizado!</p>
-          }
-          <div className="infoContainer justify-center">
+  let closePanel = useCallback(() => {
+    state?.unpaintCircle?.()
+    dispatch(close())
+  }, [])
 
-            <div className="column">
+  let decrementProb = useCallback((ev) => {
+    if (ev.target.checked) {
+      updatedFrecuence(lat, lng, true, setState, frecuence)
+    }
+  }, [lat, lng, frecuence])
 
-              <div>
-                <div className="verticalCentered align-center">
-                  <img src={petsIcon} className="petsImg" />
-                  <span>Descripción</span>
-                </div>
-                <p>
-                  {this.state.description ? this.state.description : "No hay descripción"}
-                </p>
+  let incrementProb = useCallback((ev) => {
+    if (ev.target.checked) {
+      updatedFrecuence(lat, lng, false, setState, frecuence)
+    }
+  }, [lat, lng, frecuence])
+
+  let onImgCLicked = useCallback(() => {
+    setState(prev => { return { ...prev, isImgOpen: false } })
+  }, [])
+
+  let onImgLoaded = useCallback(() => {
+    setState(prev => { return { ...prev, imgLoading: false } })
+  }, [])
+
+
+  return (
+    <div className="panelContainer">
+
+      <div className={opened ? "panel active" : "panel inactive"} >
+        <img
+          src={closeIcon}
+          alt="close"
+          id="closePanel"
+          className="closeIcon"
+          onClick={closePanel} />
+        {state.excessOfRevitions &&
+          <p className="excess">
+            No puedes incrementar o disminuir la probabilidad más de una vez
+          </p>}
+        {state.updatedFrecuence &&
+          <p className="frecuenceUpdated">Dato actualizado!</p>
+        }
+        <div className="infoContainer justify-center">
+
+          <div className="column">
+
+            <div>
+              <div className="verticalCentered align-center">
+                <img src={petsIcon} className="petsImg" />
+                <span>Descripción</span>
               </div>
+              <p>
+                {description ? description : "No hay descripción"}
+              </p>
+            </div>
 
-              <div>
-                <div className="verticalCentered align-center">
-                  <img src={frecuenceIcon} />
-                  <span>Avistamientos</span>
+            <div>
+              <div className="verticalCentered align-center">
+                <img src={frecuenceIcon} />
+                <span>Avistamientos</span>
+              </div>
+              <div className="probabilityContainer align-center">
+                <div className="probabilitybars">
+                  {probabilityBars}
                 </div>
-                <div className="probabilityContainer align-center">
-                  <div className="probabilitybars">
-                    {probabilityBars}
-                  </div>
 
-                  <label htmlFor="decrementProb">
-                    <input type="radio" name="dep"
-                      className="hide"
-                      key={previousOptio1key}
-                      id="decrementProb"
-                      onChange={(ev) => {
-                        if (ev.target.checked) { this.updatedFrecuence(this.state.lat, this.state.lng, true) }
-                      }} />
-                    <img src={minus} />
-                  </label>
+                <label htmlFor="decrementProb">
+                  <input type="radio" name="dep"
+                    className="hide"
+                    key={previousOptio1key}
+                    id="decrementProb"
+                    onChange={decrementProb} />
+                  <img src={minus} />
+                </label>
 
-                  <label htmlFor="incrementProb"
+                <label htmlFor="incrementProb"
                   className="centered"
-                  >
-                    <input type="radio"
-                      className="hide"
-                      id="incrementProb"
-                      name="dep"
-                      key={previousOptio2key}
-                      onChange={(ev) => {
-                        if (ev.target.checked) {
-                          this.updatedFrecuence(this.state.lat, this.state.lng, false)
-                        }
-                      }} />
-                    <img src={plus} />
-                  </label>
-                </div>
+                >
+                  <input type="radio"
+                    className="hide"
+                    id="incrementProb"
+                    name="dep"
+                    key={previousOptio2key}
+                    onChange={incrementProb} />
+                  <img src={plus} />
+                </label>
               </div>
-
-              <div>
-                <div className="verticalCentered align-center">
-                  <img src={UserIcon} />
-                  <span>Contacto</span>
-                </div>
-
-                <p>
-                  {this.state.contact ? this.state.contact : "No hay contacto"}
-                </p>
-              </div>
-
             </div>
-            <div className={this.state.isImgOpen ? "fullScreen" : "animalImgcontainer"}>
 
-              {this.state.isImgOpen &&
-                <div className="background emergentContainer"
-                  onClick={() => { this.setState({ isImgOpen: false }) }}
-                ></div>}
-
-              <div className={(this.state.isImgOpen ? "deployimg rounded relative align-center justify-center" : "relative nodeployed") + (window.innerHeight > window.innerWidth ? " top" : " center")}>
-
-                {this.state.isImgOpen &&
-                  <img className={window.innerHeight > window.innerWidth ? "left closeIcon" : "right closeIcon"}
-                    id={"closeimg"}
-                    src={closeIcon}
-                    onClick={() => { this.setState({ isImgOpen: false }) }}
-                  />}
-                <img className={this.state.isImgOpen ?
-                  (window.innerHeight > window.innerWidth ? "mobilbigimg" : "animalImg") :
-                  "animalImg"}
-                  onClick={openImg}
-                  src={this.state.imgUrl ? this.state.imgUrl : undefined}
-                  key={this.state.imgKey}
-                  onLoad={(pre) => {
-                    this.setState({ ...pre, imgLoading: false })
-                  }}
-                />
-                {this.state.imgLoading && <LoadingCircles />}
+            <div>
+              <div className="verticalCentered align-center">
+                <img src={UserIcon} />
+                <span>Contacto</span>
               </div>
 
+              <p>
+                {contact ? contact : "No hay contacto"}
+              </p>
             </div>
+
           </div>
+          <div className={state.isImgOpen ? "fullScreen" : "animalImgcontainer"}>
 
+            {state.isImgOpen &&
+              <div className="background emergentContainer"
+                onClick={() => { setState({ isImgOpen: false }) }}
+              ></div>}
 
+            <div className={(state.isImgOpen ? "deployimg rounded relative align-center justify-center" : "relative nodeployed") + (window.innerHeight > window.innerWidth ? " top" : " center")}>
+
+              {state.isImgOpen &&
+                <img className={window.innerHeight > window.innerWidth ? "left closeIcon" : "right closeIcon"}
+                  id={"closeimg"}
+                  src={closeIcon}
+                  onClick={onImgCLicked}
+                />}
+              <img className={state.isImgOpen ?
+                (window.innerHeight > window.innerWidth ? "mobilbigimg" : "animalImg") :
+                "animalImg"}
+                onClick={openImg}
+                src={imgurl ? imgurl : undefined}
+                key={imgKey}
+                onLoad={onImgLoaded}
+              />
+              {state.imgLoading && <LoadingCircles />}
+            </div>
+
+          </div>
         </div>
-      </div >
-    )
+      </div>
+    </div >
+  )
+}
+
+
+let updatedFrecuence = async function (lat = 0, lng = 0, isDeprecated = false, setState, frecuence) {
+
+  if (isDeprecated) {
+    setState(prev => { return { ...prev, prob: frecuence <= 1 ? 1 : 2 * frecuence - 1 } })
+    editFrecuences(frecuence - 0.5, actualCoords)
+  }
+  else {
+    setState(prev => { return { ...prev, prob: frecuence < 4.5 ? 2 * frecuence + 2 : 10 } })
+    editFrecuences(frecuence + 1, actualCoords)
   }
 
-
-  async updatedFrecuence(lat = 0, lng = 0, isDeprecated = false) {
-    if (isDeprecated) {
-      this.setState({ prob: actualFrecuence <= 1 ? 1 : 2 * actualFrecuence - 1 })
-      editFrecuences(actualFrecuence - 0.5, actualCoords)
-    }
-    else {
-      this.setState({ prob: this.state.prob < 9 ? 2 * actualFrecuence + 2 : 10 })
-      editFrecuences(actualFrecuence + 1, actualCoords)
-    }
-    //console.log("enviando")
-    try {
-      await axios.put(process.env.REACT_APP_POINTS_URI, { lat, lng, isDeprecated })
-      this.setState({ loading: false, updatedFrecuence: true })
-      setTimeout(() => { this.setState({ display: "none", updatedFrecuence: false }) }, 600)
-
-      console.log("Dato Actualizado")
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
-  open(lat, lng, data) {
-    actualCoords = lat + "" + lng
-    actualFrecuence = data.frecuence
-    previousOptio1key = Math.random()
-    previousOptio2key = Math.random()
-
-    //console.log(data)
-
-    this.setState({
-      display: "block",
-      show: true,
-      prob: 2 * actualFrecuence,
-      lat,
-      lng,
-      imgUrl: data.imgurl ? data.imgurl : (data.type === "dog" ? dogIcon : catIcon),
-      contact: data.contact,
-      description: data.description,
-      unpaintCircle: data.unpaintCircle,
-      imgLoading: true,
-      imgKey: Math.random()
-    })
+  try {
+    await axios.put(process.env.REACT_APP_POINTS_URI, { lat, lng, isDeprecated })
+    setState(prev => { return { ...prev, loading: false, updatedFrecuence: true } })
+    setTimeout(() => { setState(prev => { return { ...prev, updatedFrecuence: false } }) }, 600)
+  } catch (err) {
+    console.log(err)
   }
 }
