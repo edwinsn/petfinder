@@ -23,6 +23,7 @@ import { deactivate } from './features/editingSlice';
 import store from './store'
 import { storage } from './fire'
 import { addBackup } from './features/recoverSlice';
+import {open} from './features/panelSlice'
 
 
 let activeMarker = false
@@ -186,8 +187,8 @@ export let Animal = (props) => {
                                     <div>
                                         <img src={petsIcon} alt="descripción" className="petsIcon icon" />
                                         <textarea
-                                        id="description" 
-                                        type="text" defaultValue={markerData.description}></textarea>
+                                            id="description"
+                                            type="text" defaultValue={markerData.description}></textarea>
                                     </div>
                                 </div>
                                 <div className="contactContainer">
@@ -428,7 +429,7 @@ async function addPermanentMark(markerData, panelDisplay,
     }
 }
 
-function addMarkToMap(markerData, map, setEditing, panes, open) {
+function addMarkToMap(markerData, map, setEditing, panes) {
 
     //console.log("adding mark")
 
@@ -459,7 +460,7 @@ function addMarkToMap(markerData, map, setEditing, panes, open) {
     marker.on("click", () => {
 
         if (!store.getState().editing.value) {
-            open(markerData.coords.lat, markerData.coords.lng, markerData)
+            store.dispatch(open(markerData))
         }
         else {
             circle.removeFrom(map)

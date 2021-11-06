@@ -104,6 +104,12 @@ export let GetMarkers = (props) => {
         }
       }
 
+      if (!store.getState().panel.value.opened) {
+        previousCircle?.setStyle({
+          color: '#3388FF'
+        })
+      }
+
     })
   }, [])
 
