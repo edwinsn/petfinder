@@ -54,9 +54,8 @@
     margin-right: 7px;
 }
 
-.goBack {
+.goback {
     position: absolute;
-    top: 15px;
     left: 15px;
     top: calc(var(--vh, 1vh) * 4);
     left: calc(var(--vh, 1vh) * 4);
@@ -145,6 +144,7 @@
 
 .inputsContainer>div>input {
     padding-left: 35px;
+    box-sizing: border-box;
     min-height: var(--minHeightInput);
 }
 
