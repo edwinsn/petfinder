@@ -24,7 +24,7 @@ import store from './store'
 import { storage } from './fire'
 import { addBackup } from './features/recoverSlice';
 import {open} from './features/panelSlice'
-
+import REACT_APP_POINTS_URI from './api'
 
 let activeMarker = false
 let lastMarkAdded = undefined
@@ -246,7 +246,7 @@ export let Animal = (props) => {
                                         try {
                                             props.setEditing(false)
                                             cancelMarker(setOptions, markerData, true, map, false, panes, props.open)
-                                            let { data } = await axios.delete(process.env.REACT_APP_POINTS_URI, { data: { _id: markerData._id, userid: props.userid } })
+                                            let { data } = await axios.delete(REACT_APP_POINTS_URI, { data: { _id: markerData._id, userid: props.userid } })
                                             let marker = defaultMarkerData
                                             marker._id = data._id
                                             marker.lat = defaultMarkerData.coords.lat
@@ -401,7 +401,7 @@ async function addPermanentMark(markerData, panelDisplay,
         try {
             if (!editing) {
                 console.log("postin")
-                res = await axios.post(process.env.REACT_APP_POINTS_URI, data)//, config)
+                res = await axios.post(REACT_APP_POINTS_URI, data)//, config)
                 //console.log(res.data)
                 markerData._id = res.data._id
                 lastMarkAdded.removeFrom(map)
@@ -413,7 +413,7 @@ async function addPermanentMark(markerData, panelDisplay,
                 markerData.defaultMarkerData = undefined
                 markerData.defaultMarkerData = Object.assign({}, markerData)
                 //console.log(markerData)
-                res = await axios.put(process.env.REACT_APP_POINTS_URI, { ...data, relocating: true })//, config)
+                res = await axios.put(REACT_APP_POINTS_URI, { ...data, relocating: true })//, config)
             }
             console.log(res.status === 200 ? "Dato registrado" : "Error en el envio del punto")
         } catch (err) {

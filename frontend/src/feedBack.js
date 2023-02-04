@@ -5,7 +5,7 @@ import axios from 'axios'
 import { LoadingCircles } from './Loading'
 import { useDispatch } from 'react-redux'
 import { showNotifications } from "./features/notificationsSlice"
-
+import REACT_APP_POINTS_URI from './api'
 
 export const FeedBack = (props) => {
 
@@ -67,7 +67,7 @@ let sendFeedBack = async (ev, isSlow, isConfuse, setLoading, updateNotifications
     let moreSuggestions = ev.target[0].value
     setLoading(true)
     try {
-        let { status } = await axios.post(process.env.REACT_APP_POINTS_URI + "feedBack", {
+        let { status } = await axios.post(REACT_APP_POINTS_URI + "feedBack", {
             isSlow,
             isConfuse,
             moreSuggestions

@@ -11,6 +11,7 @@ import { LoadingCircles } from './Loading'
 import { useSelector, useDispatch } from 'react-redux'
 import { close } from './features/panelSlice'
 import './assets/Panel.css'
+import REACT_APP_POINTS_URI from './api'
 
 let actualCoords
 
@@ -216,7 +217,7 @@ let updatedFrecuence = async function (lat = 0, lng = 0, isDeprecated = false, s
   }
 
   try {
-    await axios.put(process.env.REACT_APP_POINTS_URI, { lat, lng, isDeprecated })
+    await axios.put(REACT_APP_POINTS_URI, { lat, lng, isDeprecated })
     setState(prev => { return { ...prev, loading: false, updatedFrecuence: true } })
     setTimeout(() => { setState(prev => { return { ...prev, updatedFrecuence: false } }) }, 600)
   } catch (err) {

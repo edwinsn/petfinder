@@ -20,6 +20,7 @@ import Switch from "react-switch";
 import axios from 'axios'
 import store from './store'
 import { point } from "leaflet"
+import REACT_APP_POINTS_URI from './api'
 
 let prevPointDeleted = false
 
@@ -39,7 +40,7 @@ export const SideBar = (props) => {
 
     let getBackup = async () => {
         try {
-            let { data } = await axios.get(process.env.REACT_APP_POINTS_URI + "backup", {
+            let { data } = await axios.get(REACT_APP_POINTS_URI + "backup", {
                 params: {
                     userid: props.userid
                 }
@@ -148,7 +149,7 @@ export const SideBar = (props) => {
 let getDb = async (dispatch) => {
     //send only the lat, lng, fre, and type data
     try {
-        let res = await fetch(process.env.REACT_APP_POINTS_URI + "database")
+        let res = await fetch(REACT_APP_POINTS_URI + "database")
         const blob = await res.blob();
         download(blob, 'database.cvs');
     } catch (err) {

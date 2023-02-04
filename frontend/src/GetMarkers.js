@@ -10,6 +10,7 @@ import { useDispatch } from 'react-redux'
 import { showNotifications } from "./features/notificationsSlice"
 import refugeIcon from './assets/images/refugeIcon.svg'
 import { open } from './features/panelSlice'
+import REACT_APP_POINTS_URI from './api'
 
 //of-on icon 
 let markersLoadedCoords = [{ coordinates: "0" }]
@@ -71,8 +72,8 @@ export let GetMarkers = (props) => {
         try {
           console.log("restoring")
           let marker = Object.assign({}, store.getState().backup.value)
-          axios.put(process.env.REACT_APP_POINTS_URI + "backup", { _id: store.getState().backup.value._id })
-          let { data } = await axios.post(process.env.REACT_APP_POINTS_URI, store.getState().backup.value)
+          axios.put(REACT_APP_POINTS_URI + "backup", { _id: store.getState().backup.value._id })
+          let { data } = await axios.post(REACT_APP_POINTS_URI, store.getState().backup.value)
           prevBacup = store.getState().backup.value._id
           marker._id = data._id
           let dogIconM = new L.icon({
@@ -143,7 +144,7 @@ let getp = (map, props, setEditing, updateNotifications) => {
 
   getRefuges(map.getCenter(), map.distance(_northEast, _southWest) / 2, map)
 
-  axios.get(process.env.REACT_APP_POINTS_URI, {
+  axios.get(REACT_APP_POINTS_URI, {
     params: {
       lowerlat,
       upperlat,
@@ -196,7 +197,7 @@ let getRefuges = async ({ lat, lng }, radius, map) => {
   })
 
   try {
-    let { data } = await axios.get(process.env.REACT_APP_POINTS_URI + "refuges", {
+    let { data } = await axios.get(REACT_APP_POINTS_URI + "refuges", {
       params: {
         lat,
         lng,
@@ -219,7 +220,7 @@ let getRefuges = async ({ lat, lng }, radius, map) => {
         </div>`)
 
         .on('popupopen', function (popup) {
-          axios.get(process.env.REACT_APP_POINTS_URI + "refugeDatails", {
+          axios.get(REACT_APP_POINTS_URI + "refugeDatails", {
             params: { _id: refuge._id }
           })
             .then((res) => {
